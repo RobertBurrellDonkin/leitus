@@ -27,6 +27,15 @@
 #
 
 
+
+print "Leitus is a suite of higher level functions for cryptographic drives."
+
+##############################################################################
+#
+# Aborginal Sources
+#
+##############################################################################
+
 ##
 ## Creates an encrypted loopback drive.
 ##
