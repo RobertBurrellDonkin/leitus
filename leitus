@@ -26,9 +26,84 @@
 # Robert Burrell Donkin, 2011
 #
 
+import subprocess
 
+##
+## Aim: Mount the file as a loopback device 
+##
+#mountLoopDevice() {
+# if [ -z $1 ]
+# then
+#  echo "Usage: fillWithRandom <filename>"
+#  exit 1
+# fi
+#
+# EXISTING_USES=`losetup -j $1`
+# if [ -z "$EXISTING_USES" ]
+# then
+#  echo "$1 is not in use."
+# else
+#  echo "$1 already in use."
+#  exit 1
+# fi
+#
+# LoopDevice=`losetup --find`
+# if [ $? -eq 0 ]
+# then
+#  echo "Found loop $LoopDevice"
+# else
+#  echo "No loop device available."
+#  exit 1
+# fi
+#
+# losetup $LoopDevice $1
+# if [ $? -eq 0 ]
+# then
+#  echo "Mounted $1 on $LoopDevice"
+# else 
+#  echo "Mount $1 on $LoopDevice failed."
+#  exit 1
+# fi
+#}
+#
+#
 
-print "Leitus is a suite of higher level functions for cryptographic drives."
+class AlreadyInUseError(Exception):
+    """
+    Raised an operations conflicts with an existing use of
+    a entity (such as a drive, device or file).
+    
+    Attributes:
+       entity -- currently in use
+       message -- template formatted during display
+    """
+    def __init__(self, entity):
+        self.entity = entity
+        self.message = "{0} is already in use."
+    
+    def __str__(self):
+        return self.message.format(self.entity)
+  
+
+class LoopDevice():
+    """
+    High level API for loop devices
+    """
+    def __init__(self, file):
+        self.file = file        
+    
+    def __repr__(self):
+        return "Loop device (based on '{0}')".format(self.file)
+    
+    def open(self):
+        if (self.isInUse()):
+            raise AlreadyInUseError, self
+    
+    def isInUse(self):
+        return True
+    
+LoopDevice("Some File").open()
+
 
 ##############################################################################
 #
@@ -111,45 +186,6 @@ print "Leitus is a suite of higher level functions for cryptographic drives."
 # dd if=/dev/urandom of=$1 count=$2 conv=fsync iflag=nonblock bs=1M 
 # echo "...but now finished writing random bits."
 #}
-#
-##
-## Aim: Mount the file as a loopback device 
-##
-#mountLoopDevice() {
-# if [ -z $1 ]
-# then
-#  echo "Usage: fillWithRandom <filename>"
-#  exit 1
-# fi
-#
-# EXISTING_USES=`losetup -j $1`
-# if [ -z "$EXISTING_USES" ]
-# then
-#  echo "$1 is not in use."
-# else
-#  echo "$1 already in use."
-#  exit 1
-# fi
-#
-# LoopDevice=`losetup --find`
-# if [ $? -eq 0 ]
-# then
-#  echo "Found loop $LoopDevice"
-# else
-#  echo "No loop device available."
-#  exit 1
-# fi
-#
-# losetup $LoopDevice $1
-# if [ $? -eq 0 ]
-# then
-#  echo "Mounted $1 on $LoopDevice"
-# else 
-#  echo "Mount $1 on $LoopDevice failed."
-#  exit 1
-# fi
-#}
-#
 #
 ##
 ## Aim: Setup LUKS on the device.
