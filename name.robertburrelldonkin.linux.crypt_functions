@@ -1,0 +1,182 @@
+#! /bin/sh
+#
+# Copyright (c) Robert Burrell Donkin 2011
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+#
+# Sources for encryption functions
+#
+# Robert Burrell Donkin, 2011
+#
+
+
+#
+# Create the file and fill with random data.
+#
+# Aim: Avoid leaking basic size information
+# Implementation: Initialise file with random data
+#
+# /dev/urandom typically has sufficient entropy for this purpose
+# and will not block even when this quantity is required 
+# 
+fillWithRandom() {
+ 
+ if [ -z $2 ]
+ then
+  echo "Usage: fillWithRandom <filename> <initial size in M>"
+  exit 1
+ fi
+
+ echo "Preparing $1 by writing random bits..."
+ echo "...(this may take a while)..."
+ dd if=/dev/urandom of=$1 count=$2 conv=fsync iflag=nonblock bs=1M 
+ echo "...but now finished writing random bits."
+}
+
+#
+# Aim: Mount the file as a loopback device 
+#
+mountLoopDevice() {
+ if [ -z $1 ]
+ then
+  echo "Usage: fillWithRandom <filename>"
+  exit 1
+ fi
+
+ EXISTING_USES=`losetup -j $1`
+ if [ -z "$EXISTING_USES" ]
+ then
+  echo "$1 is not in use."
+ else
+  echo "$1 already in use."
+  exit 1
+ fi
+
+ LoopDevice=`losetup --find`
+ if [ $? -eq 0 ]
+ then
+  echo "Found loop $LoopDevice"
+ else
+  echo "No loop device available."
+  exit 1
+ fi
+
+ losetup $LoopDevice $1
+ if [ $? -eq 0 ]
+ then
+  echo "Mounted $1 on $LoopDevice"
+ else 
+  echo "Mount $1 on $LoopDevice failed."
+  exit 1
+ fi
+}
+
+
+#
+# Aim: Setup LUKS on the device.
+#
+setUpLUKS() {
+ if [ -z $1 ]
+ then
+  echo "Usage: setUpsLUKS <filename>"
+  exit 1
+ fi
+
+ echo "Setting up LUKS on $1"
+ cryptsetup luksFormat -c aes-cbc-essiv:sha256 $1
+ if [ $? -eq 0 ]
+ then
+  echo "Setup LUKS on $1"
+ else
+  echo "LUKS setup on $1 failed."
+  exit 1
+ fi
+}
+
+
+#
+# Aim: Map to an available name
+#
+openLUKS() {
+ if [ -z $2 ]
+ then
+  echo "Usage: openLUKS <device> <map name>"
+  exit 1
+ fi
+
+ for name in `dmsetup ls | cut -f1`
+ do
+  if [ "$name" == "$2" ] 
+  then
+   echo "/dev/mapper/$2 is already mapped."
+   exit 1
+  fi
+ done
+ echo "Opening $1 onto $2"
+ cryptsetup luksOpen $1 $2
+ if [ $? -eq 0 ]
+ then
+  echo "Opened $1 on $2"
+ else
+  echo "Failed to open $1 on $1."
+  exit 1
+ fi
+}
+
+#
+# Aim: create filesystem
+#
+makeFileSystem() {
+ if [ -z $1 ]
+ then
+  echo "Usage: makeFileSystem <map name>"
+  exit 1
+ fi
+
+ echo "Creating filesystem on $1"
+ mke2fs -j -m 1 -O dir_index,filetype /dev/mapper/$1
+ if [ $? -eq 0 ]
+ then
+  echo "Created filesystem on $1"
+ else
+  echo "Failed to create filesystem on $1."
+  exit 1
+ fi
+}
+
+
+
+#
+# Tidy up
+#
+tidyUp() {
+ if [ -z $2 ]
+ then
+  echo "Usage: tidyUp <loop device> <map name>"
+  exit 1
+ fi
+
+ echo "Closing and unmounting $1"
+ sleep 2s
+ cryptsetup luksClose $2
+ sleep 1s
+ losetup -d $1
+ echo "Done."
+}
