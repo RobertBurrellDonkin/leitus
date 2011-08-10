@@ -84,13 +84,24 @@ class AlreadyInUseError(Exception):
     def __str__(self):
         return self.message.format(self.entity)
   
+class SubprocessLoopDevice():
+    """
+    Low level API for loop devices
+    """
+    
+    def firstUnusedDevice(self):
+        """
+        The name of the first unused device.
+        """
+        return subprocess.check_output(["losetup", "-f"])
 
 class LoopDevice():
     """
     High level API for loop devices
     """
     def __init__(self, file):
-        self.file = file        
+        self.file = file
+        self.api = SubprocessLoopDevice()
     
     def __repr__(self):
         return "Loop device (based on '{0}')".format(self.file)
@@ -102,7 +113,10 @@ class LoopDevice():
     def isInUse(self):
         return True
     
-LoopDevice("Some File").open()
+    def firstUnusedDevice(self):
+        return self.api.firstUnusedDevice()
+    
+print LoopDevice("Some File").firstUnusedDevice()
 
 
 ##############################################################################
