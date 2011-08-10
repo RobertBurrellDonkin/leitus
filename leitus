@@ -149,13 +149,19 @@ class LoopDevice():
         self.api.create(self.file, size)
         return self
     
+    def deviceName(self):
+        status = self.status()
+        if (status == None):
+            raise NotFoundError, self
+        return status.split(":", 1)[0]
+        
     
 filename = "neo.crypt"
 sizeInMegabytes = 2
 
-device = LoopDevice(filename)
+print LoopDevice(filename).deviceName()
 
-device.create(sizeInMegabytes).open()
+# LoopDevice(filename).create(sizeInMegabytes).open()
 
 
 ##############################################################################
