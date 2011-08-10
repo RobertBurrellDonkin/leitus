@@ -96,6 +96,17 @@ class SubprocessLoopDevice():
         Returns - the device name
         """
         subprocess.check_call(["losetup", device, file])
+    
+    def create(self, file, count):
+        """
+        Fills with random data
+        
+        count in megabytes
+        """
+        subprocess.check_call(
+            ['dd', 'if=/dev/urandom', 'of=' + file, 'count={0}'.format(count),
+             'conv=fsync', 'iflag=nonblock', 'bs=1M'])
+
 
 
 class LoopDevice():
@@ -115,6 +126,7 @@ class LoopDevice():
         if (self.isInUse()):
             raise AlreadyInUseError, self
         self.api.open(self.file, self.firstUnusedDevice())
+        return self
     
     def isInUse(self):
         return (os.path.exists(self.file) and not(self.status() == None))
@@ -125,10 +137,25 @@ class LoopDevice():
     def firstUnusedDevice(self):
         return self.api.firstUnusedDevice()
         
+    def create(self, size):
+        """
+        Creates a new device of the given size
+        filled with random data.
+        
+        size (in megabytes)
+        """
+        if (os.path.exists(self.file)):
+            raise AlreadyInUseError, self.file
+        self.api.create(self.file, size)
+        return self
+    
     
 filename = "neo.crypt"
+sizeInMegabytes = 2
 
-LoopDevice(filename).open()
+device = LoopDevice(filename)
+
+device.create(sizeInMegabytes).open()
 
 
 ##############################################################################
@@ -190,29 +217,7 @@ LoopDevice(filename).open()
 #exit 0
 
 
-##
-## Create the file and fill with random data.
-##
-## Aim: Avoid leaking basic size information
-## Implementation: Initialise file with random data
-##
-## /dev/urandom typically has sufficient entropy for this purpose
-## and will not block even when this quantity is required 
-## 
-#fillWithRandom() {
-# 
-# if [ -z $2 ]
-# then
-#  echo "Usage: fillWithRandom <filename> <initial size in M>"
-#  exit 1
-# fi
-#
-# echo "Preparing $1 by writing random bits..."
-# echo "...(this may take a while)..."
-# dd if=/dev/urandom of=$1 count=$2 conv=fsync iflag=nonblock bs=1M 
-# echo "...but now finished writing random bits."
-#}
-#
+
 ##
 ## Aim: Setup LUKS on the device.
 ##
