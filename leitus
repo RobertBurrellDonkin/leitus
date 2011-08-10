@@ -156,12 +156,37 @@ class LoopDevice():
         return status.split(":", 1)[0]
         
     
-filename = "neo.crypt"
-sizeInMegabytes = 2
+class CryptSetup():
+    
+    def map(self, name, device):
+        args = ['cryptsetup',
+                '-d', '/dev/urandom',
+                'create',
+                name, device]
+        subprocess.check_call(args)
+    
+class CryptDeviceWithRandomKey():
+    
+    def on(self, source):
+        return DeviceMapping(source.deviceName(), CryptSetup())
+    
+    
+class DeviceMapping():
+    def __init__(self, device, api):
+        self.device = device
+        self.api = api
+    
+    def mapTo(self, name):
+        self.api.map(name, self.device)
+        return self
+    
+name = "neo"
+filename = name + ".crypt"
+sizeInMegabytes = 500
 
-print LoopDevice(filename).deviceName()
+# LoopDevice(filename).create(sizeInMegabytes).open().deviceName()
 
-# LoopDevice(filename).create(sizeInMegabytes).open()
+CryptDeviceWithRandomKey().on(LoopDevice(filename)).mapTo(name)
 
 
 ##############################################################################
