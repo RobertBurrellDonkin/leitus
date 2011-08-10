@@ -27,48 +27,36 @@
 #
 
 import subprocess
+import os.path
 
-##
-## Aim: Mount the file as a loopback device 
-##
-#mountLoopDevice() {
-# if [ -z $1 ]
-# then
-#  echo "Usage: fillWithRandom <filename>"
-#  exit 1
-# fi
-#
-# EXISTING_USES=`losetup -j $1`
-# if [ -z "$EXISTING_USES" ]
-# then
-#  echo "$1 is not in use."
-# else
-#  echo "$1 already in use."
-#  exit 1
-# fi
-#
-# LoopDevice=`losetup --find`
-# if [ $? -eq 0 ]
-# then
-#  echo "Found loop $LoopDevice"
-# else
-#  echo "No loop device available."
-#  exit 1
-# fi
-#
-# losetup $LoopDevice $1
-# if [ $? -eq 0 ]
-# then
-#  echo "Mounted $1 on $LoopDevice"
-# else 
-#  echo "Mount $1 on $LoopDevice failed."
-#  exit 1
-# fi
-#}
-#
-#
+class ResourceError(Exception):
+    """
+    Raised when a resource causes an operation to failure.
+    
+    Attributes:
+       resource -- the resource in question
+       message -- template formatted during display
+    """
+    def __init__(self, resource, message):
+        self.resource = resource
+        self.message = message
+        
+    def __str__(self):
+        return self.message.format(self.resource)
 
-class AlreadyInUseError(Exception):
+class NotFoundError(ResourceError):
+    """
+    Raised when a resource (such as a drive, device or file)
+    required by an operation cannot be located.
+    
+    Attributes:
+       resource -- which cannot be located
+       message -- template formatted during display
+    """
+    def __init__(self, resource):
+        ResourceError.__init__(self, resource, "{0} not found.")
+
+class AlreadyInUseError(ResourceError):
     """
     Raised an operations conflicts with an existing use of
     a entity (such as a drive, device or file).
@@ -78,22 +66,37 @@ class AlreadyInUseError(Exception):
        message -- template formatted during display
     """
     def __init__(self, entity):
-        self.entity = entity
-        self.message = "{0} is already in use."
+        ResourceError.__init__(self, entity, "{0} is already in use.")
     
-    def __str__(self):
-        return self.message.format(self.entity)
-  
 class SubprocessLoopDevice():
     """
     Low level API for loop devices
     """
     
+    def status(self, file):
+        """
+        Status of every loop device mapped to the given file.
+        """
+        status = subprocess.check_output(["losetup", "-j", file])
+        if (len(status)):
+            return status
+        return None
+    
     def firstUnusedDevice(self):
         """
         The name of the first unused device.
         """
-        return subprocess.check_output(["losetup", "-f"])
+        return subprocess.check_output(["losetup", "-f"]).strip()
+    
+    def open(self, file, device):
+        """
+        Mounts the given file as a loopback on the first available
+        device.
+        
+        Returns - the device name
+        """
+        subprocess.check_call(["losetup", device, file])
+
 
 class LoopDevice():
     """
@@ -107,16 +110,25 @@ class LoopDevice():
         return "Loop device (based on '{0}')".format(self.file)
     
     def open(self):
+        if (not os.path.exists(self.file)):
+            raise NotFoundError, self.file
         if (self.isInUse()):
             raise AlreadyInUseError, self
+        self.api.open(self.file, self.firstUnusedDevice())
     
     def isInUse(self):
-        return True
+        return (os.path.exists(self.file) and not(self.status() == None))
+    
+    def status(self):
+        return self.api.status(self.file)
     
     def firstUnusedDevice(self):
         return self.api.firstUnusedDevice()
+        
     
-print LoopDevice("Some File").firstUnusedDevice()
+filename = "neo.crypt"
+
+LoopDevice(filename).open()
 
 
 ##############################################################################
