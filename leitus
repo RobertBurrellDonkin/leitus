@@ -178,16 +178,36 @@ class DeviceMapping():
     
     def mapTo(self, name):
         self.api.map(name, self.device)
-        return self
+        return FileSystem(name)
+
+class Ext3():
     
+    def format(self, device):
+        subprocess.check_call(['mke2fs', '-j', '-m', '1', '-O',
+                               'dir_index,filetype',
+                               '/dev/mapper/{0}'.format(device)])        
+    
+class FileSystemOnDeviceMapping():
+    
+    def __init__(self, onDevice):
+        self.onDevice = onDevice;
+
+    def makeFormat(self, api):
+        api.format(self.onDevice)
+    
+
+
 name = "neo"
 filename = name + ".crypt"
 sizeInMegabytes = 500
 
 # LoopDevice(filename).create(sizeInMegabytes).open().deviceName()
 
-CryptDeviceWithRandomKey().on(LoopDevice(filename)).mapTo(name)
+# CryptDeviceWithRandomKey().on(LoopDevice(filename)).mapTo(name)
 
+#FileSystemOnDeviceMapping("neo").makeFormat(Ext3())
+
+FileSystemOnDeviceMapping("neo")
 
 ##############################################################################
 #
