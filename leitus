@@ -30,6 +30,7 @@ import subprocess
 import os.path
 import shutil
 import os
+import pwd
 
 class ResourceError(Exception):
     """
@@ -209,6 +210,42 @@ class FileSystemOnDeviceMapping():
         self.api.mount(self.onDevice, path)
         return MountedFileSystem(path)
 
+class User():
+    
+    NAME_FIELD = 0
+    PASSWD_FIELD = 1
+    UID_FIELD = 2
+    GID_FIELD = 3
+    COMMENT_FIELD = 4
+    HOME_DIRECTORY_FIELD = 5
+    SHELL_FIELD = 6
+    
+    def __init__(self, name):
+        self.name = name
+    
+    def uid(self):
+        return self.info()[self.UID_FIELD]
+
+    def gid(self):
+        return self.info()[self.GID_FIELD]
+    
+    def info(self):
+        return pwd.getpwnam(self.name)
+        
+    def own(self, target):
+        """
+        Establishes this user as owner of target.
+        Applied recursively when target is a directory.
+        """
+        uid = self.uid()
+        gid = self.gid()
+        for root, dirs, files in os.walk(target):
+            for file in files:
+                os.chown(os.path.join(root, file), uid, gid)
+
+    def __repr__(self):
+        return "User named '{0}'".format(self.name)
+
 class Copy():
     """
     Copy operations.
@@ -235,15 +272,20 @@ class Copy():
                 
 
 class MountedFileSystem():
+    
     def __init__(self, mountPoint):
         self.mountPoint = mountPoint
         self.profileRoot = "profiles"
+        
     
     def merge(self, profiles):
         if not (os.path.exists(self.mountPoint)):
             raise NotFoundError, self
         for profile in profiles:
             Copy(os.path.join(self.profileRoot, profile)).into(self.mountPoint)
+    
+    def ownBy(self, user):
+        user.own(self.mountPoint)
     
     def __repr__(self):
         return "File system at {0}".format(self.mountPoint)
@@ -263,7 +305,8 @@ target = '/mnt/buck'
 
 #FileSystemOnDeviceMapping("/dev/mapper/neo").mountOn(target)
 
-MountedFileSystem(target).merge(profiles)
+#MountedFileSystem(target).merge(profiles)
+MountedFileSystem(target).ownBy(User('rdonkin'))
 
 ##############################################################################
 #
