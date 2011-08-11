@@ -31,6 +31,7 @@ import os.path
 import shutil
 import os
 import pwd
+import stat
 
 class ResourceError(Exception):
     """
@@ -211,8 +212,9 @@ class FileSystemOnDeviceMapping():
         self.onDevice = onDevice;
         self.api = SubprocessMount()
 
-    def makeFormat(self, api):
+    def withFormat(self, api):
         api.format(self.onDevice)
+        return self
     
     def mountOn(self, path):
         self.api.mount(self.onDevice, path)
@@ -236,6 +238,9 @@ class User():
 
     def gid(self):
         return self.info()[self.GID_FIELD]
+        
+    def home(self):
+        return self.info()[self.HOME_DIRECTORY_FIELD]
     
     def info(self):
         return pwd.getpwnam(self.name)
@@ -247,9 +252,11 @@ class User():
         """
         uid = self.uid()
         gid = self.gid()
+        os.chown(target, uid, gid)
         for root, dirs, files in os.walk(target):
             for file in files:
                 os.chown(os.path.join(root, file), uid, gid)
+        os.chmod(target, stat.S_IRWXU)
 
     def __repr__(self):
         return "User named '{0}'".format(self.name)
@@ -273,6 +280,7 @@ class Copy():
             raise NotFoundError, target
         for name in os.listdir(self.source):
             path = os.path.join(self.source, name)
+            print '...'
             if os.path.isdir(path):
                 shutil.copytree(path, os.path.join(target, name))
             else:
@@ -291,6 +299,7 @@ class MountedFileSystem():
             raise NotFoundError, self
         for profile in profiles:
             Copy(os.path.join(self.profileRoot, profile)).into(self.mountPoint)
+        return self
     
     def ownBy(self, user):
         user.own(self.mountPoint)
@@ -299,15 +308,16 @@ class MountedFileSystem():
         return "File system at {0}".format(self.mountPoint)
     
 
-profiles = ['home']
+profiles = ['home', 'gnome', 'maven', 'java6']
 name = "neo"
 filename = name + ".crypt"
 sizeInMegabytes = 500
-target = '/mnt/buck'
+user = User('rdonkin')
+target = user.home()
 
 # LoopDevice(filename).create(sizeInMegabytes).open().deviceName()
 
-#CryptDeviceWithRandomKey().on(LoopDevice(filename)).mapTo(name).makeFormat(Ext3())
+#CryptDeviceWithRandomKey().on(LoopDevice(filename)).mapTo(name).withFormat(Ext3())
 
 #FileSystemOnDeviceMapping("neo").makeFormat(Ext3())
 
@@ -316,7 +326,10 @@ target = '/mnt/buck'
 #MountedFileSystem(target).merge(profiles)
 #MountedFileSystem(target).ownBy(User('rdonkin'))
 
-CryptDeviceWithRandomKey().on(LoopDevice(filename)).unmapFrom(name)
+#CryptDeviceWithRandomKey().on(LoopDevice(filename)).unmapFrom(name)
+
+CryptDeviceWithRandomKey().on(LoopDevice(filename)).mapTo(name).withFormat(Ext3()).mountOn(target).merge(profiles).ownBy(user)
+
 
 ##############################################################################
 #
