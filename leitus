@@ -195,7 +195,8 @@ class FileSystemOnDeviceMapping():
     def makeFormat(self, api):
         api.format(self.onDevice)
     
-
+    def mountOn(self, path):
+        pass
 
 name = "neo"
 filename = name + ".crypt"
@@ -319,28 +320,6 @@ FileSystemOnDeviceMapping("neo")
 #  exit 1
 # fi
 #}
-#
-##
-## Aim: create filesystem
-##
-#makeFileSystem() {
-# if [ -z $1 ]
-# then
-#  echo "Usage: makeFileSystem <map name>"
-#  exit 1
-# fi
-#
-# echo "Creating filesystem on $1"
-# mke2fs -j -m 1 -O dir_index,filetype /dev/mapper/$1
-# if [ $? -eq 0 ]
-# then
-#  echo "Created filesystem on $1"
-# else
-#  echo "Failed to create filesystem on $1."
-#  exit 1
-# fi
-#}
-#
 #
 #
 ##
