@@ -28,6 +28,8 @@
 
 import subprocess
 import os.path
+import shutil
+import os
 
 class ResourceError(Exception):
     """
@@ -176,20 +178,23 @@ class DeviceMapping():
         self.device = device
         self.api = api
     
+    def nameAfterMapping(self, name):
+        return '/dev/mapper/{0}'.format(name)
+    
     def mapTo(self, name):
         self.api.map(name, self.device)
-        return FileSystemOnDeviceMapping(name)
+        return FileSystemOnDeviceMapping(self.nameAfterMapping(name))
 
 class Ext3():
     
     def format(self, device):
         subprocess.check_call(['mke2fs', '-j', '-m', '1', '-O',
                                'dir_index,filetype',
-                               '/dev/mapper/{0}'.format(device)])        
+                               device])        
     
 class SubprocessMount():
     def mount(self, device, onPath):
-        subprocess.check_call(['mount', device, path])
+        subprocess.check_call(['mount', device, onPath])
 
 class FileSystemOnDeviceMapping():
     
@@ -202,18 +207,63 @@ class FileSystemOnDeviceMapping():
     
     def mountOn(self, path):
         self.api.mount(self.onDevice, path)
+        return MountedFileSystem(path)
 
+class Copy():
+    """
+    Copy operations.
+    """
+    def __init__(self, source):
+        self.source = source
+        
+    def into(self, target):
+        """
+        Copies (recursively) all files in source into the
+        given target directory. (As far as possible) meta-data
+        is preserved.
+        """
+        if not (os.path.exists(self.source)):
+            raise NotFoundError, source
+        if not (os.path.exists(target)):
+            raise NotFoundError, target
+        for name in os.listdir(self.source):
+            path = os.path.join(self.source, name)
+            if os.path.isdir(path):
+                shutil.copytree(path, os.path.join(target, name))
+            else:
+                shutil.copy2(path, target)
+                
+
+class MountedFileSystem():
+    def __init__(self, mountPoint):
+        self.mountPoint = mountPoint
+        self.profileRoot = "profiles"
+    
+    def merge(self, profiles):
+        if not (os.path.exists(self.mountPoint)):
+            raise NotFoundError, self
+        for profile in profiles:
+            Copy(os.path.join(self.profileRoot, profile)).into(self.mountPoint)
+    
+    def __repr__(self):
+        return "File system at {0}".format(self.mountPoint)
+    
+
+profiles = ['home']
 name = "neo"
 filename = name + ".crypt"
 sizeInMegabytes = 500
+target = '/mnt/buck'
 
 # LoopDevice(filename).create(sizeInMegabytes).open().deviceName()
 
 #CryptDeviceWithRandomKey().on(LoopDevice(filename)).mapTo(name).makeFormat(Ext3())
 
-FileSystemOnDeviceMapping("neo").makeFormat(Ext3())
+#FileSystemOnDeviceMapping("neo").makeFormat(Ext3())
 
-#FileSystemOnDeviceMapping("neo")
+#FileSystemOnDeviceMapping("/dev/mapper/neo").mountOn(target)
+
+MountedFileSystem(target).merge(profiles)
 
 ##############################################################################
 #
