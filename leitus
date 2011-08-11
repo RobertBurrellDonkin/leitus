@@ -167,6 +167,11 @@ class CryptSetup():
                 'create',
                 name, device]
         subprocess.check_call(args)
+        
+    def unmap(self, name):
+        args = ['cryptsetup',
+                'remove', name]
+        subprocess.check_call(args)        
     
 class CryptDeviceWithRandomKey():
     
@@ -185,6 +190,9 @@ class DeviceMapping():
     def mapTo(self, name):
         self.api.map(name, self.device)
         return FileSystemOnDeviceMapping(self.nameAfterMapping(name))
+    
+    def unmapFrom(self, name):
+        self.api.unmap(name)
 
 class Ext3():
     
@@ -306,7 +314,9 @@ target = '/mnt/buck'
 #FileSystemOnDeviceMapping("/dev/mapper/neo").mountOn(target)
 
 #MountedFileSystem(target).merge(profiles)
-MountedFileSystem(target).ownBy(User('rdonkin'))
+#MountedFileSystem(target).ownBy(User('rdonkin'))
+
+CryptDeviceWithRandomKey().on(LoopDevice(filename)).unmapFrom(name)
 
 ##############################################################################
 #
