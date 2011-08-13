@@ -111,7 +111,8 @@ class SubprocessLoopDevice():
             ['dd', 'if=/dev/urandom', 'of=' + file, 'count={0}'.format(count),
              'conv=fsync', 'iflag=nonblock', 'bs=1M'])
 
-
+    def close(self, device):
+        subprocess.check_call(["losetup", "-d", device])
 
 class LoopDevice():
     """
@@ -159,6 +160,11 @@ class LoopDevice():
             raise NotFoundError, self
         return status.split(":", 1)[0]
         
+    def close(self):
+        try:
+            self.api.close(self.deviceName())
+        except NotFoundError:
+            pass
     
 class CryptSetup():
     
@@ -177,23 +183,29 @@ class CryptSetup():
 class CryptDeviceWithRandomKey():
     
     def on(self, source):
-        return DeviceMapping(source.deviceName(), CryptSetup())
+        return DeviceMapping(source, CryptSetup())
     
     
 class DeviceMapping():
-    def __init__(self, device, api):
-        self.device = device
+    def __init__(self, source, api):
+        self.device = source.deviceName()
         self.api = api
+        self.source = source
     
     def nameAfterMapping(self, name):
         return '/dev/mapper/{0}'.format(name)
     
     def mapTo(self, name):
         self.api.map(name, self.device)
+        return self.fileSystem(name)
+    
+    def fileSystem(self, name):
         return FileSystemOnDeviceMapping(self.nameAfterMapping(name))
     
-    def unmapFrom(self, name):
+    def unmapFrom(self, name, mountPoint = None):
+        self.fileSystem(name).unmountFrom(mountPoint)
         self.api.unmap(name)
+        self.source.close()
 
 class Ext3():
     
@@ -205,6 +217,10 @@ class Ext3():
 class SubprocessMount():
     def mount(self, device, onPath):
         subprocess.check_call(['mount', device, onPath])
+        
+    def unmount(self, onPath):
+        if (onPath):
+            subprocess.check_call(['umount', onPath])
 
 class FileSystemOnDeviceMapping():
     
@@ -219,6 +235,9 @@ class FileSystemOnDeviceMapping():
     def mountOn(self, path):
         self.api.mount(self.onDevice, path)
         return MountedFileSystem(path)
+        
+    def unmountFrom(self, path):
+        self.api.unmount(path)
 
 class User():
     
@@ -308,27 +327,46 @@ class MountedFileSystem():
         return "File system at {0}".format(self.mountPoint)
     
 
-profiles = ['home', 'gnome', 'maven', 'java6']
-name = "neo"
-filename = name + ".crypt"
-sizeInMegabytes = 500
-user = User('rdonkin')
-target = user.home()
+#
+#
+# High Level Api
+#
 
-# LoopDevice(filename).create(sizeInMegabytes).open().deviceName()
+class Leitus():
+    def __init__(self, profiles, name, sizeInMegabytes, user, target):
+        self.profiles = profiles
+        self.name = name
+        self.user = user
+        self.sizeInMegabytes = sizeInMegabytes
+        self.target = target
+        self.filename = name + ".img"
+        
+    def commissionAnonymous(self):
+        CryptDeviceWithRandomKey().on(
+            LoopDevice(self.filename).create(self.sizeInMegabytes).open()).mapTo(
+            self.name).withFormat(Ext3()).mountOn(self.target).merge(self.profiles).ownBy(self.user)
+    
+    def decommissionAnonymous(self):
+        CryptDeviceWithRandomKey().on(
+            LoopDevice(self.filename)).unmapFrom(self.name, self.target)
 
-#CryptDeviceWithRandomKey().on(LoopDevice(filename)).mapTo(name).withFormat(Ext3())
+#
+#
+# Scripting foo
 
-#FileSystemOnDeviceMapping("neo").makeFormat(Ext3())
+def standard():
+    user = User('rdonkin')
+    return Leitus(['home', 'gnome', 'maven', 'java6'],
+            "neo", 2000, user, user.home())
 
-#FileSystemOnDeviceMapping("/dev/mapper/neo").mountOn(target)
+def run(leitus):
+    if os.path.exists(leitus.filename):
+        leitus.decommissionAnonymous()
+    else:
+        leitus.commissionAnonymous()
 
-#MountedFileSystem(target).merge(profiles)
-#MountedFileSystem(target).ownBy(User('rdonkin'))
+run(standard())
 
-#CryptDeviceWithRandomKey().on(LoopDevice(filename)).unmapFrom(name)
-
-CryptDeviceWithRandomKey().on(LoopDevice(filename)).mapTo(name).withFormat(Ext3()).mountOn(target).merge(profiles).ownBy(user)
 
 
 ##############################################################################
