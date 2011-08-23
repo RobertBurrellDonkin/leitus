@@ -327,11 +327,6 @@ class MountedFileSystem():
         return "File system at {0}".format(self.mountPoint)
     
 
-#
-#
-# High Level Api
-#
-
 class Leitus():
     def __init__(self, profiles, name, sizeInMegabytes, user, target):
         self.profiles = profiles
@@ -349,7 +344,6 @@ class Leitus():
     def decommissionAnonymous(self):
         CryptDeviceWithRandomKey().on(
             LoopDevice(self.filename)).unmapFrom(self.name, self.target)
-
 
 
 ##############################################################################
