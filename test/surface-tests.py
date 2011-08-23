@@ -40,7 +40,14 @@ class TestBuildSessionHome(unittest.TestCase):
     def checkUserNamed(self, name):
         self.assertEquals(name, surface.Builder().forUser(name).configuration[surface.ConfigConstants().USER])
     
+    def testMergeProfiles(self):
+        self.checkMergeProfiles(['alpha', 'beta', 'gamma'])
+        self.checkMergeProfiles([])
+        self.checkMergeProfiles(None)
+        self.checkMergeProfiles([''])
     
+    def checkMergeProfiles(self, profiles):
+        self.assertEquals(profiles, surface.Builder().mergeProfiles(profiles).configuration[surface.ConfigConstants().PROFILES])
     
 if __name__ == '__main__':
     unittest.main()

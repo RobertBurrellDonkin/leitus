@@ -37,12 +37,17 @@ def standard():
     
 class ConfigConstants():
     USER = 'user'
+    PROFILES = 'profiles'
     
 class Builder():
     
     def __init__(self):
         self.configuration = {}
         self.constants = ConfigConstants()  
+    
+    def mergeProfiles(self, profiles):
+        self.configuration[ConfigConstants.PROFILES] = profiles
+        return self
     
     def forUser(self, withName):
         self.configuration[ConfigConstants.USER] = withName
