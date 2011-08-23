@@ -310,7 +310,7 @@ class MountedFileSystem():
     
     def __init__(self, mountPoint):
         self.mountPoint = mountPoint
-        self.profileRoot = "profiles"
+        self.profileRoot = "profiles.d"
         
     
     def merge(self, profiles):
