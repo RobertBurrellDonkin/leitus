@@ -35,9 +35,4 @@ def standard():
     user = deep.User('rdonkin')
     return deep.Leitus(['home', 'gnome', 'maven', 'java6'],
             "neo", 2000, user, user.home())
-
-def run(leitus):
-    if os.path.exists(leitus.filename):
-        leitus.decommissionAnonymous()
-    else:
-        leitus.commissionAnonymous()
+    

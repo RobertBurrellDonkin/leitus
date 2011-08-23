@@ -345,6 +345,11 @@ class Leitus():
         CryptDeviceWithRandomKey().on(
             LoopDevice(self.filename)).unmapFrom(self.name, self.target)
 
+    def perform(self):
+        if os.path.exists(self.filename):
+            self.decommissionAnonymous()
+        else:
+            self.commissionAnonymous()
 
 ##############################################################################
 #
