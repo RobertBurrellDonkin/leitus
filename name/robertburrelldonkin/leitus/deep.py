@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # Copyright (c) Robert Burrell Donkin 2011
 #

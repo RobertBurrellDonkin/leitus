@@ -21,29 +21,26 @@
 #
 #
 # Leitus is a suite of higher level functions for cryptographic drives.
-# The surface module contains a high level API.
+# The contents tests the surface module.
 #
 # Robert Burrell Donkin, 2011
 #
 
-import os
+import unittest
 
-from name.robertburrelldonkin.leitus import deep
+from name.robertburrelldonkin.leitus import surface
 
-def standard():
-    user = deep.User('rdonkin')
-    return deep.Leitus(['home', 'gnome', 'maven', 'java6'],
-            "neo", 2000, user, user.home())
+class TestBuildSessionHome(unittest.TestCase):
     
-class ConfigConstants():
-    USER = 'user'
+    def testForUser(self):
+        self.checkUserNamed('a user')
+        self.checkUserNamed('ALLCAPS')
+        self.checkUserNamed('one')
+        
+    def checkUserNamed(self, name):
+        self.assertEquals(name, surface.Builder().forUser(name).configuration[surface.ConfigConstants().USER])
     
-class Builder():
     
-    def __init__(self):
-        self.configuration = {}
-        self.constants = ConfigConstants()  
     
-    def forUser(self, withName):
-        self.configuration[ConfigConstants.USER] = withName
-        return self
+if __name__ == '__main__':
+    unittest.main()
