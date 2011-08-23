@@ -38,6 +38,7 @@ def standard():
 class ConfigConstants():
     USER = 'user'
     PROFILES = 'profiles'
+    SIZE = 'sizeInMeg'
     
 class Builder():
     
@@ -51,4 +52,8 @@ class Builder():
     
     def forUser(self, withName):
         self.configuration[ConfigConstants.USER] = withName
+        return self
+    
+    def withSize(self, megabytes):
+        self.configuration[ConfigConstants.SIZE] = megabytes
         return self

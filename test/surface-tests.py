@@ -49,5 +49,13 @@ class TestBuildSessionHome(unittest.TestCase):
     def checkMergeProfiles(self, profiles):
         self.assertEquals(profiles, surface.Builder().mergeProfiles(profiles).configuration[surface.ConfigConstants().PROFILES])
     
+    def testWithSize(self):
+        self.checkWithSize(12)
+        self.checkWithSize('12')
+        self.checkWithSize(46)
+    
+    def checkWithSize(self, size):
+        self.assertEquals(size, surface.Builder().withSize(size).configuration[surface.ConfigConstants().SIZE])
+    
 if __name__ == '__main__':
     unittest.main()
