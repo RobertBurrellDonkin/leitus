@@ -30,6 +30,7 @@ import os.path
 import json
 
 from name.robertburrelldonkin.leitus import deep
+from name.robertburrelldonkin.leitus.layout import StandardLayout
 
 def load(name):
     return JsonLoader(name).load()
@@ -59,22 +60,12 @@ class ConfigConstants():
     def sizeFor(self, configuration):
         return configuration[self.SIZE]
 
-
-
-class StandardLayout():
-    
-    BASE = "drives.d"
-    READ_ONLY = 'r'
-    
-    def open(self, resource):
-        return open(os.path.join(self.BASE, resource), self.READ_ONLY)
-
 class JsonLoader():
     SUFFIX = ".json"
     
     def __init__(self, name):
         self.resource = name + self.SUFFIX
-        self.layout = StandardLayout()
+        self.layout = StandardLayout().conf()
         
     def load(self):
-        return json.load(self.layout.open(self.resource))
+        return json.load(self.layout.read(self.resource))

@@ -21,60 +21,29 @@
 #
 #
 # Leitus is a suite of higher level functions for cryptographic drives.
-# The config module contains configuration foo.
+# The layout module abstracts options for laying out resources.
 #
 # Robert Burrell Donkin, 2011
 #
 
 import os.path
-import json
-
-from name.robertburrelldonkin.leitus import deep
-
-def load(name):
-    return JsonLoader(name).load()
-    
-class ConfigConstants():
-    USER = 'user'
-    PROFILES = 'profiles'
-    SIZE = 'sizeInMeg'
-    NAME = 'name'
-    
-    def build(self, user, profiles, size, name):
-        return {self.USER:user, self.PROFILES: profiles,
-                    self.SIZE: size, self.NAME:name}
-        
-    def userNameFor(self, configuration):
-        return configuration[self.USER]
-        
-    def userFor(self, configuration):
-        return deep.User(self.userNameFor(configuration))
-        
-    def profilesFor(self, configuration):
-        return configuration[self.PROFILES]
-        
-    def nameFor(self, configuration):
-        return configuration[self.NAME]
-        
-    def sizeFor(self, configuration):
-        return configuration[self.SIZE]
-
 
 
 class StandardLayout():
+    DRIVES = "drives.d"
+    CONF = DRIVES
     
-    BASE = "drives.d"
+    def drives(self):
+        return FileSystemLayout(self.DRIVES)
+    
+    def conf(self):
+        return FileSystemLayout(self.CONF)
+    
+class FileSystemLayout():
     READ_ONLY = 'r'
     
-    def open(self, resource):
-        return open(os.path.join(self.BASE, resource), self.READ_ONLY)
-
-class JsonLoader():
-    SUFFIX = ".json"
+    def __init__(self, directory):
+        self.directory = directory
     
-    def __init__(self, name):
-        self.resource = name + self.SUFFIX
-        self.layout = StandardLayout()
-        
-    def load(self):
-        return json.load(self.layout.open(self.resource))
+    def read(self, resource):
+        return open(os.path.join(self.directory, resource), self.READ_ONLY)
