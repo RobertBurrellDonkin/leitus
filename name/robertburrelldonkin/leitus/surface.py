@@ -31,15 +31,44 @@ import os
 from name.robertburrelldonkin.leitus import deep
 
 def standard():
-    user = deep.User('rdonkin')
-    return deep.Leitus(['home', 'gnome', 'maven', 'java6'],
-            "neo", 2000, user, user.home())
+    return sessionHome('neo').withSize(2000).forUser(
+        'rdonkin').mergeProfiles(['home', 'gnome', 'maven', 'java6']
+        ).build()
+    
+def sessionHome(name):
+    return Builder().named(name)
+    
+def withConfiguration(configuration):
+    constants = ConfigConstants()
+    user = constants.userFor(configuration)
+    return deep.Leitus(constants.profilesFor(configuration),
+            constants.nameFor(configuration), constants.sizeFor(configuration),
+                    user, user.home())
     
 class ConfigConstants():
     USER = 'user'
     PROFILES = 'profiles'
     SIZE = 'sizeInMeg'
     NAME = 'name'
+    
+    def build(self, user, profiles, size, name):
+        return {self.USER:user, self.PROFILES: profiles,
+                    self.SIZE: size, self.NAME:name}
+        
+    def userNameFor(self, configuration):
+        return configuration[self.USER]
+        
+    def userFor(self, configuration):
+        return deep.User(self.userNameFor(configuration))
+        
+    def profilesFor(self, configuration):
+        return configuration[self.PROFILES]
+        
+    def nameFor(self, configuration):
+        return configuration[self.NAME]
+        
+    def sizeFor(self, configuration):
+        return configuration[self.SIZE]
     
 class Builder():
     
@@ -62,3 +91,6 @@ class Builder():
     def named(self, name):
         self.configuration[ConfigConstants.NAME] = name
         return self
+    
+    def build(self):
+        return withConfiguration(self.configuration)

@@ -62,6 +62,16 @@ class TestBuildSessionHome(unittest.TestCase):
     
     def checkNamed(self, name):
         self.assertEquals(name, surface.Builder().named(name).configuration[surface.ConfigConstants().NAME])
+        
+    def testWithSessionHomeConfiguration(self):
+        pass
+    
+    def checkWithSessionHomeConfiguration(self, user, profiles, size, name):
+        self.assertEquals(name, withConfiguration(ConfigConstants().build(user, profiles, size, name)).name)
+        self.assertEquals(user, withConfiguration(ConfigConstants().build(user, profiles, size, name)).user.name)
+        self.assertEquals(profiles, withConfiguration(ConfigConstants().build(user, profiles, size, name)).profiles)
+        self.assertEquals(size, withConfiguration(ConfigConstants().build(user, profiles, size, name)).user.sizeInMegabytes)
+    
     
 if __name__ == '__main__':
     unittest.main()
