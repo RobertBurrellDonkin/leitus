@@ -57,5 +57,11 @@ class TestBuildSessionHome(unittest.TestCase):
     def checkWithSize(self, size):
         self.assertEquals(size, surface.Builder().withSize(size).configuration[surface.ConfigConstants().SIZE])
     
+    def testNamed(self):
+        self.checkNamed('roger')
+    
+    def checkNamed(self, name):
+        self.assertEquals(name, surface.Builder().named(name).configuration[surface.ConfigConstants().NAME])
+    
 if __name__ == '__main__':
     unittest.main()
