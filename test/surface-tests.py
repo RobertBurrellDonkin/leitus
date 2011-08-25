@@ -29,6 +29,7 @@
 import unittest
 
 from name.robertburrelldonkin.leitus import surface
+from name.robertburrelldonkin.leitus.config import ConfigConstants
 
 class TestBuildSessionHome(unittest.TestCase):
     

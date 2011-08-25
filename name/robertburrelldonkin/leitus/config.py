@@ -21,29 +21,11 @@
 #
 #
 # Leitus is a suite of higher level functions for cryptographic drives.
-# The surface module contains a high level API.
+# The config module contains configuration foo.
 #
 # Robert Burrell Donkin, 2011
 #
 
-import os
-
-from name.robertburrelldonkin.leitus import deep
-
-def standard():
-    return sessionHome('neo').withSize(2000).forUser(
-        'rdonkin').mergeProfiles(['home', 'gnome', 'maven', 'java6']
-        ).build()
-    
-def sessionHome(name):
-    return Builder().named(name)
-    
-def withConfiguration(configuration):
-    constants = ConfigConstants()
-    user = constants.userFor(configuration)
-    return deep.Leitus(constants.profilesFor(configuration),
-            constants.nameFor(configuration), constants.sizeFor(configuration),
-                    user, user.home())
     
 class ConfigConstants():
     USER = 'user'
@@ -69,28 +51,3 @@ class ConfigConstants():
         
     def sizeFor(self, configuration):
         return configuration[self.SIZE]
-    
-class Builder():
-    
-    def __init__(self):
-        self.configuration = {}
-        self.constants = ConfigConstants()  
-    
-    def mergeProfiles(self, profiles):
-        self.configuration[ConfigConstants.PROFILES] = profiles
-        return self
-    
-    def forUser(self, withName):
-        self.configuration[ConfigConstants.USER] = withName
-        return self
-    
-    def withSize(self, megabytes):
-        self.configuration[ConfigConstants.SIZE] = megabytes
-        return self
-    
-    def named(self, name):
-        self.configuration[ConfigConstants.NAME] = name
-        return self
-    
-    def build(self):
-        return withConfiguration(self.configuration)

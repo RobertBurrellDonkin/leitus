@@ -29,6 +29,7 @@
 import os
 
 from name.robertburrelldonkin.leitus import deep
+from name.robertburrelldonkin.leitus.config import ConfigConstants
 
 def standard():
     return sessionHome('neo').withSize(2000).forUser(
@@ -44,31 +45,6 @@ def withConfiguration(configuration):
     return deep.Leitus(constants.profilesFor(configuration),
             constants.nameFor(configuration), constants.sizeFor(configuration),
                     user, user.home())
-    
-class ConfigConstants():
-    USER = 'user'
-    PROFILES = 'profiles'
-    SIZE = 'sizeInMeg'
-    NAME = 'name'
-    
-    def build(self, user, profiles, size, name):
-        return {self.USER:user, self.PROFILES: profiles,
-                    self.SIZE: size, self.NAME:name}
-        
-    def userNameFor(self, configuration):
-        return configuration[self.USER]
-        
-    def userFor(self, configuration):
-        return deep.User(self.userNameFor(configuration))
-        
-    def profilesFor(self, configuration):
-        return configuration[self.PROFILES]
-        
-    def nameFor(self, configuration):
-        return configuration[self.NAME]
-        
-    def sizeFor(self, configuration):
-        return configuration[self.SIZE]
     
 class Builder():
     
