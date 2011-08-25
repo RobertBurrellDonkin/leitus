@@ -45,8 +45,13 @@ def configuration(name):
     
 def withConfiguration(configuration):
     constants = ConfigConstants()
-    user = constants.userFor(configuration)
-    return deep.Leitus(constants.profilesFor(configuration),
+    if constants.UUID in configuration:
+        return deep.LuksDrive(constants.uuidFor(configuration),
+                       constants.nameFor(configuration),
+                       constants.targetFor(configuration))
+    else:
+        user = constants.userFor(configuration)
+        return deep.SessionHome(constants.profilesFor(configuration),
             constants.nameFor(configuration), constants.sizeFor(configuration),
                     user, user.home())
     

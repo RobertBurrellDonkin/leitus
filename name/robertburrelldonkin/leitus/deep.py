@@ -184,7 +184,43 @@ class CryptDeviceWithRandomKey():
     def on(self, source):
         return DeviceMapping(source, CryptSetup())
     
+class LuksSetup():
     
+    def map(self, name, device):
+        args = ['cryptsetup',
+                'luksOpen',
+                device, name]
+        subprocess.check_call(args)
+        
+    def unmap(self, name):
+        args = ['cryptsetup',
+                'luksClose', name]
+        subprocess.check_call(args)        
+
+    def isInUse(self, name):
+        args = ['cryptsetup',
+                'status', name]
+        return (subprocess.call(args) == 0)
+    
+
+class LuksDevice():
+    
+    def on(self, source):
+        return DeviceMapping(source, LuksSetup())
+
+class DiskByUUID():
+    
+    PATH = '/dev/disk/by-uuid/'
+    
+    def __init__(self, uuid):
+        self.uuid = uuid
+        
+    def deviceName(self):
+        return self.PATH + self.uuid
+    
+    def close(self):
+        pass
+
 class DeviceMapping():
     def __init__(self, source, api):
         self.device = source.deviceName()
@@ -205,6 +241,9 @@ class DeviceMapping():
         self.fileSystem(name).unmountFrom(mountPoint)
         self.api.unmap(name)
         self.source.close()
+    
+    def isInUse(self, name):
+        return self.api.isInUse(name)
 
 class Ext3():
     
@@ -325,8 +364,22 @@ class MountedFileSystem():
     def __repr__(self):
         return "File system at {0}".format(self.mountPoint)
     
+class LuksDrive():
+    
+    def __init__(self, uuid, name, target):
+        self.uuid = uuid
+        self.name = name
+        self.target = target
+        
+    def perform(self):
+        print "LUKS ", self.uuid, self.name, self.target
+        device = LuksDevice().on(DiskByUUID(self.uuid))
+        if device.isInUse(self.name):
+            device.unmapFrom(self.name)
+        else:
+            device.mapTo(self.name).mountOn(self.target)
 
-class Leitus():
+class SessionHome():
     def __init__(self, profiles, name, sizeInMegabytes, user, target):
         self.profiles = profiles
         self.name = name

@@ -40,10 +40,18 @@ class ConfigConstants():
     PROFILES = 'profiles'
     SIZE = 'sizeInMeg'
     NAME = 'name'
+    UUID = 'UUID'
+    TARGET = 'target'
     
     def build(self, user, profiles, size, name):
         return {self.USER:user, self.PROFILES: profiles,
                     self.SIZE: size, self.NAME:name}
+        
+    def targetFor(self, configuration):
+        return configuration[self.TARGET]
+    
+    def uuidFor(self, configuration):
+        return configuration[self.UUID]
         
     def userNameFor(self, configuration):
         return configuration[self.USER]
