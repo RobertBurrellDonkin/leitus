@@ -32,4 +32,13 @@ from name.robertburrelldonkin.leitus import surface
 #
 # Scripting foo
 
-surface.standard().perform()
+import sys
+
+if len(sys.argv) == 1:
+    surface.standard().perform()
+elif len(sys.argv) == 2:
+    surface.configuration(sys.argv[1]).perform()
+else: 
+    print "Usage: leitus <name>"
+    sys.exit(1)
+sys.exit(0)

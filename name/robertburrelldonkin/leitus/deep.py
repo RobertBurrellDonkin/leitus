@@ -349,6 +349,7 @@ class Leitus():
             self.decommissionAnonymous()
         else:
             self.commissionAnonymous()
+    
 
 ##############################################################################
 #

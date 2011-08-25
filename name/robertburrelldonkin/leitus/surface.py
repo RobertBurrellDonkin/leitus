@@ -29,6 +29,7 @@
 import os
 
 from name.robertburrelldonkin.leitus import deep
+from name.robertburrelldonkin.leitus import config
 from name.robertburrelldonkin.leitus.config import ConfigConstants
 
 def standard():
@@ -38,6 +39,9 @@ def standard():
     
 def sessionHome(name):
     return Builder().named(name)
+    
+def configuration(name):
+    return withConfiguration(config.load(name))
     
 def withConfiguration(configuration):
     constants = ConfigConstants()
@@ -53,19 +57,19 @@ class Builder():
         self.constants = ConfigConstants()  
     
     def mergeProfiles(self, profiles):
-        self.configuration[ConfigConstants.PROFILES] = profiles
+        self.configuration[self.constants.PROFILES] = profiles
         return self
     
     def forUser(self, withName):
-        self.configuration[ConfigConstants.USER] = withName
+        self.configuration[self.constants.USER] = withName
         return self
     
     def withSize(self, megabytes):
-        self.configuration[ConfigConstants.SIZE] = megabytes
+        self.configuration[self.constants.SIZE] = megabytes
         return self
     
     def named(self, name):
-        self.configuration[ConfigConstants.NAME] = name
+        self.configuration[self.constants.NAME] = name
         return self
     
     def build(self):
