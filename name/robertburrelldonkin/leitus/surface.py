@@ -40,7 +40,7 @@ def standard():
 def sessionHome(name):
     return Builder().named(name)
     
-def configuration(name):
+def configuredAs(name):
     return withConfiguration(config.load(name))
     
 def withConfiguration(configuration):
@@ -79,3 +79,14 @@ class Builder():
     
     def build(self):
         return withConfiguration(self.configuration)
+        
+
+class Leitus():
+    def __init__(self, name):
+        self.name = name
+    
+    def perform(self):
+        if self.name:
+            configuredAs(self.name).perform()
+        else:
+            standard().perform()
