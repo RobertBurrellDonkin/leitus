@@ -30,10 +30,9 @@ import os.path
 import json
 
 from name.robertburrelldonkin.leitus import deep
-from name.robertburrelldonkin.leitus.layout import StandardLayout
 
-def load(name):
-    return JsonLoader(name).load()
+def load(name, layout):
+    return JsonLoader(name, layout).load()
     
 class ConfigConstants():
     USER = 'user'
@@ -71,9 +70,9 @@ class ConfigConstants():
 class JsonLoader():
     SUFFIX = ".json"
     
-    def __init__(self, name):
+    def __init__(self, name, layout):
         self.resource = name + self.SUFFIX
-        self.layout = StandardLayout().conf()
+        self.layout = layout
         
     def load(self):
         return json.load(self.layout.read(self.resource))

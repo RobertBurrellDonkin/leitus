@@ -28,16 +28,17 @@
 
 import os.path
 
-
 class StandardLayout():
-    DRIVES = "drives.d"
-    CONF = DRIVES
+
+    def __init__(self, drives_d, conf_d):
+        self.drives_d = drives_d
+        self.conf_d = conf_d
     
     def drives(self):
-        return FileSystemLayout(self.DRIVES)
+        return FileSystemLayout(self.drives_d)
     
     def conf(self):
-        return FileSystemLayout(self.CONF)
+        return FileSystemLayout(self.conf_d)
     
 class FileSystemLayout():
     READ_ONLY = 'r'
@@ -47,3 +48,4 @@ class FileSystemLayout():
     
     def read(self, resource):
         return open(os.path.join(self.directory, resource), self.READ_ONLY)
+

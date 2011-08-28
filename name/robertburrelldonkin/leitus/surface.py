@@ -30,6 +30,7 @@ import os
 
 from name.robertburrelldonkin.leitus import deep
 from name.robertburrelldonkin.leitus import config
+from name.robertburrelldonkin.leitus import layout
 from name.robertburrelldonkin.leitus.config import ConfigConstants
 
 def standard():
@@ -39,9 +40,6 @@ def standard():
     
 def sessionHome(name):
     return Builder().named(name)
-    
-def configuredAs(name):
-    return withConfiguration(config.load(name))
     
 def withConfiguration(configuration):
     constants = ConfigConstants()
@@ -84,9 +82,10 @@ class Builder():
 class Leitus():
     def __init__(self, name):
         self.name = name
+        self.layout = layout.StandardLayout("drives.d", "drives.d")
     
     def perform(self):
         if self.name:
-            configuredAs(self.name).perform()
+            withConfiguration(config.load(self.name, self.layout.conf())).perform()
         else:
             standard().perform()
