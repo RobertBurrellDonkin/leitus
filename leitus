@@ -26,24 +26,18 @@
 # Robert Burrell Donkin, 2011
 #
 
-from name.robertburrelldonkin.leitus import surface
+from name.robertburrelldonkin.leitus.surface import Leitus
 
 #
 #
 # Scripting foo
 
 import sys
+import argparse
 
-numberOfArguments = len(sys.argv)-1
+parser = argparse.ArgumentParser(description="Leitus does the legwork so users can relax and enjoy cryptographic drives.")
+parser.add_argument('name', help='the configuration exercised', nargs='?', default=None)
+args = vars(parser.parse_args())
 
-if numberOfArguments > 1:
-    print "Usage: leitus <name>"
-    sys.exit(1)
-
-if numberOfArguments == 1:
-    name = sys.argv[1]
-else:
-    name = None
-
-surface.Leitus(name).perform()    
+Leitus(args['name']).perform()
 sys.exit(0)
