@@ -26,29 +26,16 @@
 # Robert Burrell Donkin, 2011
 #
 
-from name.robertburrelldonkin.leitus.surface import Leitus
+from name.robertburrelldonkin.leitus import cli
 
-#
-#
-# Scripting foo
-
-import os.path
 import sys
-import argparse
 
-def leitus(conf_d, drives_d, profiles_d):
-    parser = argparse.ArgumentParser(description="Leitus does the legwork so users can relax and enjoy cryptographic drives.")
-    parser.add_argument('name', help='the configuration exercised', nargs='?', default=None)
-    parser.add_argument('-c', '--conf', help='configuration directory', nargs='?', default=conf_d)
-    parser.add_argument('-p', '--profiles', help='profiles directory', nargs='?', default=profiles_d)
-    parser.add_argument('-d', '--drives', help='drives directory', nargs='?', default=drives_d)
-    args = parser.parse_args()
-
-    print args.conf, args.profiles, args.drives
-
-    #Leitus(args.name).perform()
-
+# Defaults
 CONF_DATA = '/etc/conf.d'
 VAR_DATA = '/var/lib/leitus'
-leitus(os.path.join(CONF_DATA, 'leitus'), os.path.join(VAR_DATA, 'drives.d'),os.path.join(VAR_DATA, 'profiles.d'))
+
+# Run
+cli.leitus(CONF_DATA, VAR_DATA)
+
+# Done
 sys.exit(0)
