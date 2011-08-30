@@ -80,12 +80,11 @@ class Builder():
         
 
 class Leitus():
-    def __init__(self, name):
-        self.name = name
-        self.layout = layout.StandardLayout("drives.d", "drives.d")
+    def __init__(self, conf_d, drives_d, profiles_d):
+        self.layout = layout.StandardLayout(conf_d, drives_d, profiles_d)
     
-    def perform(self):
-        if self.name:
-            withConfiguration(config.load(self.name, self.layout.conf())).perform()
+    def perform(self, name):
+        if name:
+            withConfiguration(config.load(name, self.layout.conf())).perform()
         else:
             standard().perform()

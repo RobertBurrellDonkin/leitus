@@ -30,15 +30,19 @@ import os.path
 
 class StandardLayout():
 
-    def __init__(self, drives_d, conf_d):
+    def __init__(self, conf_d, drives_d, profiles_d):
         self.drives_d = drives_d
         self.conf_d = conf_d
+        self.profiles_d = profiles_d
     
     def drives(self):
         return FileSystemLayout(self.drives_d)
     
     def conf(self):
         return FileSystemLayout(self.conf_d)
+        
+    def profiles(self):
+        return FileSystemLayout(self.profiles_d)
     
 class FileSystemLayout():
     READ_ONLY = 'r'

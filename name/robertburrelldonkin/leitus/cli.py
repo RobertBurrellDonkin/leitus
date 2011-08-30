@@ -54,7 +54,5 @@ class CommandLineInterface():
         parser.add_argument('-p', '--profiles', help='profiles directory', nargs='?', default=self.profiles_d)
         parser.add_argument('-d', '--drives', help='drives directory', nargs='?', default=self.drives_d)
         args = parser.parse_args()
-    
-        print args.conf, args.profiles, args.drives
-    
-        #Leitus(args.name).perform()
+        
+        Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles).perform(args.name)
