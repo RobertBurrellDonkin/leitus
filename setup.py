@@ -29,7 +29,7 @@ from distutils.core import setup
 
 setup(name='leitus',
       description='Leitus is a suite of higher level functions for cryptographic drives.',
-      version='0.1',
+      version='0.2',
       author='Robert Burrell Donkin',
       author_email='leitus@robertburrelldonkin.name',
       url='http://robertburrelldonkin.name',
