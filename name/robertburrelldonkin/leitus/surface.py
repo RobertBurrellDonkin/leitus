@@ -47,6 +47,10 @@ def withConfiguration(configuration):
         return deep.LuksDrive(constants.uuidFor(configuration),
                        constants.nameFor(configuration),
                        constants.targetFor(configuration))
+    elif  constants.SOURCE in configuration:
+        return deep.ImageDrive(constants.sourceFor(configuration),
+                       constants.nameFor(configuration),
+                       constants.targetFor(configuration))
     else:
         user = constants.userFor(configuration)
         return deep.SessionHome(constants.profilesFor(configuration),

@@ -244,6 +244,13 @@ class DeviceMapping():
     
     def isInUse(self, name):
         return self.api.isInUse(name)
+        
+    def toggle(self, name, target):
+        if self.isInUse(name):
+            self.unmapFrom(name)
+        else:
+            self.mapTo(name).mountOn(target)
+        return self
 
 class Ext3():
     
@@ -364,6 +371,16 @@ class MountedFileSystem():
     def __repr__(self):
         return "File system at {0}".format(self.mountPoint)
     
+class ImageDrive():
+    
+    def __init__(self, source, name, target):
+        self.source = source
+        self.name = name
+        self.target = target
+
+    def perform(self):
+        LuksDevice().on(LoopDevice(self.source).open()).toggle(self.name, self.target)
+    
 class LuksDrive():
     
     def __init__(self, uuid, name, target):
@@ -373,11 +390,7 @@ class LuksDrive():
         
     def perform(self):
         print "LUKS ", self.uuid, self.name, self.target
-        device = LuksDevice().on(DiskByUUID(self.uuid))
-        if device.isInUse(self.name):
-            device.unmapFrom(self.name)
-        else:
-            device.mapTo(self.name).mountOn(self.target)
+        LuksDevice().on(DiskByUUID(self.uuid)).toggle(self.name, self.target)
 
 class SessionHome():
     def __init__(self, profiles, name, sizeInMegabytes, user, target):

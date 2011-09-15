@@ -31,6 +31,32 @@ import unittest
 from name.robertburrelldonkin.leitus import surface
 from name.robertburrelldonkin.leitus.config import ConfigConstants
 
+
+class TestLUKSDrive(unittest.TestCase):
+    
+    def testThatWithConfigurationSetsParameters(self):
+        aUUID = "8e1f215f-6c53-4a96-b664-5c1252a06e43"
+        aName = "Bingo"
+        aTarget = "/some/path"
+        drive = surface.withConfiguration({ConfigConstants().UUID:aUUID, ConfigConstants().NAME:aName, ConfigConstants().TARGET:aTarget})
+        self.assertEquals(aName, drive.name)
+        self.assertEquals(aTarget, drive.target)
+        self.assertEquals(aUUID, drive.uuid)
+
+
+class TestImageDrive(unittest.TestCase):
+    
+    def testThatWithConfigurationSetsParameters(self):
+        aSource = "something.img"
+        aName = "Bongo"
+        aTarget = "/a/path"
+        drive = surface.withConfiguration({ConfigConstants().SOURCE:aSource, ConfigConstants().NAME:aName, ConfigConstants().TARGET:aTarget})
+        self.assertEquals(aName, drive.name)
+        self.assertEquals(aTarget, drive.target)
+        self.assertEquals(aSource, drive.source)
+
+
+
 class TestBuildSessionHome(unittest.TestCase):
     
     def testForUser(self):
@@ -73,6 +99,6 @@ class TestBuildSessionHome(unittest.TestCase):
         self.assertEquals(profiles, withConfiguration(ConfigConstants().build(user, profiles, size, name)).profiles)
         self.assertEquals(size, withConfiguration(ConfigConstants().build(user, profiles, size, name)).user.sizeInMegabytes)
     
-    
+
 if __name__ == '__main__':
     unittest.main()
