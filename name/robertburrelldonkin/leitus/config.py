@@ -25,6 +25,7 @@ import os.path
 import json
 
 from name.robertburrelldonkin.leitus import deep
+from name.robertburrelldonkin.leitus import diagnosis
 
 def load(name, layout):
     return JsonLoader(name, layout).load()
@@ -74,4 +75,10 @@ class JsonLoader():
         self.layout = layout
         
     def load(self):
-        return json.load(self.layout.read(self.resource))
+        try:
+            return json.load(self.layout.read(self.resource))
+        except IOError, (errorNumber, errorMessage):
+            if errorNumber == 2:
+                raise diagnosis.ConfigurationNotFoundError(self.resource, self.layout, errorMessage)
+            else:
+                raise

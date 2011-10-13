@@ -21,12 +21,14 @@
 # Robert Burrell Donkin, 2011
 #
 
+from name.robertburrelldonkin.leitus import diagnosis
 from name.robertburrelldonkin.leitus.surface import Leitus
 
 #
 #
 # Scripting foo
 
+import sys
 import os.path
 import argparse
 
@@ -37,17 +39,36 @@ def leitus(conf_data, var_data):
 
 class CommandLineInterface():
     
+    # Successful exit
+    OKAY=0
+    # Exit with failure caused by missing configuration
+    FAILURE_MISSING_CONFIGURATION=1
+    
     def __init__(self, conf_d, drives_d, profiles_d):
         self.conf_d = conf_d
         self.drives_d = drives_d
         self.profiles_d = profiles_d
 
     def leitus(self):
-        parser = argparse.ArgumentParser(description="Leitus does the legwork so users can relax and enjoy cryptographic drives.")
-        parser.add_argument('name', help='the configuration exercised', nargs='?', default=None)
-        parser.add_argument('-c', '--conf', help='configuration directory', nargs='?', default=self.conf_d)
-        parser.add_argument('-p', '--profiles', help='profiles directory', nargs='?', default=self.profiles_d)
-        parser.add_argument('-d', '--drives', help='drives directory', nargs='?', default=self.drives_d)
-        args = parser.parse_args()
+        try:
+            parser = argparse.ArgumentParser(description="Leitus does the legwork so users can relax and enjoy cryptographic drives.")
+            parser.add_argument('name', help='the configuration exercised', nargs='?', default=None)
+            parser.add_argument('-c', '--conf', help='configuration directory', nargs='?', default=self.conf_d)
+            parser.add_argument('-p', '--profiles', help='profiles directory', nargs='?', default=self.profiles_d)
+            parser.add_argument('-d', '--drives', help='drives directory', nargs='?', default=self.drives_d)
+            args = parser.parse_args()
+            
+            Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles).perform(args.name)
+            return self.OKAY
         
-        Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles).perform(args.name)
+        except diagnosis.ConfigurationNotFoundError, error:
+            return self.noteFailure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommendedFix())
+    
+    def noteFailure(self, exit_code, error, recommendations=None):
+        sys.stderr.write("%(message)s\nLeitus failed.\n" % {"message": repr(error)})
+        if recommendations:
+            sys.stderr.write("\n")
+            sys.stderr.write(recommendations)
+            sys.stderr.write("\n")
+        return exit_code
+    

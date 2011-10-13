@@ -15,38 +15,32 @@
 #    with this program; if not, write to the Free Software Foundation, Inc.,
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
+#
+#
 # Leitus is a suite of higher level functions for cryptographic drives.
-# The layout module abstracts options for laying out resources.
+# The contents tests the surface module.
 #
 # Robert Burrell Donkin, 2011
 #
 
-import os.path
+import unittest
 
-class StandardLayout():
+from name.robertburrelldonkin.leitus import diagnosis
 
-    def __init__(self, conf_d, drives_d, profiles_d):
-        self.drives_d = drives_d
-        self.conf_d = conf_d
-        self.profiles_d = profiles_d
+class TestFileNotFound(unittest.TestCase):
     
-    def drives(self):
-        return FileSystemLayout(self.drives_d)
     
-    def conf(self):
-        return FileSystemLayout(self.conf_d)
+    def testBelowTwo(self):
+        for i in range(-100,1):
+            self.assertFalse(diagnosis.fileNotFound(i))
         
-    def profiles(self):
-        return FileSystemLayout(self.profiles_d)
     
-class FileSystemLayout():
-    READ_ONLY = 'r'
+    def testTwo(self):
+        self.assertTrue(diagnosis.fileNotFound(2))    
     
-    def __init__(self, directory):
-        self.directory = directory
-    
-    def read(self, resource):
-        return open(os.path.join(self.directory, resource), self.READ_ONLY)
-
-    def __repr__(self):
-        return "directory %(dir)s" % {"dir":repr(self.directory)}
+    def testAboveTwo(self):
+        for i in range(3,100):
+            self.assertFalse(diagnosis.fileNotFound(i))
+        
+if __name__ == '__main__':
+    unittest.main()
