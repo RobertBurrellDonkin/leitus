@@ -43,6 +43,8 @@ class CommandLineInterface():
     OKAY=0
     # Exit with failure caused by missing configuration
     FAILURE_MISSING_CONFIGURATION=1
+    # Exit with failure when user cancels
+    FAILURE_USER_CANCEL=2
     
     def __init__(self, conf_d, drives_d, profiles_d):
         self.conf_d = conf_d
@@ -63,6 +65,10 @@ class CommandLineInterface():
         
         except diagnosis.ConfigurationNotFoundError, error:
             return self.noteFailure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommendedFix())
+            
+        except KeyboardInterrupt:
+            sys.stderr.write("\nLeitus cancelled.\n\nSome manual tidy up might be a good idea.\n")
+            return self.FAILURE_USER_CANCEL
     
     def noteFailure(self, exit_code, error, recommendations=None):
         sys.stderr.write("%(message)s\nLeitus failed.\n" % {"message": repr(error)})

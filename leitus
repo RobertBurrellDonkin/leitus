@@ -22,13 +22,17 @@
 # Robert Burrell Donkin, 2011
 #
 
-from name.robertburrelldonkin.leitus import cli
-
 import sys
 
-# Defaults
-CONF_DATA = '/etc/conf.d'
-VAR_DATA = '/var/lib/leitus'
+try:    
+    from name.robertburrelldonkin.leitus import cli
 
-# Run
-sys.exit(cli.leitus(CONF_DATA, VAR_DATA))
+    # Defaults
+    CONF_DATA = '/etc/conf.d'
+    VAR_DATA = '/var/lib/leitus'
+    
+    # Run
+    sys.exit(cli.leitus(CONF_DATA, VAR_DATA))
+
+except KeyboardInterrupt:
+    sys.stderr.write("\nLeitus cancelled.\n")
