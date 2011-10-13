@@ -1,0 +1,3 @@
+Leitus 0.3
+ * Improved error reporting:
+   * When configuration file not found
