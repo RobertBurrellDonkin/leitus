@@ -8,5 +8,6 @@ name/robertburrelldonkin/leitus/__init__.py
 name/robertburrelldonkin/leitus/cli.py
 name/robertburrelldonkin/leitus/config.py
 name/robertburrelldonkin/leitus/deep.py
+name/robertburrelldonkin/leitus/diagnosis.py
 name/robertburrelldonkin/leitus/layout.py
 name/robertburrelldonkin/leitus/surface.py
