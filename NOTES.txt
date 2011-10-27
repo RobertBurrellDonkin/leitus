@@ -7,3 +7,4 @@ Leitus 0.3
 
 TODO:
  * Improve error handling from cryptsetup by checking for 255 status (wrong password, looks like) 
+ * Include version number in help
