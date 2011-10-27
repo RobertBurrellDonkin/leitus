@@ -2,3 +2,6 @@ Leitus 0.3
  * Improved error reporting:
    * When configuration file not found
    * When script cancelled from keyboard
+
+TODO:
+ * Improve error handling from cryptsetup by checking for 255 status (wrong password, looks like) 
