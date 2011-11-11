@@ -10,3 +10,6 @@ TODO:
  * Include version number in help
  * Replace logged description of disc with message loaded from json
  * Bash completion
+ * Replace script default action (create new image) with print help
+ * Print configuration properties in --help
+ * Add --list-drives (which lists drives)
