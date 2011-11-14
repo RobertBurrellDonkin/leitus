@@ -56,9 +56,15 @@ class CommandLineInterface():
             parser = argparse.ArgumentParser(description="Leitus %(version)s does the legwork so users can relax and enjoy cryptographic drives."
                                              % {"version":__version__})
             parser.add_argument('name', help='the configuration exercised', nargs='?', default=None)
-            parser.add_argument('-c', '--conf', help='configuration directory', nargs='?', default=self.conf_d)
-            parser.add_argument('-p', '--profiles', help='profiles directory', nargs='?', default=self.profiles_d)
-            parser.add_argument('-d', '--drives', help='drives directory', nargs='?', default=self.drives_d)
+            parser.add_argument('-c', '--conf',
+                                help='configuration directory (defaults to %(conf.d)s)' % {"conf.d":self.conf_d},
+                                nargs='?', default=self.conf_d)
+            parser.add_argument('-p', '--profiles',
+                                help='profiles directory (defaults to %(profiles.d)s)' % {"profiles.d":self.profiles_d},
+                                nargs='?', default=self.profiles_d)
+            parser.add_argument('-d', '--drives',
+                                help='drives directory (defaults to %(drives.d)s)' % {"drives.d":self.drives_d},
+                                nargs='?', default=self.drives_d)
             args = parser.parse_args()
             
             Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles).perform(args.name)

@@ -1,6 +1,7 @@
 Leitus 0.4
  * Improved --help
   * Include version number in --help
+  * Print configuration properties in --help
  
 Leitus 0.3
  * Improved error reporting:
@@ -12,5 +13,4 @@ TODO:
  * Replace logged description of disc with message loaded from json
  * Bash completion
  * Replace script default action (create new image) with print help
- * Print configuration properties in --help
  * Add --list-drives (which lists drives)
