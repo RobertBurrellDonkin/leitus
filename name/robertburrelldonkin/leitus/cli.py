@@ -53,7 +53,8 @@ class CommandLineInterface():
 
     def leitus(self):
         try:
-            parser = argparse.ArgumentParser(description="Leitus does the legwork so users can relax and enjoy cryptographic drives.")
+            parser = argparse.ArgumentParser(description="Leitus %(version)s does the legwork so users can relax and enjoy cryptographic drives."
+                                             % {"version":__version__})
             parser.add_argument('name', help='the configuration exercised', nargs='?', default=None)
             parser.add_argument('-c', '--conf', help='configuration directory', nargs='?', default=self.conf_d)
             parser.add_argument('-p', '--profiles', help='profiles directory', nargs='?', default=self.profiles_d)
@@ -78,3 +79,4 @@ class CommandLineInterface():
             sys.stderr.write("\n")
         return exit_code
     
+__version__="0.4-SNAPSHOT"

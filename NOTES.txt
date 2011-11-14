@@ -1,5 +1,7 @@
 Leitus 0.4
-
+ * Improved --help
+  * Include version number in --help
+ 
 Leitus 0.3
  * Improved error reporting:
    * When configuration file not found
@@ -7,7 +9,6 @@ Leitus 0.3
 
 TODO:
  * Improve error handling from cryptsetup by checking for 255 status (wrong password, looks like) 
- * Include version number in help
  * Replace logged description of disc with message loaded from json
  * Bash completion
  * Replace script default action (create new image) with print help
