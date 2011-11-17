@@ -67,7 +67,10 @@ class CommandLineInterface():
                                 nargs='?', default=self.drives_d)
             args = parser.parse_args()
             
-            Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles).perform(args.name)
+            if (args.name):
+                Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles).perform(args.name)
+            else:
+                sys.stdout.write("Leitus %(version)s\n - Did you want something in particular?\n" % {"version":__version__} )
             return self.OKAY
         
         except diagnosis.ConfigurationNotFoundError, error:

@@ -2,6 +2,7 @@ Leitus 0.4
  * Improved --help
   * Include version number in --help
   * Print configuration properties in --help
+ * Replace script default action (create new image) with version number and wacky comment
  
 Leitus 0.3
  * Improved error reporting:
@@ -12,5 +13,4 @@ TODO:
  * Improve error handling from cryptsetup by checking for 255 status (wrong password, looks like) 
  * Replace logged description of disc with message loaded from json
  * Bash completion
- * Replace script default action (create new image) with print help
  * Add --list-drives (which lists drives)
