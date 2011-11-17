@@ -14,3 +14,4 @@ TODO:
  * Replace logged description of disc with message loaded from json
  * Bash completion
  * Add --list-drives (which lists drives)
+ * Add support for loopback image drive configurations
