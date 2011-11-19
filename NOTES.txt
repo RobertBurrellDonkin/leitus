@@ -16,3 +16,5 @@ TODO:
  * Add --list-drives (which lists drives)
  * Add support for loopback image drive configurations
  * Validate configurations
+ * Add luks drive creation
+ * Add option to zero new drives in addition to default use of dev random
