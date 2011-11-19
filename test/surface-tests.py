@@ -25,9 +25,11 @@
 
 import unittest
 
+import os.path
+
 from name.robertburrelldonkin.leitus import surface
 from name.robertburrelldonkin.leitus.config import ConfigConstants
-
+from name.robertburrelldonkin.leitus import layout
 
 class TestLUKSDrive(unittest.TestCase):
     
@@ -43,7 +45,16 @@ class TestLUKSDrive(unittest.TestCase):
 
 class TestImageDrive(unittest.TestCase):
     
-    def testThatWithConfigurationSetsParameters(self):
+    def testWhenAbsoluteSourceIsNotModified(self):
+        aSource = "/something.img"
+        aName = "Bongo"
+        aTarget = "/a/path"
+        drive = surface.withConfiguration({ConfigConstants().SOURCE:aSource, ConfigConstants().NAME:aName, ConfigConstants().TARGET:aTarget})
+        self.assertEquals(aName, drive.name)
+        self.assertEquals(aTarget, drive.target)
+        self.assertEquals(aSource, drive.source)
+
+    def testWhenRelativeIsNotModifiedWithoutLayout(self):
         aSource = "something.img"
         aName = "Bongo"
         aTarget = "/a/path"
@@ -52,7 +63,18 @@ class TestImageDrive(unittest.TestCase):
         self.assertEquals(aTarget, drive.target)
         self.assertEquals(aSource, drive.source)
 
-
+    def testWhenRelativeIsJoinedToDrivesWhenLayoutSet(self):
+        aSource = "something.img"
+        aName = "Bongo"
+        aTarget = "/a/path"
+        aDriveDirectory = "drives.d"
+        
+        drive = surface.withConfiguration(
+            {ConfigConstants().SOURCE:aSource, ConfigConstants().NAME:aName, ConfigConstants().TARGET:aTarget},
+            layout.StandardLayout("conf.d", aDriveDirectory, "profiles.d"))
+        self.assertEquals(aName, drive.name)
+        self.assertEquals(aTarget, drive.target)
+        self.assertEquals(os.path.join(aDriveDirectory, aSource), drive.source)
 
 class TestBuildSessionHome(unittest.TestCase):
     

@@ -38,6 +38,12 @@ class StandardLayout():
         
     def profiles(self):
         return FileSystemLayout(self.profiles_d)
+        
+    def drivePath(self, resource):
+        if os.path.isabs(resource):
+            return resource
+        else:
+            return self.drives().asPath(resource)
     
 class FileSystemLayout():
     READ_ONLY = 'r'
@@ -46,7 +52,10 @@ class FileSystemLayout():
         self.directory = directory
     
     def read(self, resource):
-        return open(os.path.join(self.directory, resource), self.READ_ONLY)
+        return open(self.asPath(resource), self.READ_ONLY)
+
+    def asPath(self, resource):
+        return os.path.join(self.directory, resource)
 
     def __repr__(self):
         return "directory %(dir)s" % {"dir":repr(self.directory)}

@@ -35,6 +35,8 @@ Distinquished by *source* attribute.
 
 - *source* identifies an encrypted disc image, for example `"source":"small.img"`
 
+* When *source* is absolute, this will be used directly
+* Otherwise *source* is relative. Relative paths are resolved based on the drives.d directory.
 
 Session Drive
 -------------

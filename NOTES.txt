@@ -5,6 +5,8 @@ Leitus 0.4
  * Replace script default action (create new image) with version number and wacky comment
  * Clean out aboriginal sources
  * Improve error reporting when disc image not found
+ * Support absolute paths for disc images, not just those in drives.d
+ * Add support for loopback image drive configurations
  
 Leitus 0.3
  * Improved error reporting:
@@ -16,9 +18,7 @@ TODO:
  * Replace logged description of disc with message loaded from json
  * Bash completion
  * Add --list-drives (which lists drives)
- * Add support for loopback image drive configurations
  * Validate configurations
  * Add luks drive creation
  * Add option to zero new drives in addition to default use of dev random
  * Improve error reporting when disc image already in use
- * Support absolute paths for disc images, not just those in drives.d
