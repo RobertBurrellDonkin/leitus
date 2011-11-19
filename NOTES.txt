@@ -18,3 +18,5 @@ TODO:
  * Validate configurations
  * Add luks drive creation
  * Add option to zero new drives in addition to default use of dev random
+ * Improve error reporting when disc image not found
+ * Clean out aboriginal sources
