@@ -93,4 +93,4 @@ class CommandLineInterface():
             sys.stderr.write("\n")
         return exit_code
     
-__version__="0.4-SNAPSHOT"
+__version__="0.4"
