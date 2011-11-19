@@ -15,3 +15,4 @@ TODO:
  * Bash completion
  * Add --list-drives (which lists drives)
  * Add support for loopback image drive configurations
+ * Validate configurations
