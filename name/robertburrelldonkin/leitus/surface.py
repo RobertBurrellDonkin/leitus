@@ -38,7 +38,7 @@ def standard():
 def sessionHome(name):
     return Builder().named(name)
     
-def withConfiguration(configuration, layout):
+def withConfiguration(configuration):
     constants = ConfigConstants()
     if constants.UUID in configuration:
         return deep.LuksDrive(constants.uuidFor(configuration),
@@ -87,7 +87,7 @@ class Leitus():
     def perform(self, name):
         try:
             if name:
-                withConfiguration(config.load(name, self.layout.conf()), self.layout).perform()
+                withConfiguration(config.load(name, self.layout.conf())).perform()
             else:
                 standard().perform()
         except deep.DiscImageNotFoundError, error:
