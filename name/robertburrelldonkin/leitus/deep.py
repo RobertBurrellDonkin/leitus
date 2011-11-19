@@ -53,6 +53,21 @@ class NotFoundError(ResourceError):
     """
     def __init__(self, resource):
         ResourceError.__init__(self, resource, "{0} not found.")
+        
+
+class DiscImageNotFoundError(NotFoundError):
+    """
+    Raised when the disc image for a loop back drive
+    cannot be found.
+    
+    Attributes:
+       resource -- which cannot be located
+       message -- template formatted during display
+    """
+    def __init__(self, resource):
+        NotFoundError.__init__(self, resource)
+        
+
 
 class AlreadyInUseError(ResourceError):
     """
@@ -66,6 +81,7 @@ class AlreadyInUseError(ResourceError):
     def __init__(self, entity):
         ResourceError.__init__(self, entity, "{0} is already in use.")
     
+
 class SubprocessLoopDevice():
     """
     Low level API for loop devices
@@ -121,7 +137,7 @@ class LoopDevice():
     
     def open(self):
         if (not os.path.exists(self.file)):
-            raise NotFoundError, self.file
+            raise DiscImageNotFoundError, self.file
         if (self.isInUse()):
             raise AlreadyInUseError, self
         self.api.open(self.file, self.firstUnusedDevice())
