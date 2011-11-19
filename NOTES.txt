@@ -21,3 +21,4 @@ TODO:
  * Add luks drive creation
  * Add option to zero new drives in addition to default use of dev random
  * Improve error reporting when disc image already in use
+ * Support absolute paths for disc images, not just those in drives.d
