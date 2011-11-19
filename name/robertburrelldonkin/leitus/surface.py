@@ -27,6 +27,7 @@ import os
 from name.robertburrelldonkin.leitus import deep
 from name.robertburrelldonkin.leitus import config
 from name.robertburrelldonkin.leitus import layout
+from name.robertburrelldonkin.leitus import diagnosis
 from name.robertburrelldonkin.leitus.config import ConfigConstants
 
 def standard():
@@ -37,7 +38,7 @@ def standard():
 def sessionHome(name):
     return Builder().named(name)
     
-def withConfiguration(configuration):
+def withConfiguration(configuration, layout):
     constants = ConfigConstants()
     if constants.UUID in configuration:
         return deep.LuksDrive(constants.uuidFor(configuration),
@@ -84,7 +85,10 @@ class Leitus():
         self.layout = layout.StandardLayout(conf_d, drives_d, profiles_d)
     
     def perform(self, name):
-        if name:
-            withConfiguration(config.load(name, self.layout.conf())).perform()
-        else:
-            standard().perform()
+        try:
+            if name:
+                withConfiguration(config.load(name, self.layout.conf()), self.layout).perform()
+            else:
+                standard().perform()
+        except deep.DiscImageNotFoundError, error:
+            raise diagnosis.MissingDiscImageError(self.layout, error, error.resource)

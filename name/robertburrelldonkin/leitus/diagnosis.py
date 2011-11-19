@@ -22,27 +22,48 @@
 
 import logging
 
-class ConfigurationNotFoundError(Exception):
-    def __init__(self, configuration, layout, error):
-        self.configuration = configuration
-        self.layout = layout
+class DiagnosticError(Exception):
+    def __init__(self, error, fix, message):
+        self.diagnosticMessage = message
+        self.causalError = error
+        self.fix = fix
         logger.debug(error)
-        Exception.__init__(self, str(self))
-        
+        Exception.__init__(self, message)
+
     def __str__(self):
-        return "Missing configuration: %(configuration)s not found in %(layout)s" % {"configuration": repr(self.configuration),
-                                                "layout": repr(self.layout)}
-    
+        return self.diagnosticMessage
+
     def __repr__(self):
         return str(self)
     
     def recommendedFix(self):
-        return "Did you mistype %(name)s?" % {"name": repr(self.configuration)} 
+        return self.fix
+
+class ConfigurationNotFoundError(DiagnosticError):
+    def __init__(self, configuration, layout, error):
+        self.configuration = configuration
+        self.layout = layout
+        DiagnosticError.__init__(self,
+                                 error,
+                                 "Did you mistype %(name)s?" % {"name": repr(configuration)},
+                                 "Missing configuration: %(configuration)s not found in %(layout)s" % {"configuration": repr(configuration),
+                                                "layout": repr(layout)})
+
+    
+class MissingDiscImageError(DiagnosticError):
+    def __init__(self, layout, error, discImageNotFound):
+        self.layout = layout
+        self.error = error
+        self.discImageNotFound = discImageNotFound
+        DiagnosticError.__init__(self,
+                                 error,
+                                 "Did you mean to specify a drives directory on the command line?",
+                                 "Disc image '%(discImage)s' not found. Drives in %(drives)s"
+                                 % {"discImage": str(discImageNotFound), "drives": repr(layout.drives())})
+
 
 def fileNotFound(error_number):
     return (error_number == 2)
-    
-    
     
     
 

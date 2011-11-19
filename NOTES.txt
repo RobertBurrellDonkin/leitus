@@ -4,6 +4,7 @@ Leitus 0.4
   * Print configuration properties in --help
  * Replace script default action (create new image) with version number and wacky comment
  * Clean out aboriginal sources
+ * Improve error reporting when disc image not found
  
 Leitus 0.3
  * Improved error reporting:
@@ -19,5 +20,4 @@ TODO:
  * Validate configurations
  * Add luks drive creation
  * Add option to zero new drives in addition to default use of dev random
- * Improve error reporting when disc image not found
  * Improve error reporting when disc image already in use
