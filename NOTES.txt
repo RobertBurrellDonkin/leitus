@@ -24,3 +24,4 @@ TODO:
  * Add luks drive creation
  * Add option to zero new drives in addition to default use of dev random
  * Improve error reporting when disc image already in use
+ * Add "leitus <name> --describe" which lists configuration information on <name>
