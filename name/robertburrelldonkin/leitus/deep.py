@@ -42,6 +42,18 @@ class ResourceError(Exception):
     def __str__(self):
         return self.message.format(self.resource)
 
+class PassphaseError(ResourceError):
+    """
+    Raised when an operation on a resource (such as a drive, device or file)
+    fails 
+    
+    Attributes:
+       resource -- which could not be unlocked
+    """
+    def __init__(self, resource):
+        ResourceError.__init__(self, resource, "{0} could not be unlocked.")
+    
+
 class NotFoundError(ResourceError):
     """
     Raised when a resource (such as a drive, device or file)
@@ -68,10 +80,9 @@ class DiscImageNotFoundError(NotFoundError):
         NotFoundError.__init__(self, resource)
         
 
-
 class AlreadyInUseError(ResourceError):
     """
-    Raised an operations conflicts with an existing use of
+    Raised when an operation conflicts with an existing use of
     a entity (such as a drive, device or file).
     
     Attributes:
@@ -195,13 +206,94 @@ class CryptDeviceWithRandomKey():
     def on(self, source):
         return DeviceMapping(source, CryptSetup())
     
+class LowLevelError(Exception):
+    """
+    Raised when a low level operation fails.
+    
+    Attributes:
+       msg -- offers an explaination for the failure
+       api -- names the low level API that failed
+    """
+    def __init__(self, msg, api):
+        self.msg = msg
+        self.api = api
+        
+    
+    def isAlreadyInUse(self):
+        return false;
+    
+    def isNotFound(self):
+        return false;
+    
+    def isBadPassphrase(self):
+        return false
+    
+    def __str__(self):
+        return self.msg
+    
+class CryptsetupError(LowLevelError):
+    """
+    Interprets an error from cryptsetup.
+    
+    Cryptsetup codes
+        1 wrong parameters
+        2 no permission (bad passphrase)
+        3 out of memory
+        4 wrong device specified
+        5 device already exists or device is busy
+    
+    Attributes:
+        returncode -- raw error code
+        output -- raw output
+    """
+    def __init__(self, error):
+        self.returncode = error.returncode
+        self.output = error.output
+        LowLevelError.__init__(self, self.cause(), "cryptation")
+    
+    def isParameterError(self):
+        return self.returncode == 1
+    
+    def isBadPassphrase(self):
+        return self.returncode == 2
+    
+    def isOutOfMemory(self):
+        return self.returncode == 3
+    
+    def isDeviceError(self):
+        return self.returncode == 4
+    
+    def isDeviceBusy(self):
+        return self.returncode == 5
+    
+    def isAlreadyInUse(self):
+        return self.isDeviceBusy();
+    
+    def cause(self):
+        returncode = self.returncode
+        if returncode == 1:
+            return "I seem to have passed the wrong parameters.\nIs this version unsupported?"
+        if returncode == 2:
+            return "Did you mistype the passphrase?"
+        if returncode == 3:
+            return "I'm sorry but there's too little memory left."
+        if returncode == 4:
+            return "I seem to have the wrong device. Please accept my apologies."
+        if returncode == 5:
+            return "Seems that the device already exists or is busy."
+        
+        return "error code {0}".format(returncode) 
+    
 class LuksSetup():
     
     def map(self, name, device):
         args = ['cryptsetup',
                 'luksOpen',
                 device, name]
-        subprocess.check_call(args)
+        try:
+            subprocess.check_call(args)
+        except subprocess.CalledProcessError, e:
+            raise CryptsetupError(e)
         
     def unmap(self, name):
         args = ['cryptsetup',
@@ -242,8 +334,15 @@ class DeviceMapping():
         return '/dev/mapper/{0}'.format(name)
     
     def mapTo(self, name):
-        self.api.map(name, self.device)
-        return self.fileSystem(name)
+        try:
+            self.api.map(name, self.device)
+            return self.fileSystem(name)
+        except LowLevelError, e:
+            if e.isAlreadyInUse():
+                raise AlreadyInUseError(self.device);
+            if e.isBadPassphrase():
+                raise PassphaseError(self.device);
+            raise
     
     def fileSystem(self, name):
         return FileSystemOnDeviceMapping(self.nameAfterMapping(name))

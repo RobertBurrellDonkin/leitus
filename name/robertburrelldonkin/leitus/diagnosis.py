@@ -61,6 +61,19 @@ class MissingDiscImageError(DiagnosticError):
                                  "Disc image '%(discImage)s' not found. Drives in %(drives)s"
                                  % {"discImage": str(discImageNotFound), "drives": repr(layout.drives())})
 
+class CouldNotUnlockEncryptedDrive(DiagnosticError):
+    def __init__(self, layout, error, driveThatCouldNotBeUnlock):
+        self.layout = layout
+        self.error = error
+        self.driveThatCouldNotBeUnlock = driveThatCouldNotBeUnlock
+        DiagnosticError.__init__(self,
+                                 error,
+                                 "Did you type the right passphase?",
+                                 "\n'%(discImage)s' couldn't be unlocked."
+                                 % {"discImage": str(driveThatCouldNotBeUnlock)})
+    
+    
+    
 
 def fileNotFound(error_number):
     return (error_number == 2)

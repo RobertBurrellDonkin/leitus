@@ -95,3 +95,7 @@ class Leitus():
                 standard().perform()
         except deep.DiscImageNotFoundError, error:
             raise diagnosis.MissingDiscImageError(self.layout, error, error.resource)
+            
+        except deep.PassphaseError, error:
+            raise diagnosis.CouldNotUnlockEncryptedDrive(self.layout, error, error.resource)
+            
