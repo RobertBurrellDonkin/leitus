@@ -69,6 +69,10 @@ class CommandLineInterface():
             parser.add_argument('-d', '--drives',
                                 help='drives directory (defaults to %(drives.d)s)' % {"drives.d":self.drives_d},
                                 nargs='?', default=self.drives_d)
+            parser.add_argument('-i', '--info',
+                                help='describes the configuration',
+                                action='store_true')
+
             args = parser.parse_args()
             
             if (args.name):

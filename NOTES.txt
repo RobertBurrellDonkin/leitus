@@ -1,5 +1,5 @@
 In Flight
-  * Add "leitus <name> --describe" which lists configuration information on <name>
+  * Add "leitus <name> --info" which lists configuration information on <name>
   
 Leitus 0.5
  * Improved error reporting when passphrase is mistyped
