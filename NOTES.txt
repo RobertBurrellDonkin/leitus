@@ -1,3 +1,6 @@
+In Flight
+  * Add "leitus <name> --describe" which lists configuration information on <name>
+  
 Leitus 0.5
  * Improved error reporting when passphrase is mistyped
 
@@ -25,6 +28,5 @@ TODO:
  * Add luks drive creation
  * Add option to zero new drives in addition to default use of dev random
  * Improve error reporting when disc image already in use
- * Add "leitus <name> --describe" which lists configuration information on <name>
  * Improve error handling from cryptsetup by checking for 240 (device is busy) 
  * Check drives before mounting
