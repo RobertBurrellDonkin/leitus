@@ -100,4 +100,7 @@ class Leitus():
             raise diagnosis.CouldNotUnlockEncryptedDrive(self.layout, error, error.resource)
             
     def info(self, name):
-        return "I'm afraid I'm still working on this feature...\n\n"
+        if name:
+            withConfiguration(config.load(name, self.layout.conf()), self.layout).info()
+        else:
+            return "Here's the deal: a name for information"
