@@ -76,10 +76,14 @@ class CommandLineInterface():
             args = parser.parse_args()
             
             if (args.name):
-                Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles).perform(args.name)
+                leitus = Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles)
+                if (args.info):
+                    sys.stdout.write(leitus.info(args.name))
+                else:
+                    leitus.perform(args.name)
             else:
                 if (args.info):
-                    sys.stdout.write("Leitus %(version)s\n\n  Add the drive name to the command line, and I'll describe its configuration.\n  For example 'leitus --info cool'\n" % {"version":__version__} )                    
+                    sys.stdout.write("Leitus %(version)s\n\n  Add the drive name to the command line, and I'll describe its configuration.\n\n  For example 'leitus --info cool'\n\n" % {"version":__version__} )                    
                 else:
                     sys.stdout.write("Leitus %(version)s\n - Did you want something in particular?\n" % {"version":__version__} )
             return self.OKAY

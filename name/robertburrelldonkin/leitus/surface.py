@@ -99,3 +99,5 @@ class Leitus():
         except deep.PassphaseError, error:
             raise diagnosis.CouldNotUnlockEncryptedDrive(self.layout, error, error.resource)
             
+    def info(self, name):
+        return "I'm afraid I'm still working on this feature...\n\n"
