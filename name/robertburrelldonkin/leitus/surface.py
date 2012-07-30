@@ -93,10 +93,10 @@ class Leitus():
                 withConfiguration(config.load(name, self.layout.conf()), self.layout).perform()
             else:
                 standard().perform()
-        except deep.DiscImageNotFoundError, error:
+        except deep.DiscImageNotFoundError as error:
             raise diagnosis.MissingDiscImageError(self.layout, error, error.resource)
             
-        except deep.PassphaseError, error:
+        except deep.PassphaseError as error:
             raise diagnosis.CouldNotUnlockEncryptedDrive(self.layout, error, error.resource)
             
     def info(self, name):

@@ -88,13 +88,13 @@ class CommandLineInterface():
                     sys.stdout.write("Leitus %(version)s\n - Did you want something in particular?\n" % {"version":__version__} )
             return self.OKAY
         
-        except diagnosis.ConfigurationNotFoundError, error:
+        except diagnosis.ConfigurationNotFoundError as error:
             return self.noteFailure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommendedFix())
 
-        except diagnosis.MissingDiscImageError, error:
+        except diagnosis.MissingDiscImageError as error:
             return self.noteFailure(self.FAILURE_MISSING_DISC_IMAGE, error, error.recommendedFix())
         
-        except diagnosis.CouldNotUnlockEncryptedDrive, error:
+        except diagnosis.CouldNotUnlockEncryptedDrive as error:
             return self.noteFailure(self.FAILURE_CANNOT_UNLOCK_ENCRYPTED_DRIVE, error, error.recommendedFix())
             
         except KeyboardInterrupt:

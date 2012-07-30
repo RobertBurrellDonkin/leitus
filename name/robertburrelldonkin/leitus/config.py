@@ -77,7 +77,9 @@ class JsonLoader():
     def load(self):
         try:
             return json.load(self.layout.read(self.resource))
-        except IOError, (errorNumber, errorMessage):
+        except IOError as e:
+            errorNumber = e.errno 
+            errorMessage = e.strerror
             if errorNumber == 2:
                 raise diagnosis.ConfigurationNotFoundError(self.resource, self.layout, errorMessage)
             else:

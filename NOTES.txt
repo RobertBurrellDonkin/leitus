@@ -3,6 +3,7 @@ In Flight
   
 Leitus 0.5
  * Improved error reporting when passphrase is mistyped
+ * Upgraded to Python 3
 
 Leitus 0.4
  * Improved --help

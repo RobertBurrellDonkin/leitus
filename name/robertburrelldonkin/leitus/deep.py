@@ -148,9 +148,9 @@ class LoopDevice():
     
     def open(self):
         if (not os.path.exists(self.file)):
-            raise DiscImageNotFoundError, self.file
+            raise DiscImageNotFoundError(self.file)
         if (self.isInUse()):
-            raise AlreadyInUseError, self
+            raise AlreadyInUseError(self)
         self.api.open(self.file, self.firstUnusedDevice())
         return self
     
@@ -171,14 +171,14 @@ class LoopDevice():
         size (in megabytes)
         """
         if (os.path.exists(self.file)):
-            raise AlreadyInUseError, self.file
+            raise AlreadyInUseError(self.file)
         self.api.create(self.file, size)
         return self
     
     def deviceName(self):
         status = self.status()
         if (status == None):
-            raise NotFoundError, self
+            raise NotFoundError(self)
         return status.split(":", 1)[0]
         
     def close(self):
@@ -292,7 +292,7 @@ class LuksSetup():
                 device, name]
         try:
             subprocess.check_call(args)
-        except subprocess.CalledProcessError, e:
+        except subprocess.CalledProcessError as e:
             raise CryptsetupError(e)
         
     def unmap(self, name):
@@ -337,7 +337,7 @@ class DeviceMapping():
         try:
             self.api.map(name, self.device)
             return self.fileSystem(name)
-        except LowLevelError, e:
+        except LowLevelError as e:
             if e.isAlreadyInUse():
                 raise AlreadyInUseError(self.device);
             if e.isBadPassphrase():
@@ -449,9 +449,9 @@ class Copy():
         is preserved.
         """
         if not (os.path.exists(self.source)):
-            raise NotFoundError, source
+            raise NotFoundError(source)
         if not (os.path.exists(target)):
-            raise NotFoundError, target
+            raise NotFoundError(target)
         for name in os.listdir(self.source):
             path = os.path.join(self.source, name)
             print '...'
@@ -470,7 +470,7 @@ class MountedFileSystem():
     
     def merge(self, profiles):
         if not (os.path.exists(self.mountPoint)):
-            raise NotFoundError, self
+            raise NotFoundError(self)
         for profile in profiles:
             Copy(os.path.join(self.profileRoot, profile)).into(self.mountPoint)
         return self
