@@ -454,7 +454,7 @@ class Copy():
             raise NotFoundError(target)
         for name in os.listdir(self.source):
             path = os.path.join(self.source, name)
-            print '...'
+            print('...')
             if os.path.isdir(path):
                 shutil.copytree(path, os.path.join(target, name))
             else:
@@ -499,7 +499,7 @@ class LuksDrive():
         self.target = target
         
     def perform(self):
-        print "LUKS ", self.uuid, self.name, self.target
+        print("LUKS ", self.uuid, self.name, self.target)
         LuksDevice().on(DiskByUUID(self.uuid)).toggle(self.name, self.target)
 
 class SessionHome():
