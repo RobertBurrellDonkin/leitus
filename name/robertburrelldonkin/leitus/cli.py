@@ -87,6 +87,9 @@ class CommandLineInterface():
                 else:
                     sys.stdout.write("Leitus %(version)s\n - Did you want something in particular?\n" % {"version":__version__} )
             return self.OKAY
+
+        except diagnosis.ConfigurationPermissionError as error:
+            return self.noteFailure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommendedFix())        
         
         except diagnosis.ConfigurationNotFoundError as error:
             return self.noteFailure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommendedFix())

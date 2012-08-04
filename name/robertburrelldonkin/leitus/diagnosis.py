@@ -49,6 +49,16 @@ class ConfigurationNotFoundError(DiagnosticError):
                                  "Missing configuration: %(configuration)s not found in %(layout)s" % {"configuration": repr(configuration),
                                                 "layout": repr(layout)})
 
+class ConfigurationPermissionError(DiagnosticError):
+    def __init__(self, configuration, layout, error):
+        self.configuration = configuration
+        self.layout = layout
+        DiagnosticError.__init__(self,
+                                 error,
+                                 "Did you mean to sudo?",
+                                 "Could not read %(configuration)s in %(layout)s" % {"configuration": repr(configuration),
+                                                "layout": repr(layout)})
+
     
 class MissingDiscImageError(DiagnosticError):
     def __init__(self, layout, error, discImageNotFound):

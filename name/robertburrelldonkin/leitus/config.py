@@ -82,5 +82,7 @@ class JsonLoader():
             errorMessage = e.strerror
             if errorNumber == 2:
                 raise diagnosis.ConfigurationNotFoundError(self.resource, self.layout, errorMessage)
+            elif errorNumber == 13:
+                raise diagnosis.ConfigurationPermissionError(self.resource, self.layout, errorMessage)
             else:
                 raise

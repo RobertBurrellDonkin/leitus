@@ -23,6 +23,8 @@
 
 import os.path
 
+from name.robertburrelldonkin.leitus import diagnosis
+
 class StandardLayout():
 
     def __init__(self, conf_d, drives_d, profiles_d):
@@ -52,7 +54,17 @@ class FileSystemLayout():
         self.directory = directory
     
     def read(self, resource):
-        return open(self.asPath(resource), self.READ_ONLY)
+        try:
+            return open(self.asPath(resource), self.READ_ONLY)
+        except IOError as e:
+            errorNumber = e.errno 
+            errorMessage = e.strerror
+            if errorNumber == 2:
+                raise diagnosis.ConfigurationNotFoundError(resource, self, errorMessage)
+            elif errorNumber == 13:
+                raise diagnosis.ConfigurationPermissionError(resource, self, errorMessage)
+            else:
+                raise
 
     def asPath(self, resource):
         return os.path.join(self.directory, resource)
