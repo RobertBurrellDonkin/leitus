@@ -44,7 +44,7 @@ def withConfiguration(configuration, directoryLayout = None):
         return deep.LuksDrive(constants.uuidFor(configuration),
                        constants.nameFor(configuration),
                        constants.targetFor(configuration))
-    elif  constants.SOURCE in configuration:
+    elif constants.SOURCE in configuration:
         sourceDiscImage = constants.sourceFor(configuration)
         if (directoryLayout):
             sourceDiscImage = directoryLayout.drivePath(sourceDiscImage)
@@ -101,6 +101,6 @@ class Leitus():
             
     def info(self, name):
         if name:
-            withConfiguration(config.load(name, self.layout.conf()), self.layout).info()
+            return withConfiguration(config.load(name, self.layout.conf()), self.layout).info()
         else:
             return "Here's the deal: a name for information"

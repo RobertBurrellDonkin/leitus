@@ -490,6 +490,9 @@ class ImageDrive():
 
     def perform(self):
         LuksDevice().on(LoopDevice(self.source).open()).toggle(self.name, self.target)
+        
+    def info(self):
+        return "Image Drive\n  source: {0}\n  target: {1}\n\n".format(self.source, self.target)
     
 class LuksDrive():
     
@@ -501,6 +504,9 @@ class LuksDrive():
     def perform(self):
         print("LUKS ", self.uuid, self.name, self.target)
         LuksDevice().on(DiskByUUID(self.uuid)).toggle(self.name, self.target)
+
+    def info(self):
+        return "\nLUKS\n\n"
 
 class SessionHome():
     def __init__(self, profiles, name, sizeInMegabytes, user, target):
@@ -525,4 +531,6 @@ class SessionHome():
             self.decommissionAnonymous()
         else:
             self.commissionAnonymous()
-    
+
+    def info(self):
+        return "\nSession\n\n"
