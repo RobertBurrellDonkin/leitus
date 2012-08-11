@@ -71,4 +71,4 @@ initialised with profiles "home", "gnome", "maven" and "java6" then maps it to "
 Develops
 ========
 
-* Use nose to run all the tests after making changes
+* Use nose to run all the tests after making changes: nosetests
