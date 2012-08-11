@@ -26,6 +26,7 @@ import shutil
 import os
 import pwd
 import stat
+import errno
 
 class ResourceError(Exception):
     """
@@ -114,7 +115,14 @@ class UnsupportedOSError(UnsupportedError):
     """
     def __init__(self, oserror, feature):
         self.oserror = oserror
-        UnsupportedError.__init__(self, feature, "Leitus tried '{0}' but the operating system failed.")
+        message = "Leitus tried to use '{0}' but "
+        if oserror.errno == errno.ENOENT:
+            message = message + "this isn't on your user's path."
+        elif oserror.errno == errno.EACCES:
+            message = message + "this isn't readable by your user."
+        else:
+            message = message + " this failed.\n" + oserror.strerror
+        UnsupportedError.__init__(self, feature, message)
 
 
 class Losetup():
