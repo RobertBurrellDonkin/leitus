@@ -120,6 +120,8 @@ class Losetup():
             args.append(self.list)
         return args
     
+    def do(self):
+        return subprocess.check_output(self.args())
     
 
 class SubprocessLoopDevice():
@@ -131,7 +133,7 @@ class SubprocessLoopDevice():
         """
         Status of every loop device mapped to the given file.
         """
-        status = subprocess.check_output(["losetup", "-j", file])
+        status = Losetup().list(file).do();
         if (len(status)):
             return status
         return None
