@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2011
+# Copyright (c) Robert Burrell Donkin 2012
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -103,6 +103,24 @@ class UnsupportedError(Exception):
 
     def __str__(self):
         return self.message.format(self.feature)
+
+class Losetup():
+    """
+    Convience wrapper for calls to losetup
+    """
+    
+    def list(self, file):
+        self.list = file
+        return self
+
+    def args(self):
+        args = ["losetup"]
+        if self.list != None:
+            args.append("-j")
+            args.append(self.list)
+        return args
+    
+    
 
 class SubprocessLoopDevice():
     """
