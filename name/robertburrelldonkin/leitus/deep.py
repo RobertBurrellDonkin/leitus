@@ -104,6 +104,16 @@ class UnsupportedError(Exception):
     def __str__(self):
         return self.message.format(self.feature)
 
+class UnsupportedOSError(UnsupportedError):
+    """
+    Raised when the OS does not support a required feature.
+    
+    """
+    def __init__(self, oserror, feature):
+        self.oserror = oserror
+        UnsupportedError.__init__(self, feature, "Leitus tried '{0}' but the operating system failed.")
+
+
 class Losetup():
     """
     Convience wrapper for calls to losetup
@@ -121,8 +131,10 @@ class Losetup():
         return args
     
     def do(self):
-        return subprocess.check_output(self.args())
-    
+        try:
+            return subprocess.check_output(self.args())
+        except OSError as e:
+            raise UnsupportedOSError(e, "losetup")
 
 class SubprocessLoopDevice():
     """
