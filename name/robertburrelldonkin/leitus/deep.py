@@ -91,7 +91,18 @@ class AlreadyInUseError(ResourceError):
     """
     def __init__(self, entity):
         ResourceError.__init__(self, entity, "{0} is already in use.")
+        
+class UnsupportedError(Exception):
+    """
+    Raised when the OS does not support a required feature.
     
+    """
+    def __init__(self, feature, message):
+        self.message = message
+        self.feature = feature
+
+    def __str__(self):
+        return self.message.format(self.feature)
 
 class SubprocessLoopDevice():
     """

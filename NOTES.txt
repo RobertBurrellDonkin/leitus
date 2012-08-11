@@ -1,5 +1,6 @@
 In Flight
   * Add "leitus <name> --info" which lists configuration information on <name>
+  * Improved error reporting when losetup command isn't available
   
 Leitus 0.5
  * Improved error reporting when passphrase is mistyped
