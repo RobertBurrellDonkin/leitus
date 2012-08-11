@@ -103,6 +103,9 @@ class UnsupportedError(Exception):
 
     def __str__(self):
         return self.message.format(self.feature)
+        
+    def explain(self):
+        return self.message.format(self.feature)
 
 class UnsupportedOSError(UnsupportedError):
     """

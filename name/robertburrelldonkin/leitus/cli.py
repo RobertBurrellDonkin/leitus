@@ -49,6 +49,8 @@ class CommandLineInterface():
     FAILURE_MISSING_DISC_IMAGE=3
     # Exit with failure when encrypted drive cannot be unlocked
     FAILURE_CANNOT_UNLOCK_ENCRYPTED_DRIVE=4
+    # Exit with failure when some system requirement isn't met
+    FAILURE_MISSING_REQUIREMENT=5
     
     def __init__(self, conf_d, drives_d, profiles_d):
         self.conf_d = conf_d
@@ -99,6 +101,9 @@ class CommandLineInterface():
         
         except diagnosis.CouldNotUnlockEncryptedDrive as error:
             return self.noteFailure(self.FAILURE_CANNOT_UNLOCK_ENCRYPTED_DRIVE, error, error.recommendedFix())
+            
+        except diagnosis.UnsupportedRequirementError as error:
+            return self.noteFailure(self.FAILURE_MISSING_REQUIREMENT, error, error.recommendedFix())
             
         except KeyboardInterrupt:
             sys.stderr.write("\nLeitus cancelled.\n\nSome manual tidy up might be a good idea.\n")

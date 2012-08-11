@@ -84,6 +84,13 @@ class CouldNotUnlockEncryptedDrive(DiagnosticError):
     
     
     
+class UnsupportedRequirementError(DiagnosticError):
+    def __init__(self, error):
+        DiagnosticError.__init__(self,
+                                 error,
+                                 "Looks like your system is missing a vital requirement for Leitus.",
+                                 error.explain())
+        
 
 def fileNotFound(error_number):
     return (error_number == 2)
