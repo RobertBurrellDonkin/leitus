@@ -104,6 +104,9 @@ class CommandLineInterface():
             
         except diagnosis.UnsupportedRequirementError as error:
             return self.noteFailure(self.FAILURE_MISSING_REQUIREMENT, error, error.recommendedFix())
+        
+        except diagnosis.InUseError as error:
+            return self.noteFailure(self.FAILURE_MISSING_REQUIREMENT, error, error.recommendedFix())
             
         except KeyboardInterrupt:
             sys.stderr.write("\nLeitus cancelled.\n\nSome manual tidy up might be a good idea.\n")

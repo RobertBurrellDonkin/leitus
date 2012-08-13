@@ -7,6 +7,7 @@ Leitus 0.5
  * Upgraded to Python 3
  * Improved error reporting when user hasn't permission to read the
    configuration
+ * Improved error reporting when drive is already in use
 
 Leitus 0.4
  * Improved --help

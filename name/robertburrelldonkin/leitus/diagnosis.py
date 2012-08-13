@@ -92,6 +92,15 @@ class UnsupportedRequirementError(DiagnosticError):
                                  error.explain())
         
 
+class InUseError(DiagnosticError):
+    def __init__(self, error):
+        DiagnosticError.__init__(self,
+                                 error,
+                                 "",
+                                 "%(resource)s is already in use."
+                                 % {"resource": str(error.resource)})
+
+
 def fileNotFound(error_number):
     return (error_number == 2)
     

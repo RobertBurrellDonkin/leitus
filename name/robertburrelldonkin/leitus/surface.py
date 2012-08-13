@@ -101,6 +101,9 @@ class Leitus():
         
         except deep.UnsupportedError as error:
             raise diagnosis.UnsupportedRequirementError(error)
+            
+        except deep.AlreadyInUseError as error:
+            raise diagnosis.InUseError(error)
         
             
     def info(self, name):
