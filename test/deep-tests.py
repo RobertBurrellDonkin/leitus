@@ -27,6 +27,20 @@ import unittest
 
 from name.robertburrelldonkin.leitus import deep
 
+class SubprocessLoopDeviceStub():
+    def status(self, file):
+        return self.status_result
+
+class TestLoopDevice(unittest.TestCase):
+    
+    def testDeviceName(self):
+        stub = SubprocessLoopDeviceStub()
+        stub.status_result = "/dev/loop0: [fd05]:49178 (/opt/development/leitus/drives.d/small.img)"
+        file = "something";
+        subject = deep.LoopDevice(file, stub)
+        self.assertEqual('/dev/loop0', subject.deviceName())
+        
+
 class TestLosetup(unittest.TestCase):
     
     def testAssociated(self):

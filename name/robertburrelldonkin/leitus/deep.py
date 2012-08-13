@@ -193,9 +193,12 @@ class LoopDevice():
     """
     High level API for loop devices
     """
-    def __init__(self, file):
+    def __init__(self, file, api = None):
         self.file = file
-        self.api = SubprocessLoopDevice()
+        if api is None:
+            self.api = SubprocessLoopDevice()
+        else:
+            self.api = api
     
     def __repr__(self):
         return "Loop device (based on '{0}')".format(self.file)
