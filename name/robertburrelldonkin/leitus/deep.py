@@ -124,7 +124,6 @@ class UnsupportedOSError(UnsupportedError):
             message = message + " this failed.\n" + oserror.strerror
         UnsupportedError.__init__(self, feature, message)
 
-
 class Losetup():
     """
     Convience wrapper for calls to losetup
@@ -143,7 +142,7 @@ class Losetup():
     
     def do(self):
         try:
-            return subprocess.check_output(self.args())
+            return subprocess.check_output(self.args()).decode('utf-8')
         except OSError as e:
             raise UnsupportedOSError(e, "losetup")
 
@@ -158,7 +157,7 @@ class SubprocessLoopDevice():
         """
         status = Losetup().list(file).do();
         if (len(status)):
-            return status
+            return str(status)
         return None
     
     def firstUnusedDevice(self):
