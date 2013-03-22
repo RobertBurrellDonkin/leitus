@@ -68,6 +68,8 @@ For example, the configuration json
 creates a new 2000M disc image owned by "rdonkin" and 
 initialised with profiles "home", "gnome", "maven" and "java6" then maps it to "neo".
 
+A temporary file image will be created and filled with noise, before being mounted and initialised.
+
 Develops
 ========
 

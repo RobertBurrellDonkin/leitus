@@ -27,6 +27,7 @@ import os
 import pwd
 import stat
 import errno
+from tempfile import NamedTemporaryFile
 
 class ResourceError(Exception):
     """
@@ -228,7 +229,9 @@ class LoopDevice():
         """
         if (os.path.exists(self.file)):
             raise AlreadyInUseError(self.file)
+        print("Filling " + self.file + " with noise...")
         self.api.create(self.file, size)
+        print("Done.")
         return self
     
     def deviceName(self):
@@ -571,22 +574,22 @@ class SessionHome():
         self.user = user
         self.sizeInMegabytes = sizeInMegabytes
         self.target = target
-        self.filename = name + ".img"
+        self.filename = NamedTemporaryFile(prefix='leitus-drive-' + name + '-',  suffix=".img").name
         
-    def commissionAnonymous(self):
+    def commission(self):
         CryptDeviceWithRandomKey().on(
             LoopDevice(self.filename).create(self.sizeInMegabytes).open()).mapTo(
             self.name).withFormat(Ext3()).mountOn(self.target).merge(self.profiles).ownBy(self.user)
     
-    def decommissionAnonymous(self):
+    def decommission(self):
         CryptDeviceWithRandomKey().on(
             LoopDevice(self.filename)).unmapFrom(self.name, self.target)
 
     def perform(self):
         if os.path.exists(self.filename):
-            self.decommissionAnonymous()
+            self.decommission()
         else:
-            self.commissionAnonymous()
+            self.commission()
 
     def info(self):
         return "\nSession\n\n"
