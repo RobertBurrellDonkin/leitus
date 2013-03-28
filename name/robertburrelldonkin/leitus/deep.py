@@ -508,7 +508,7 @@ class Copy():
         is preserved.
         """
         if not (os.path.exists(self.source)):
-            raise NotFoundError(source)
+            raise NotFoundError(self.source)
         if not (os.path.exists(target)):
             raise NotFoundError(target)
         for name in os.listdir(self.source):
