@@ -1,6 +1,7 @@
 In Flight
 
 Leitus 0.6
+ * Adopt simpler and more pythonic package name
  * Adopt more conventional directory structure: move script into bin
   
 Leitus 0.5

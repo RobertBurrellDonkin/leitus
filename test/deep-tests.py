@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2012
+# Copyright (c) Robert Burrell Donkin 2012-2013
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 
 import unittest
 
-from name.robertburrelldonkin.leitus import deep
+from leitus import deep
 
 class SubprocessLoopDeviceStub():
     def status(self, file):

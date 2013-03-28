@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2011
+# Copyright (c) Robert Burrell Donkin 2011-2013
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 import os.path
 
-from name.robertburrelldonkin.leitus import diagnosis
+from leitus import diagnosis
 
 class StandardLayout():
 

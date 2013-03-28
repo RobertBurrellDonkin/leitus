@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2011
+# Copyright (c) Robert Burrell Donkin 2011-2013
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,11 +24,11 @@
 
 import os
 
-from name.robertburrelldonkin.leitus import deep
-from name.robertburrelldonkin.leitus import config
-from name.robertburrelldonkin.leitus import layout
-from name.robertburrelldonkin.leitus import diagnosis
-from name.robertburrelldonkin.leitus.config import ConfigConstants
+from leitus import deep
+from leitus import config
+from leitus import layout
+from leitus import diagnosis
+from leitus.config import ConfigConstants
 
 def standard():
     return sessionHome('neo').withSize(2000).forUser(

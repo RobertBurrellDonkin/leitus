@@ -31,5 +31,5 @@ setup(name='leitus',
       url='https://github.com/RobertBurrellDonkin/leitus',
       license='GNU GPL v2',
       scripts=['bin/leitus'],
-      packages=['name', 'name.robertburrelldonkin', 'name.robertburrelldonkin.leitus'],
+      packages=['leitus'],
       )

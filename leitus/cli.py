@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2011
+# Copyright (c) Robert Burrell Donkin 2011-2013
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@
 # Robert Burrell Donkin, 2011
 #
 
-from name.robertburrelldonkin.leitus import diagnosis
-from name.robertburrelldonkin.leitus.surface import Leitus
+from leitus import diagnosis
+from leitus.surface import Leitus
 
 #
 #
