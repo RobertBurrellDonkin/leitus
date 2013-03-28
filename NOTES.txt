@@ -1,6 +1,7 @@
 In Flight
 
 Leitus 0.6
+ * Adopt more conventional directory structure: move script into bin
   
 Leitus 0.5
  * Add "leitus <name> --info" which lists configuration information on <name>
