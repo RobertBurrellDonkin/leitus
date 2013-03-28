@@ -54,6 +54,18 @@ class TestLosetup(unittest.TestCase):
         self.assertEqual(deviceName, args[2])
         
         
+
+class TestSessionHome(unittest.TestCase):
+    
+    def testInfo(self):
+        profiles = ["a profile", "another profile"]
+        name = "some name"
+        sizeInMegabytes = 12345
+        user = "some_user"
+        target = "some/target"
+        subject = deep.SessionHome(profiles, name, sizeInMegabytes, user, target)
+        
+        self.assertEqual(subject.info(), "Session drive - size:12345M mapping:'some name' target:'some/target' user:some_user profiles:'a profile','another profile'")
     
 if __name__ == '__main__':
     unittest.main()
