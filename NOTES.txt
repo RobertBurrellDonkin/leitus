@@ -1,8 +1,8 @@
 In Flight
   * Add "leitus <name> --info" which lists configuration information on <name>
-  * Improved error reporting when losetup command isn't available
   
 Leitus 0.5
+ * Improved error reporting when losetup command isn't available
  * Generate anonymous drive in /tmp (not current directory)
  * Improved error reporting when passphrase is mistyped
  * Upgraded to Python 3
