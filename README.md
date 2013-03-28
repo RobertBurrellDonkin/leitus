@@ -70,7 +70,31 @@ initialised with profiles "home", "gnome", "maven" and "java6" then maps it to "
 
 A temporary file image will be created and filled with noise, before being mounted and initialised.
 
-Develops
-========
+Tasks
+=====
+
+The actions that Leitus knows how to perform
+
+Info
+----
+
+--info displays some basic information about a drive configuration
+
+For example
+
+ $ ./leitus --conf ../conf.d/ --info neo
+
+ Session drive:
+
+	size:		2M
+	mapping:	'neo'
+	target:		'/home/rdonkin'
+	user:		User named 'rdonkin'
+	profiles:	'home','gnome','maven','java6'
+
+
+
+Developers
+==========
 
 * Use nose to run all the tests after making changes: nosetests
