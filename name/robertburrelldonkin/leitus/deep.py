@@ -592,7 +592,7 @@ class SessionHome():
             self.commission()
 
     def info(self):
-        info = "Session drive - size:{0:d}M mapping:'{1}' target:'{2}' user:{3} profiles:".format(self.sizeInMegabytes, self.name, self.target, self.user)
+        info = "\n\nSession drive:\n\n\tsize:\t\t{0}M\n\tmapping:\t'{1}'\n\ttarget:\t\t'{2}'\n\tuser:\t\t{3}\n\tprofiles:\t".format(self.sizeInMegabytes, self.name, self.target, self.user)
         isFirstTime = True
         for profile in self.profiles:
             if isFirstTime:
@@ -600,4 +600,5 @@ class SessionHome():
             else:
                 info += ','
             info += repr(profile)
+        info += "\n\n"
         return info

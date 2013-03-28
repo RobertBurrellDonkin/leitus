@@ -65,7 +65,9 @@ class TestSessionHome(unittest.TestCase):
         target = "some/target"
         subject = deep.SessionHome(profiles, name, sizeInMegabytes, user, target)
         
-        self.assertEqual(subject.info(), "Session drive - size:12345M mapping:'some name' target:'some/target' user:some_user profiles:'a profile','another profile'")
+        self.assertEqual(subject.info(), "\n\nSession drive:\n\n\tsize:\t\t12345M\n\tmapping:\t" +
+                         "'some name'\n\ttarget:\t\t'some/target'\n\tuser:\t\tsome_user\n\tprofiles:\t" +
+                         "'a profile','another profile'\n\n")
     
 if __name__ == '__main__':
     unittest.main()
