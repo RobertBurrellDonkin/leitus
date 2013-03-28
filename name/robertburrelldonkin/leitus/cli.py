@@ -120,4 +120,4 @@ class CommandLineInterface():
             sys.stderr.write("\n")
         return exit_code
     
-__version__="0.5"
+__version__="0.6-SNAPSHOT"
