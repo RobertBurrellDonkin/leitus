@@ -602,3 +602,5 @@ class SessionHome():
             info += repr(profile)
         info += "\n\n"
         return info
+    
+__version__='0.6dev'

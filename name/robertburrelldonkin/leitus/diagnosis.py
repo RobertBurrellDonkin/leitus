@@ -110,3 +110,5 @@ def fileNotFound(error_number):
 # Default logger for module
 #
 logger = logging.getLogger("leitus")
+
+__version__='0.6dev'

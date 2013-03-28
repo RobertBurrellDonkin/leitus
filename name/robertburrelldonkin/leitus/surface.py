@@ -111,3 +111,5 @@ class Leitus():
             return withConfiguration(config.load(name, self.layout.conf()), self.layout).info()
         else:
             return "Here's the deal: a name for information"
+        
+__version__='0.6dev'
