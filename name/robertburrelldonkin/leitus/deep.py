@@ -565,7 +565,7 @@ class LuksDrive():
         LuksDevice().on(DiskByUUID(self.uuid)).toggle(self.name, self.target)
 
     def info(self):
-        return "\nLUKS\n\n"
+        return "\n\nLUKS encrypted drive:\n\n\tuuid:\t\t{0}\n\tmapping:\t'{1}'\n\ttarget:\t\t'{2}'\n\n".format(self.uuid, self.name, self.target)
 
 class SessionHome():
     def __init__(self, profiles, name, sizeInMegabytes, user, target):

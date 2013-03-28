@@ -69,5 +69,17 @@ class TestSessionHome(unittest.TestCase):
                          "'some name'\n\ttarget:\t\t'some/target'\n\tuser:\t\tsome_user\n\tprofiles:\t" +
                          "'a profile','another profile'\n\n")
     
+class TestLuksDrive(unittest.TestCase):
+    
+    def testInfo(self):
+        uuid = "AAAA-BBBB"
+        name = "some name"
+        target = "some/target"
+        subject = deep.LuksDrive(uuid, name, target)
+    
+        self.assertEqual(subject.info(), "\n\nLUKS encrypted drive:\n\n\tuuid:\t\tAAAA-BBBB\n\tmapping:\t" +
+                         "'some name'\n\ttarget:\t\t'some/target'\n\n")
+    
+
 if __name__ == '__main__':
     unittest.main()
