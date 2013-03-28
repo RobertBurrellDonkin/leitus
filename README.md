@@ -82,15 +82,13 @@ Info
 
 For example
 
- $ ./leitus --conf ../conf.d/ --info neo
-
- Session drive:
-
-	size:		2M
-	mapping:	'neo'
-	target:		'/home/rdonkin'
-	user:		User named 'rdonkin'
-	profiles:	'home','gnome','maven','java6'
+    $ ./leitus --conf ../conf.d/ --info neo
+    Session drive:
+        size:           200M
+        mapping:        'neo'
+        target:	        '/home/rdonkin'
+        user:           User named 'rdonkin'
+        profiles:       'home','gnome','maven','java6'
 
 
 
