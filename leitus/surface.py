@@ -38,24 +38,28 @@ def standard():
 def sessionHome(name):
     return Builder().named(name)
     
-def withConfiguration(configuration, directoryLayout = None):
-    constants = ConfigConstants()
-    if constants.UUID in configuration:
-        return deep.LuksDrive(constants.uuidFor(configuration),
-                       constants.nameFor(configuration),
-                       constants.targetFor(configuration))
-    elif constants.SOURCE in configuration:
-        sourceDiscImage = constants.sourceFor(configuration)
-        if (directoryLayout):
-            sourceDiscImage = directoryLayout.drivePath(sourceDiscImage)
-        return deep.ImageDrive(sourceDiscImage,
-                       constants.nameFor(configuration),
-                       constants.targetFor(configuration))
-    else:
-        user = constants.userFor(configuration)
-        return deep.SessionHome(constants.profilesFor(configuration),
-            constants.nameFor(configuration), constants.sizeFor(configuration),
-                    user, user.home())
+class Configure():
+    def __init__(self, api = deep.Facade()):
+        self.api = api
+        
+    def withConfiguration(self, configuration, directoryLayout = None):
+        constants = ConfigConstants()
+        if constants.UUID in configuration:
+            return self.api.aLuksDrive(constants.uuidFor(configuration),
+                           constants.nameFor(configuration),
+                           constants.targetFor(configuration))
+        elif constants.SOURCE in configuration:
+            sourceDiscImage = constants.sourceFor(configuration)
+            if (directoryLayout):
+                sourceDiscImage = directoryLayout.drivePath(sourceDiscImage)
+            return self.api.anImageDrive(sourceDiscImage,
+                           constants.nameFor(configuration),
+                           constants.targetFor(configuration))
+        else:
+            user = constants.userFor(configuration)
+            return self.api.aSessionHome(constants.profilesFor(configuration),
+                constants.nameFor(configuration), constants.sizeFor(configuration),
+                        user, user.home())
     
 class Builder():
     
@@ -84,11 +88,12 @@ class Builder():
         
 
 class Leitus():
-    def __init__(self, conf_d, drives_d, profiles_d):
+    def __init__(self, conf_d, drives_d, profiles_d, api=deep.Facade()):
         self.layout = layout.StandardLayout(conf_d, drives_d, profiles_d)
+        self.api = api
     
     def withConfiguration(self, name):
-        return withConfiguration(config.load(name, self.layout.conf()), self.layout);
+        return Configure(api).withConfiguration(config.load(name, self.layout.conf()), self.layout);
     
     def perform(self, name):
         try:

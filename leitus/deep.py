@@ -603,4 +603,15 @@ class SessionHome():
         info += "\n\n"
         return info
     
+class Facade():
+    def aSessionHome(self, profiles, name, sizeInMegabytes, user, target):
+        return SessionHome(profiles, name, sizeInMegabytes, user, target)
+        
+    def anImageDrive(self, uuid, name, target):
+        return ImageDrive(uuid, name, target)
+    
+    def aLuksDrive(self, uuid, name, target):
+        return LuksDrive(uuid, name, target)
+    
+    
 __version__='0.6dev'

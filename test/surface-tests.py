@@ -33,11 +33,13 @@ from leitus import layout
 
 class TestLUKSDrive(unittest.TestCase):
     
+    
     def testThatWithConfigurationSetsParameters(self):
+        
         aUUID = "8e1f215f-6c53-4a96-b664-5c1252a06e43"
         aName = "Bingo"
         aTarget = "/some/path"
-        drive = surface.withConfiguration({ConfigConstants().UUID:aUUID, ConfigConstants().NAME:aName, ConfigConstants().TARGET:aTarget})
+        drive = surface.Configure().withConfiguration({ConfigConstants().UUID:aUUID, ConfigConstants().NAME:aName, ConfigConstants().TARGET:aTarget})
         self.assertEquals(aName, drive.name)
         self.assertEquals(aTarget, drive.target)
         self.assertEquals(aUUID, drive.uuid)
@@ -46,30 +48,33 @@ class TestLUKSDrive(unittest.TestCase):
 class TestImageDrive(unittest.TestCase):
     
     def testWhenAbsoluteSourceIsNotModified(self):
+        
         aSource = "/something.img"
         aName = "Bongo"
         aTarget = "/a/path"
-        drive = surface.withConfiguration({ConfigConstants().SOURCE:aSource, ConfigConstants().NAME:aName, ConfigConstants().TARGET:aTarget})
+        drive = surface.Configure().withConfiguration({ConfigConstants().SOURCE:aSource, ConfigConstants().NAME:aName, ConfigConstants().TARGET:aTarget})
         self.assertEquals(aName, drive.name)
         self.assertEquals(aTarget, drive.target)
         self.assertEquals(aSource, drive.source)
 
     def testWhenRelativeIsNotModifiedWithoutLayout(self):
+        
         aSource = "something.img"
         aName = "Bongo"
         aTarget = "/a/path"
-        drive = surface.withConfiguration({ConfigConstants().SOURCE:aSource, ConfigConstants().NAME:aName, ConfigConstants().TARGET:aTarget})
+        drive = surface.Configure().withConfiguration({ConfigConstants().SOURCE:aSource, ConfigConstants().NAME:aName, ConfigConstants().TARGET:aTarget})
         self.assertEquals(aName, drive.name)
         self.assertEquals(aTarget, drive.target)
         self.assertEquals(aSource, drive.source)
 
     def testWhenRelativeIsJoinedToDrivesWhenLayoutSet(self):
+        
         aSource = "something.img"
         aName = "Bongo"
         aTarget = "/a/path"
         aDriveDirectory = "drives.d"
         
-        drive = surface.withConfiguration(
+        drive = surface.Configure().withConfiguration(
             {ConfigConstants().SOURCE:aSource, ConfigConstants().NAME:aName, ConfigConstants().TARGET:aTarget},
             layout.StandardLayout("conf.d", aDriveDirectory, "profiles.d"))
         self.assertEquals(aName, drive.name)
