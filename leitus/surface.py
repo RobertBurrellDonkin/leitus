@@ -87,10 +87,13 @@ class Leitus():
     def __init__(self, conf_d, drives_d, profiles_d):
         self.layout = layout.StandardLayout(conf_d, drives_d, profiles_d)
     
+    def withConfiguration(self, name):
+        return withConfiguration(config.load(name, self.layout.conf()), self.layout);
+    
     def perform(self, name):
         try:
             if name:
-                withConfiguration(config.load(name, self.layout.conf()), self.layout).perform()
+                self.withConfiguration(name).perform()
             else:
                 standard().perform()
         except deep.DiscImageNotFoundError as error:
@@ -108,7 +111,7 @@ class Leitus():
             
     def info(self, name):
         if name:
-            return withConfiguration(config.load(name, self.layout.conf()), self.layout).info()
+            return self.withConfiguration(name).info()
         else:
             return "Here's the deal: a name for information"
         
