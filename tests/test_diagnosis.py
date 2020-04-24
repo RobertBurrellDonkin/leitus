@@ -27,20 +27,20 @@ import unittest
 
 from leitus import diagnosis
 
+
 class TestFileNotFound(unittest.TestCase):
-    
-    
+
     def testBelowTwo(self):
-        for i in range(-100,1):
+        for i in range(-100, 1):
             self.assertFalse(diagnosis.fileNotFound(i))
-        
-    
+
     def testTwo(self):
-        self.assertTrue(diagnosis.fileNotFound(2))    
-    
+        self.assertTrue(diagnosis.fileNotFound(2))
+
     def testAboveTwo(self):
-        for i in range(3,100):
+        for i in range(3, 100):
             self.assertFalse(diagnosis.fileNotFound(i))
-        
+
+
 if __name__ == '__main__':
     unittest.main()

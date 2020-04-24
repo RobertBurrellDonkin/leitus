@@ -26,12 +26,13 @@
 import os.path
 import unittest
 
-from leitus import diagnosis
 from leitus import config
+from leitus import diagnosis
 from leitus import layout
 
+
 class TestJsonLoader(unittest.TestCase):
-    
+
     def testWhenConfigurationFileIsMissingThatConfigurationNotFoundErrorIsRaised(self):
         dir = "test"
         someMissingFile = "some-missing-file"
@@ -43,6 +44,6 @@ class TestJsonLoader(unittest.TestCase):
         except diagnosis.ConfigurationNotFoundError as e:
             pass
 
+
 if __name__ == '__main__':
     unittest.main()
-    

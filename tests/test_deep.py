@@ -27,22 +27,24 @@ import unittest
 
 from leitus import deep
 
+
 class SubprocessLoopDeviceStub():
     def status(self, file):
         return self.status_result
 
+
 class TestLoopDevice(unittest.TestCase):
-    
+
     def testDeviceName(self):
         stub = SubprocessLoopDeviceStub()
         stub.status_result = "/dev/loop0: [fd05]:49178 (/opt/development/leitus/drives.d/small.img)"
-        file = "something";
+        file = "something"
         subject = deep.LoopDevice(file, stub)
         self.assertEqual('/dev/loop0', subject.deviceName())
-        
+
 
 class TestLosetup(unittest.TestCase):
-    
+
     def testAssociated(self):
         subject = deep.Losetup()
         deviceName = "Some device Name"
@@ -52,11 +54,10 @@ class TestLosetup(unittest.TestCase):
         self.assertEqual("losetup", args[0])
         self.assertEqual("-j", args[1])
         self.assertEqual(deviceName, args[2])
-        
-        
+
 
 class TestSessionHome(unittest.TestCase):
-    
+
     def testInfo(self):
         profiles = ["a profile", "another profile"]
         name = "some name"
@@ -64,22 +65,23 @@ class TestSessionHome(unittest.TestCase):
         user = "some_user"
         target = "some/target"
         subject = deep.SessionHome(profiles, name, sizeInMegabytes, user, target)
-        
+
         self.assertEqual(subject.info(), "\n\nSession drive:\n\n\tsize:\t\t12345M\n\tmapping:\t" +
                          "'some name'\n\ttarget:\t\t'some/target'\n\tuser:\t\tsome_user\n\tprofiles:\t" +
                          "'a profile','another profile'\n\n")
-    
+
+
 class TestLuksDrive(unittest.TestCase):
-    
+
     def testInfo(self):
         uuid = "AAAA-BBBB"
         name = "some name"
         target = "some/target"
         subject = deep.LuksDrive(uuid, name, target)
-    
+
         self.assertEqual(subject.info(), "\n\nLUKS encrypted drive:\n\n\tuuid:\t\tAAAA-BBBB\n\tmapping:\t" +
                          "'some name'\n\ttarget:\t\t'some/target'\n\n")
-    
+
 
 if __name__ == '__main__':
     unittest.main()
