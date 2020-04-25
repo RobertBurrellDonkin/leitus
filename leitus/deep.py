@@ -137,7 +137,7 @@ class UnsupportedOSError(UnsupportedError):
         UnsupportedError.__init__(self, feature, message)
 
 
-class Losetup():
+class Losetup:
     """
     Convience wrapper for calls to losetup
     """
@@ -160,7 +160,7 @@ class Losetup():
             raise UnsupportedOSError(e, "losetup")
 
 
-class SubprocessLoopDevice():
+class SubprocessLoopDevice:
     """
     Low level API for loop devices
     """
@@ -203,7 +203,7 @@ class SubprocessLoopDevice():
         subprocess.check_call(["losetup", "-d", device])
 
 
-class LoopDevice():
+class LoopDevice:
     """
     High level API for loop devices
     """
@@ -262,7 +262,7 @@ class LoopDevice():
             pass
 
 
-class CryptSetup():
+class CryptSetup:
 
     def map(self, name, device):
         args = ['cryptsetup',
@@ -277,7 +277,7 @@ class CryptSetup():
         subprocess.check_call(args)
 
 
-class CryptDeviceWithRandomKey():
+class CryptDeviceWithRandomKey:
 
     def on(self, source):
         return DeviceMapping(source, CryptSetup())
@@ -364,7 +364,7 @@ class CryptsetupError(LowLevelError):
         return "error code {0}".format(returncode)
 
 
-class LuksSetup():
+class LuksSetup:
 
     def map(self, name, device):
         args = ['cryptsetup',
@@ -386,13 +386,13 @@ class LuksSetup():
         return (subprocess.call(args) == 0)
 
 
-class LuksDevice():
+class LuksDevice:
 
     def on(self, source):
         return DeviceMapping(source, LuksSetup())
 
 
-class DiskByUUID():
+class DiskByUUID:
     PATH = '/dev/disk/by-uuid/'
 
     def __init__(self, uuid):
@@ -405,7 +405,7 @@ class DiskByUUID():
         pass
 
 
-class DeviceMapping():
+class DeviceMapping:
     def __init__(self, source, api):
         self.device = source.deviceName()
         self.api = api
@@ -444,7 +444,7 @@ class DeviceMapping():
         return self
 
 
-class Ext3():
+class Ext3:
 
     def format(self, device):
         subprocess.check_call(['mke2fs', '-j', '-m', '1', '-O',
@@ -452,7 +452,7 @@ class Ext3():
                                device])
 
 
-class SubprocessMount():
+class SubprocessMount:
     def mount(self, device, onPath):
         subprocess.check_call(['mount', device, onPath])
 
@@ -461,7 +461,7 @@ class SubprocessMount():
             subprocess.check_call(['umount', onPath])
 
 
-class FileSystemOnDeviceMapping():
+class FileSystemOnDeviceMapping:
 
     def __init__(self, onDevice):
         self.onDevice = onDevice
@@ -479,7 +479,7 @@ class FileSystemOnDeviceMapping():
         self.api.unmount(path)
 
 
-class User():
+class User:
     NAME_FIELD = 0
     PASSWD_FIELD = 1
     UID_FIELD = 2
@@ -520,7 +520,7 @@ class User():
         return "User named '{0}'".format(self.name)
 
 
-class Copy():
+class Copy:
     """
     Copy operations.
     """
@@ -567,7 +567,7 @@ class MountedFileSystem():
         return "File system at {0}".format(self.mountPoint)
 
 
-class ImageDrive():
+class ImageDrive:
 
     def __init__(self, source, name, target):
         self.source = source
@@ -581,7 +581,7 @@ class ImageDrive():
         return "Image Drive\n  source: {0}\n  target: {1}\n\n".format(self.source, self.target)
 
 
-class LuksDrive():
+class LuksDrive:
 
     def __init__(self, uuid, name, target):
         self.uuid = uuid
@@ -597,7 +597,7 @@ class LuksDrive():
             self.uuid, self.name, self.target)
 
 
-class SessionHome():
+class SessionHome:
     def __init__(self, profiles, name, sizeInMegabytes, user, target):
         self.profiles = profiles
         self.name = name
@@ -635,7 +635,7 @@ class SessionHome():
         return info
 
 
-class Facade():
+class Facade:
     def aSessionHome(self, profiles, name, sizeInMegabytes, user, target):
         return SessionHome(profiles, name, sizeInMegabytes, user, target)
 
