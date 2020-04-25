@@ -1,3 +1,14 @@
+![Python application](https://github.com/RobertBurrellDonkin/leitus/workflows/Python%20application/badge.svg)
+
+Leitus
+======
+
+Whom...?
+--------
+I like to think that [Leitus](https://en.wikipedia.org/wiki/Leitus) the [Boeotian](https://en.wikipedia.org/wiki/Boeotia) is the sort of Homerian hero likely to played by [Claude Rains](https://en.wikipedia.org/wiki/Claude_Rains). An Argonaut, an also-ran suitor for Helen, turned up for the Trojan War and made it all the way home again without every really doing anything that really hit the headlines. 
+
+A Message In A Bottle
+---------------------
 > Enjoy Leitus, a suite of higher level functions for cryptographic drives.
 > 
 > Leitus is coded in Python for Linux under the GPLv2.
