@@ -29,14 +29,3 @@ Leitus 0.3
    * When configuration file not found
    * When script cancelled from keyboard
 
-TODO:
- * Improve error handling from cryptsetup by checking for 255 status (wrong password, looks like) 
- * Replace logged description of disc with message loaded from json
- * Bash completion
- * Add --list-drives (which lists drives)
- * Validate configurations
- * Add luks drive creation
- * Add option to zero new drives in addition to default use of dev random
- * Improve error reporting when disc image already in use
- * Improve error handling from cryptsetup by checking for 240 (device is busy) 
- * Check drives before mounting
