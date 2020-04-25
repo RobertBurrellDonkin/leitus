@@ -41,7 +41,7 @@ class TestJsonLoader(unittest.TestCase):
         subject = config.JsonLoader(someMissingFile, layout.FileSystemLayout(dir))
         try:
             subject.load()
-        except diagnosis.ConfigurationNotFoundError as e:
+        except diagnosis.ConfigurationNotFoundError:
             pass
 
 

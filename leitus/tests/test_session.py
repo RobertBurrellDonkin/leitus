@@ -23,38 +23,17 @@
 # Robert Burrell Donkin, 2011
 #
 
-import unittest
-
-from leitus import deep
+from leitus import session
 
 
-class SubprocessLoopDeviceStub():
-    def status(self, file):
-        return self.status_result
+def test_info():
+    profiles = ["a profile", "another profile"]
+    name = "some name"
+    size_in_megabytes = 12345
+    user = "some_user"
+    target = "some/target"
+    subject = session.SessionHome(profiles, name, size_in_megabytes, user, target)
 
-
-class TestLoopDevice(unittest.TestCase):
-
-    def testDeviceName(self):
-        stub = SubprocessLoopDeviceStub()
-        stub.status_result = "/dev/loop0: [fd05]:49178 (/opt/development/leitus/drives.d/small.img)"
-        file = "something"
-        subject = deep.LoopDevice(file, stub)
-        self.assertEqual('/dev/loop0', subject.device_name())
-
-
-class TestLosetup(unittest.TestCase):
-
-    def testAssociated(self):
-        subject = deep.Losetup()
-        deviceName = "Some device Name"
-        args = subject.list(deviceName).args()
-        self.assertIsNotNone(args)
-        self.assertEqual(3, len(args))
-        self.assertEqual("losetup", args[0])
-        self.assertEqual("-j", args[1])
-        self.assertEqual(deviceName, args[2])
-
-
-if __name__ == '__main__':
-    unittest.main()
+    assert subject.info() == ("\n\nSession drive:\n\n\tsize:\t\t12345M\n\tmapping:\t" +
+                              "'some name'\n\ttarget:\t\t'some/target'\n\tuser:\t\tsome_user\n\tprofiles:\t" +
+                              "'a profile','another profile'\n\n")

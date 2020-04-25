@@ -87,6 +87,3 @@ class JsonLoader:
                 raise diagnosis.ConfigurationPermissionError(self.resource, self.layout, error_message)
             else:
                 raise
-
-
-__version__ = '1.0rc2.dev'

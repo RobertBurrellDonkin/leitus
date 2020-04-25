@@ -125,6 +125,3 @@ class CommandLineInterface:
             sys.stderr.write(recommendations)
             sys.stderr.write("\n")
         return exit_code
-
-
-__version__ = '1.0rc2.dev'

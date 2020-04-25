@@ -71,6 +71,3 @@ class FileSystemLayout():
 
     def __repr__(self):
         return "directory %(dir)s" % {"dir": repr(self.directory)}
-
-
-__version__ = '1.0rc2.dev'

@@ -20,8 +20,7 @@
 # The surface module contains a high level API.
 #
 
-from leitus import config
-from leitus import deep
+from leitus import config, luks, image, session, deep
 from leitus import diagnosis
 from leitus import layout
 from leitus.config import ConfigConstants
@@ -30,7 +29,7 @@ from leitus.config import ConfigConstants
 def with_configuration(configuration, directory_layout=None):
     constants = ConfigConstants()
     if constants.UUID in configuration:
-        return deep.a_luks_drive(constants.uuid_for(configuration),
+        return luks.a_luks_drive(constants.uuid_for(configuration),
                                  constants.name_for(configuration),
                                  constants.target_for(configuration))
 
@@ -39,17 +38,17 @@ def with_configuration(configuration, directory_layout=None):
         if directory_layout:
             source_disc_image = directory_layout.drivePath(source_disc_image)
 
-        return deep.an_image_drive(source_disc_image,
-                                   constants.name_for(configuration),
-                                   constants.target_for(configuration))
+        return image.an_image_drive(source_disc_image,
+                                    constants.name_for(configuration),
+                                    constants.target_for(configuration))
 
     else:
         user = constants.user_for(configuration)
-        return deep.a_session_home(constants.profiles_for(configuration),
-                                   constants.name_for(configuration),
-                                   constants.size_for(configuration),
-                                   user,
-                                   user.home())
+        return session.a_session_home(constants.profiles_for(configuration),
+                                      constants.name_for(configuration),
+                                      constants.size_for(configuration),
+                                      user,
+                                      user.home())
 
 
 class Leitus:
@@ -81,6 +80,3 @@ class Leitus:
             return self.with_configuration(name).info()
         else:
             return "Here's the deal: a name for information"
-
-
-__version__ = '1.0rc2.dev'

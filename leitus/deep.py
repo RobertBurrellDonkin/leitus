@@ -27,25 +27,12 @@ import pwd
 import shutil
 import stat
 import subprocess
-from tempfile import NamedTemporaryFile
-
-
-def a_session_home(profiles, name, size_in_megabytes, user, target):
-    return SessionHome(profiles, name, size_in_megabytes, user, target)
-
-
-def an_image_drive(uuid, name, target):
-    return ImageDrive(uuid, name, target)
-
-
-def a_luks_drive(uuid, name, target):
-    return LuksDrive(uuid, name, target)
 
 
 class ResourceError(Exception):
     """
     Raised when a resource causes an operation to failure.
-    
+
     Attributes:
        resource -- the resource in question
        message -- template formatted during display
@@ -62,8 +49,8 @@ class ResourceError(Exception):
 class PassphaseError(ResourceError):
     """
     Raised when an operation on a resource (such as a drive, device or file)
-    fails 
-    
+    fails
+
     Attributes:
        resource -- which could not be unlocked
     """
@@ -76,7 +63,7 @@ class NotFoundError(ResourceError):
     """
     Raised when a resource (such as a drive, device or file)
     required by an operation cannot be located.
-    
+
     Attributes:
        resource -- which cannot be located
        message -- template formatted during display
@@ -90,7 +77,7 @@ class DiscImageNotFoundError(NotFoundError):
     """
     Raised when the disc image for a loop back drive
     cannot be found.
-    
+
     Attributes:
        resource -- which cannot be located
        message -- template formatted during display
@@ -104,7 +91,7 @@ class AlreadyInUseError(ResourceError):
     """
     Raised when an operation conflicts with an existing use of
     a entity (such as a drive, device or file).
-    
+
     Attributes:
        entity -- currently in use
        message -- template formatted during display
@@ -117,7 +104,7 @@ class AlreadyInUseError(ResourceError):
 class UnsupportedError(Exception):
     """
     Raised when the OS does not support a required feature.
-    
+
     """
 
     def __init__(self, feature, message):
@@ -134,7 +121,7 @@ class UnsupportedError(Exception):
 class UnsupportedOSError(UnsupportedError):
     """
     Raised when the OS does not support a required feature.
-    
+
     """
 
     def __init__(self, oserror, feature):
@@ -182,7 +169,7 @@ class SubprocessLoopDevice:
         """
         Status of every loop device mapped to the given file.
         """
-        status = Losetup().list(file).do();
+        status = Losetup().list(file).do()
         if len(status):
             return str(status)
         return None
@@ -256,7 +243,7 @@ class LoopDevice:
         """
         Creates a new device of the given size
         filled with random data.
-        
+
         size (in megabytes)
         """
         if os.path.exists(self.file):
@@ -306,7 +293,7 @@ class CryptDeviceWithRandomKey:
 class LowLevelError(Exception):
     """
     Raised when a low level operation fails.
-    
+
     Attributes:
        msg -- offers an explanation for the failure
        api -- names the low level API that failed
@@ -332,14 +319,14 @@ class LowLevelError(Exception):
 class CryptsetupError(LowLevelError):
     """
     Interprets an error from cryptsetup.
-    
+
     Cryptsetup codes
         1 wrong parameters
         2 no permission (bad passphrase)
         3 out of memory
         4 wrong device specified
         5 device already exists or device is busy
-    
+
     Attributes:
         returncode -- raw error code
         output -- raw output
@@ -589,74 +576,3 @@ class MountedFileSystem():
 
     def __repr__(self):
         return "File system at {0}".format(self.mount_point)
-
-
-class ImageDrive:
-
-    def __init__(self, source, name, target):
-        self.source = source
-        self.name = name
-        self.target = target
-
-    def perform(self):
-        LuksDevice().on(LoopDevice(self.source).open()).toggle(self.name, self.target)
-
-    def info(self):
-        return "Image Drive\n  source: {0}\n  target: {1}\n\n".format(self.source, self.target)
-
-
-class LuksDrive:
-
-    def __init__(self, uuid, name, target):
-        self.uuid = uuid
-        self.name = name
-        self.target = target
-
-    def perform(self):
-        print("LUKS ", self.uuid, self.name, self.target)
-        LuksDevice().on(DiskByUUID(self.uuid)).toggle(self.name, self.target)
-
-    def info(self):
-        return "\n\nLUKS encrypted drive:\n\n\tuuid:\t\t{0}\n\tmapping:\t'{1}'\n\ttarget:\t\t'{2}'\n\n".format(
-            self.uuid, self.name, self.target)
-
-
-class SessionHome:
-    def __init__(self, profiles, name, size_in_megabytes, user, target):
-        self.profiles = profiles
-        self.name = name
-        self.user = user
-        self.size_in_megabytes = size_in_megabytes
-        self.target = target
-        self.filename = NamedTemporaryFile(prefix='leitus-drive-' + name + '-', suffix=".img").name
-
-    def commission(self):
-        CryptDeviceWithRandomKey().on(
-            LoopDevice(self.filename).create(self.size_in_megabytes).open()).map_to(
-            self.name).with_format(Ext3()).mount_on(self.target).merge(self.profiles).own_by(self.user)
-
-    def decommission(self):
-        CryptDeviceWithRandomKey().on(
-            LoopDevice(self.filename)).unmap_from(self.name, self.target)
-
-    def perform(self):
-        if os.path.exists(self.filename):
-            self.decommission()
-        else:
-            self.commission()
-
-    def info(self):
-        info = "\n\nSession drive:\n\n\tsize:\t\t{0}M\n\tmapping:\t'{1}'\n\ttarget:\t\t'{2}'\n\tuser:\t\t{3}\n\tprofiles:\t".format(
-            self.size_in_megabytes, self.name, self.target, self.user)
-        is_first_time = True
-        for profile in self.profiles:
-            if is_first_time:
-                is_first_time = False
-            else:
-                info += ','
-            info += repr(profile)
-        info += "\n\n"
-        return info
-
-
-__version__ = '1.0rc2.dev'
