@@ -39,9 +39,9 @@ class TestLUKSDrive(unittest.TestCase):
         aTarget = "/some/path"
         drive = surface.Configure().withConfiguration(
             {ConfigConstants().UUID: aUUID, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget})
-        self.assertEquals(aName, drive.name)
-        self.assertEquals(aTarget, drive.target)
-        self.assertEquals(aUUID, drive.uuid)
+        self.assertEqual(aName, drive.name)
+        self.assertEqual(aTarget, drive.target)
+        self.assertEqual(aUUID, drive.uuid)
 
 
 class TestImageDrive(unittest.TestCase):
@@ -52,9 +52,9 @@ class TestImageDrive(unittest.TestCase):
         aTarget = "/a/path"
         drive = surface.Configure().withConfiguration(
             {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget})
-        self.assertEquals(aName, drive.name)
-        self.assertEquals(aTarget, drive.target)
-        self.assertEquals(aSource, drive.source)
+        self.assertEqual(aName, drive.name)
+        self.assertEqual(aTarget, drive.target)
+        self.assertEqual(aSource, drive.source)
 
     def testWhenRelativeIsNotModifiedWithoutLayout(self):
         aSource = "something.img"
@@ -62,9 +62,9 @@ class TestImageDrive(unittest.TestCase):
         aTarget = "/a/path"
         drive = surface.Configure().withConfiguration(
             {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget})
-        self.assertEquals(aName, drive.name)
-        self.assertEquals(aTarget, drive.target)
-        self.assertEquals(aSource, drive.source)
+        self.assertEqual(aName, drive.name)
+        self.assertEqual(aTarget, drive.target)
+        self.assertEqual(aSource, drive.source)
 
     def testWhenRelativeIsJoinedToDrivesWhenLayoutSet(self):
         aSource = "something.img"
@@ -75,9 +75,9 @@ class TestImageDrive(unittest.TestCase):
         drive = surface.Configure().withConfiguration(
             {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget},
             layout.StandardLayout("conf.d", aDriveDirectory, "profiles.d"))
-        self.assertEquals(aName, drive.name)
-        self.assertEquals(aTarget, drive.target)
-        self.assertEquals(os.path.join(aDriveDirectory, aSource), drive.source)
+        self.assertEqual(aName, drive.name)
+        self.assertEqual(aTarget, drive.target)
+        self.assertEqual(os.path.join(aDriveDirectory, aSource), drive.source)
 
 
 class TestBuildSessionHome(unittest.TestCase):
@@ -88,7 +88,7 @@ class TestBuildSessionHome(unittest.TestCase):
         self.checkUserNamed('one')
 
     def checkUserNamed(self, name):
-        self.assertEquals(name, surface.Builder().forUser(name).configuration[surface.ConfigConstants().USER])
+        self.assertEqual(name, surface.Builder().forUser(name).configuration[surface.ConfigConstants().USER])
 
     def testMergeProfiles(self):
         self.checkMergeProfiles(['alpha', 'beta', 'gamma'])
@@ -97,7 +97,7 @@ class TestBuildSessionHome(unittest.TestCase):
         self.checkMergeProfiles([''])
 
     def checkMergeProfiles(self, profiles):
-        self.assertEquals(profiles,
+        self.assertEqual(profiles,
                           surface.Builder().mergeProfiles(profiles).configuration[surface.ConfigConstants().PROFILES])
 
     def testWithSize(self):
@@ -106,22 +106,22 @@ class TestBuildSessionHome(unittest.TestCase):
         self.checkWithSize(46)
 
     def checkWithSize(self, size):
-        self.assertEquals(size, surface.Builder().withSize(size).configuration[surface.ConfigConstants().SIZE])
+        self.assertEqual(size, surface.Builder().withSize(size).configuration[surface.ConfigConstants().SIZE])
 
     def testNamed(self):
         self.checkNamed('roger')
 
     def checkNamed(self, name):
-        self.assertEquals(name, surface.Builder().named(name).configuration[surface.ConfigConstants().NAME])
+        self.assertEqual(name, surface.Builder().named(name).configuration[surface.ConfigConstants().NAME])
 
     def testWithSessionHomeConfiguration(self):
         pass
 
     def checkWithSessionHomeConfiguration(self, user, profiles, size, name):
-        self.assertEquals(name, withConfiguration(ConfigConstants().build(user, profiles, size, name)).name)
-        self.assertEquals(user, withConfiguration(ConfigConstants().build(user, profiles, size, name)).user.name)
-        self.assertEquals(profiles, withConfiguration(ConfigConstants().build(user, profiles, size, name)).profiles)
-        self.assertEquals(size,
+        self.assertEqual(name, withConfiguration(ConfigConstants().build(user, profiles, size, name)).name)
+        self.assertEqual(user, withConfiguration(ConfigConstants().build(user, profiles, size, name)).user.name)
+        self.assertEqual(profiles, withConfiguration(ConfigConstants().build(user, profiles, size, name)).profiles)
+        self.assertEqual(size,
                           withConfiguration(ConfigConstants().build(user, profiles, size, name)).user.sizeInMegabytes)
 
 
