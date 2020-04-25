@@ -26,16 +26,49 @@ import sys
 from leitus import diagnosis
 from leitus.surface import Leitus
 
+__version__ = '1.0rc2.dev'
+
 
 #
 #
 # Scripting foo
+INFO = """Leitus %(version)s
+
+  Add the drive name to the command line, and I'll describe its configuration.
+
+  For example 'leitus --info cool'
+
+""" % {
+    "version": __version__}
 
 
 def leitus(conf_data, var_data):
     CommandLineInterface(os.path.join(conf_data, 'leitus'),
                          os.path.join(var_data, 'drives.d'),
                          os.path.join(var_data, 'profiles.d')).leitus()
+
+
+def execute(args):
+    if args.name:
+        app = Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles)
+        if args.info:
+            sys.stdout.write(app.info(args.name))
+        else:
+            app.perform(args.name)
+    else:
+        if args.info:
+            write_info()
+        else:
+            write_version()
+
+
+def write_version():
+    sys.stdout.write(
+        "Leitus %(version)s\n - Did you want something in particular?\n" % {"version": __version__})
+
+
+def write_info():
+    sys.stdout.write(INFO)
 
 
 class CommandLineInterface:
@@ -59,40 +92,8 @@ class CommandLineInterface:
 
     def leitus(self):
         try:
-            parser = argparse.ArgumentParser(
-                description="Leitus %(version)s does the legwork so users can relax and enjoy cryptographic drives."
-                            % {"version": __version__})
-            parser.add_argument('name', help='the configuration exercised', nargs='?', default=None)
-            parser.add_argument('-c', '--conf',
-                                help='configuration directory (defaults to %(conf.d)s)' % {"conf.d": self.conf_d},
-                                nargs='?', default=self.conf_d)
-            parser.add_argument('-p', '--profiles',
-                                help='profiles directory (defaults to %(profiles.d)s)' % {
-                                    "profiles.d": self.profiles_d},
-                                nargs='?', default=self.profiles_d)
-            parser.add_argument('-d', '--drives',
-                                help='drives directory (defaults to %(drives.d)s)' % {"drives.d": self.drives_d},
-                                nargs='?', default=self.drives_d)
-            parser.add_argument('-i', '--info',
-                                help='describes the configuration',
-                                action='store_true')
-
-            args = parser.parse_args()
-
-            if args.name:
-                app = Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles)
-                if args.info:
-                    sys.stdout.write(app.info(args.name))
-                else:
-                    app.perform(args.name)
-            else:
-                if args.info:
-                    sys.stdout.write(
-                        "Leitus %(version)s\n\n  Add the drive name to the command line, and I'll describe its configuration.\n\n  For example 'leitus --info cool'\n\n" % {
-                            "version": __version__})
-                else:
-                    sys.stdout.write(
-                        "Leitus %(version)s\n - Did you want something in particular?\n" % {"version": __version__})
+            args = self.parse_args()
+            execute(args)
             return self.OKAY
 
         except diagnosis.ConfigurationPermissionError as error:
@@ -116,6 +117,27 @@ class CommandLineInterface:
         except KeyboardInterrupt:
             sys.stderr.write("\nLeitus cancelled.\n\nSome manual tidy up might be a good idea.\n")
             return self.FAILURE_USER_CANCEL
+
+    def parse_args(self):
+        parser = argparse.ArgumentParser(
+            description="Leitus %(version)s does the legwork so users can relax and enjoy cryptographic drives."
+                        % {"version": __version__})
+        parser.add_argument('name', help='the configuration exercised', nargs='?', default=None)
+        parser.add_argument('-c', '--conf',
+                            help='configuration directory (defaults to %(conf.d)s)' % {"conf.d": self.conf_d},
+                            nargs='?', default=self.conf_d)
+        parser.add_argument('-p', '--profiles',
+                            help='profiles directory (defaults to %(profiles.d)s)' % {
+                                "profiles.d": self.profiles_d},
+                            nargs='?', default=self.profiles_d)
+        parser.add_argument('-d', '--drives',
+                            help='drives directory (defaults to %(drives.d)s)' % {"drives.d": self.drives_d},
+                            nargs='?', default=self.drives_d)
+        parser.add_argument('-i', '--info',
+                            help='describes the configuration',
+                            action='store_true')
+        args = parser.parse_args()
+        return args
 
     @staticmethod
     def note_failure(exit_code, error, recommendations=None):
