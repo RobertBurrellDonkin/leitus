@@ -28,11 +28,12 @@ from leitus.config import ConfigConstants
 
 
 def standard():
-    return sessionHome('neo').withSize(2000).forUser(
+    return session_home('neo').withSize(2000).forUser(
         'rdonkin').mergeProfiles(['home', 'gnome', 'maven', 'java6']
                                  ).build()
 
-def sessionHome(name):
+
+def session_home(name):
     return Builder().named(name)
 
 
