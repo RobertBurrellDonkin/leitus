@@ -24,60 +24,43 @@
 #
 
 import os.path
-import unittest
 
 from leitus import layout
 from leitus import surface
 from leitus.config import ConfigConstants
 
 
-# class TestLUKSDrive(unittest.TestCase):
-#
-#     def testThatWithConfigurationSetsParameters(self):
-#         a_uuid = "8e1f215f-6c53-4a96-b664-5c1252a06e43"
-#         a_name = "Bingo"
-#         a_target = "/some/path"
-#         drive = surface.with_configuration(
-#             {ConfigConstants().UUID: a_uuid, ConfigConstants().NAME: a_name, ConfigConstants().TARGET: a_target})
-#         self.assertEqual(a_name, drive.name)
-#         self.assertEqual(a_target, drive.target)
-#         self.assertEqual(a_uuid, drive.uuid)
-#
-#
-# class TestImageDrive(unittest.TestCase):
-#
-#     def testWhenAbsoluteSourceIsNotModified(self):
-#         aSource = "/something.img"
-#         aName = "Bongo"
-#         aTarget = "/a/path"
-#         drive = surface.Configure().with_configuration(
-#             {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget})
-#         self.assertEqual(aName, drive.name)
-#         self.assertEqual(aTarget, drive.target)
-#         self.assertEqual(aSource, drive.source)
-#
-#     def testWhenRelativeIsNotModifiedWithoutLayout(self):
-#         aSource = "something.img"
-#         aName = "Bongo"
-#         aTarget = "/a/path"
-#         drive = surface.Configure().with_configuration(
-#             {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget})
-#         self.assertEqual(aName, drive.name)
-#         self.assertEqual(aTarget, drive.target)
-#         self.assertEqual(aSource, drive.source)
-#
-#     def testWhenRelativeIsJoinedToDrivesWhenLayoutSet(self):
-#         aSource = "something.img"
-#         aName = "Bongo"
-#         aTarget = "/a/path"
-#         aDriveDirectory = "drives.d"
-#
-#         drive = surface.Configure().with_configuration(
-#             {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget},
-#             layout.StandardLayout("conf.d", aDriveDirectory, "profiles.d"))
-#         self.assertEqual(aName, drive.name)
-#         self.assertEqual(aTarget, drive.target)
-#         self.assertEqual(os.path.join(aDriveDirectory, aSource), drive.source)
+def test_whenAbsoluteSourceIsNotModified():
+    aSource = "/something.img"
+    aName = "Bongo"
+    aTarget = "/a/path"
+    drive = surface.with_configuration(
+        {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget})
+    assert aName == drive.name
+    assert aTarget == drive.target
+    assert aSource == drive.source
 
-if __name__ == '__main__':
-    unittest.main()
+
+def test_whenRelativeIsNotModifiedWithoutLayout():
+    aSource = "something.img"
+    aName = "Bongo"
+    aTarget = "/a/path"
+    drive = surface.with_configuration(
+        {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget})
+    assert aName == drive.name
+    assert aTarget == drive.target
+    assert aSource == drive.source
+
+
+def test_whenRelativeIsJoinedToDrivesWhenLayoutSet():
+    aSource = "something.img"
+    aName = "Bongo"
+    aTarget = "/a/path"
+    aDriveDirectory = "drives.d"
+
+    drive = surface.with_configuration(
+        {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget},
+        layout.StandardLayout("conf.d", aDriveDirectory, "profiles.d"))
+    assert aName == drive.name
+    assert aTarget == drive.target
+    assert os.path.join(aDriveDirectory, aSource) == drive.source

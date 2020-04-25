@@ -30,25 +30,26 @@ from leitus.config import ConfigConstants
 def with_configuration(configuration, directory_layout=None):
     constants = ConfigConstants()
     if constants.UUID in configuration:
-        return None #deep.a_luks_drive(constants.uuid_for(configuration),
-                     #            constants.name_for(configuration),
-                      #           constants.target_for(configuration))
+        return deep.a_luks_drive(constants.uuid_for(configuration),
+                                 constants.name_for(configuration),
+                                 constants.target_for(configuration))
 
     elif constants.SOURCE in configuration:
         source_disc_image = constants.source_for(configuration)
         if directory_layout:
             source_disc_image = directory_layout.drivePath(source_disc_image)
 
-        return None # deep.an_image_drive(source_disc_image,
-              #                     constants.name_for(configuration),
-               #                    constants.target_for(configuration))
+        return deep.an_image_drive(source_disc_image,
+                                   constants.name_for(configuration),
+                                   constants.target_for(configuration))
+
     else:
         user = constants.user_for(configuration)
-        return None #deep.a_session_home(constants.profiles_for(configuration),
-                     #              constants.name_for(configuration),
-                      #             constants.size_for(configuration),
-                       #            user,
-                        #           user.home())
+        return deep.a_session_home(constants.profiles_for(configuration),
+                                   constants.name_for(configuration),
+                                   constants.size_for(configuration),
+                                   user,
+                                   user.home())
 
 
 class Leitus:

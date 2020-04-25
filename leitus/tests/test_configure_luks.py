@@ -26,30 +26,30 @@
 from leitus import surface
 from leitus.config import ConfigConstants
 
-#
-# def test_sets_name():
-#     a_uuid = "8e1f215f-6c53-4a96-b664-5c1252a06e43"
-#     a_name = "Bingo"
-#     a_target = "/some/path"
-#     drive = surface.with_configuration(
-#         {ConfigConstants().UUID: a_uuid, ConfigConstants().NAME: a_name, ConfigConstants().TARGET: a_target})
-#     assert a_name, drive.name
-#
-#
-# def test_sets_target():
-#     a_uuid = "8e1f215f-6c53-4a96-b664-5c1252a06e43"
-#     a_name = "Bingo"
-#     a_target = "/some/path"
-#     drive = surface.with_configuration(
-#         {ConfigConstants().UUID: a_uuid, ConfigConstants().NAME: a_name, ConfigConstants().TARGET: a_target})
-#     assert a_target, drive.target
-#     assert a_uuid, drive.uuid
-#
-#
-# def test_sets_uuid():
-#     a_uuid = "8e1f215f-6c53-4a96-b664-5c1252a06e43"
-#     a_name = "Bingo"
-#     a_target = "/some/path"
-#     drive = surface.with_configuration(
-#         {ConfigConstants().UUID: a_uuid, ConfigConstants().NAME: a_name, ConfigConstants().TARGET: a_target})
-#     assert a_uuid, drive.uuid
+
+def test_sets_name():
+    a_uuid = "8e1f215f-6c53-4a96-b664-5c1252a06e43"
+    a_name = "Bingo"
+    a_target = "/some/path"
+    drive = surface.with_configuration(
+        {ConfigConstants().UUID: a_uuid, ConfigConstants().NAME: a_name, ConfigConstants().TARGET: a_target})
+    assert a_name == drive.name
+
+
+def test_sets_target():
+    a_uuid = "8e1f215f-6c53-4a96-b664-5c1252a06e43"
+    a_name = "Bingo"
+    a_target = "/some/path"
+    drive = surface.with_configuration(
+        {ConfigConstants().UUID: a_uuid, ConfigConstants().NAME: a_name, ConfigConstants().TARGET: a_target})
+    assert a_target, drive.target
+    assert a_uuid == drive.uuid
+
+
+def test_sets_uuid():
+    a_uuid = "8e1f215f-6c53-4a96-b664-5c1252a06e43"
+    a_name = "Bingo"
+    a_target = "/some/path"
+    drive = surface.with_configuration(
+        {ConfigConstants().UUID: a_uuid, ConfigConstants().NAME: a_name, ConfigConstants().TARGET: a_target})
+    assert a_uuid == drive.uuid
