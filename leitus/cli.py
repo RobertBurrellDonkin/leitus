@@ -126,4 +126,4 @@ class CommandLineInterface():
         return exit_code
 
 
-__version__ = '1.0rc1.dev'
+__version__ = '1.0rc2.dev'

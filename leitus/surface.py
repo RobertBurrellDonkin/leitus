@@ -119,4 +119,4 @@ class Leitus():
             return "Here's the deal: a name for information"
 
 
-__version__ = '1.0rc1.dev'
+__version__ = '1.0rc2.dev'
