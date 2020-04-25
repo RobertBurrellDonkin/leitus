@@ -38,7 +38,7 @@ def leitus(conf_data, var_data):
                          os.path.join(var_data, 'profiles.d')).leitus()
 
 
-class CommandLineInterface():
+class CommandLineInterface:
     # Successful exit
     OKAY = 0
     # Exit with failure caused by missing configuration
@@ -79,14 +79,14 @@ class CommandLineInterface():
 
             args = parser.parse_args()
 
-            if (args.name):
-                leitus = Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles)
-                if (args.info):
-                    sys.stdout.write(leitus.info(args.name))
+            if args.name:
+                app = Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles)
+                if args.info:
+                    sys.stdout.write(app.info(args.name))
                 else:
-                    leitus.perform(args.name)
+                    app.perform(args.name)
             else:
-                if (args.info):
+                if args.info:
                     sys.stdout.write(
                         "Leitus %(version)s\n\n  Add the drive name to the command line, and I'll describe its configuration.\n\n  For example 'leitus --info cool'\n\n" % {
                             "version": __version__})
