@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2011-2013, 2020
+# Copyright (c) Robert Burrell Donkin 2012-2013, 2020
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,32 +15,38 @@
 #    with this program; if not, write to the Free Software Foundation, Inc.,
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-#
-#
 # Leitus is a suite of higher level functions for cryptographic drives.
-# The contents tests the surface module.
 #
-# Robert Burrell Donkin, 2011
+#
 #
 
-import unittest
+from leitus.deep import LuksDevice, DiskByUUID
 
-from leitus import diagnosis
+INFO = """
 
+LUKS encrypted drive:
 
-class TestFileNotFound(unittest.TestCase):
+\tuuid:\t\t{0}
+\tmapping:\t'{1}'
+\ttarget:\t\t'{2}'
 
-    def test_below_two(self):
-        for i in range(-100, 1):
-            self.assertFalse(diagnosis.file_not_found(i))
-
-    def test_two(self):
-        self.assertTrue(diagnosis.file_not_found(2))
-
-    def test_above_two(self):
-        for i in range(3, 100):
-            self.assertFalse(diagnosis.file_not_found(i))
+"""
 
 
-if __name__ == '__main__':
-    unittest.main()
+def a_luks_drive(uuid, name, target):
+    return LuksDrive(uuid, name, target)
+
+
+class LuksDrive:
+
+    def __init__(self, uuid, name, target):
+        self.uuid = uuid
+        self.name = name
+        self.target = target
+
+    def perform(self):
+        print("LUKS ", self.uuid, self.name, self.target)
+        LuksDevice().on(DiskByUUID(self.uuid)).toggle(self.name, self.target)
+
+    def info(self):
+        return INFO.format(self.uuid, self.name, self.target)

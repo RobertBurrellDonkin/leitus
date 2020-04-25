@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2011-2013
+# Copyright (c) Robert Burrell Donkin 2011-2013, 2020
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ class TestJsonLoader(unittest.TestCase):
         subject = config.JsonLoader(someMissingFile, layout.FileSystemLayout(dir))
         try:
             subject.load()
-        except diagnosis.ConfigurationNotFoundError as e:
+        except diagnosis.ConfigurationNotFoundError:
             pass
 
 

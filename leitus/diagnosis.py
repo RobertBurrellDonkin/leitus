@@ -23,19 +23,19 @@ import logging
 
 class DiagnosticError(Exception):
     def __init__(self, error, fix, message):
-        self.diagnosticMessage = message
+        self.diagnostic_message = message
         self.causalError = error
         self.fix = fix
         logger.debug(error)
         Exception.__init__(self, message)
 
     def __str__(self):
-        return self.diagnosticMessage
+        return self.diagnostic_message
 
     def __repr__(self):
         return str(self)
 
-    def recommendedFix(self):
+    def recommended_fix(self):
         return self.fix
 
 
@@ -64,27 +64,27 @@ class ConfigurationPermissionError(DiagnosticError):
 
 
 class MissingDiscImageError(DiagnosticError):
-    def __init__(self, layout, error, discImageNotFound):
+    def __init__(self, layout, error, disc_image_not_found):
         self.layout = layout
         self.error = error
-        self.discImageNotFound = discImageNotFound
+        self.disc_image_not_found = disc_image_not_found
         DiagnosticError.__init__(self,
                                  error,
                                  "Did you mean to specify a drives directory on the command line?",
                                  "Disc image '%(discImage)s' not found. Drives in %(drives)s"
-                                 % {"discImage": str(discImageNotFound), "drives": repr(layout.drives())})
+                                 % {"discImage": str(disc_image_not_found), "drives": repr(layout.drives())})
 
 
 class CouldNotUnlockEncryptedDrive(DiagnosticError):
-    def __init__(self, layout, error, driveThatCouldNotBeUnlock):
+    def __init__(self, layout, error, drive_that_could_not_be_unlock):
         self.layout = layout
         self.error = error
-        self.driveThatCouldNotBeUnlock = driveThatCouldNotBeUnlock
+        self.drive_that_could_not_be_unlock = drive_that_could_not_be_unlock
         DiagnosticError.__init__(self,
                                  error,
                                  "Did you type the right passphase?",
                                  "\n'%(discImage)s' couldn't be unlocked."
-                                 % {"discImage": str(driveThatCouldNotBeUnlock)})
+                                 % {"discImage": str(drive_that_could_not_be_unlock)})
 
 
 class UnsupportedRequirementError(DiagnosticError):
@@ -104,13 +104,11 @@ class InUseError(DiagnosticError):
                                  % {"resource": str(error.resource)})
 
 
-def fileNotFound(error_number):
-    return (error_number == 2)
+def file_not_found(error_number):
+    return error_number == 2
 
 
 #
 # Default logger for module
 #
 logger = logging.getLogger("leitus")
-
-__version__ = '1.0rc2.dev'

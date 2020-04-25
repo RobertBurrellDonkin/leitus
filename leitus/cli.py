@@ -26,10 +26,20 @@ import sys
 from leitus import diagnosis
 from leitus.surface import Leitus
 
+__version__ = '1.0rc2.dev'
+
 
 #
 #
 # Scripting foo
+INFO = """Leitus %(version)s
+
+  Add the drive name to the command line, and I'll describe its configuration.
+
+  For example 'leitus --info cool'
+
+""" % {
+    "version": __version__}
 
 
 def leitus(conf_data, var_data):
@@ -38,7 +48,30 @@ def leitus(conf_data, var_data):
                          os.path.join(var_data, 'profiles.d')).leitus()
 
 
-class CommandLineInterface():
+def execute(args):
+    if args.name:
+        app = Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles)
+        if args.info:
+            sys.stdout.write(app.info(args.name))
+        else:
+            app.perform(args.name)
+    else:
+        if args.info:
+            write_info()
+        else:
+            write_version()
+
+
+def write_version():
+    sys.stdout.write(
+        "Leitus %(version)s\n - Did you want something in particular?\n" % {"version": __version__})
+
+
+def write_info():
+    sys.stdout.write(INFO)
+
+
+class CommandLineInterface:
     # Successful exit
     OKAY = 0
     # Exit with failure caused by missing configuration
@@ -59,71 +92,58 @@ class CommandLineInterface():
 
     def leitus(self):
         try:
-            parser = argparse.ArgumentParser(
-                description="Leitus %(version)s does the legwork so users can relax and enjoy cryptographic drives."
-                            % {"version": __version__})
-            parser.add_argument('name', help='the configuration exercised', nargs='?', default=None)
-            parser.add_argument('-c', '--conf',
-                                help='configuration directory (defaults to %(conf.d)s)' % {"conf.d": self.conf_d},
-                                nargs='?', default=self.conf_d)
-            parser.add_argument('-p', '--profiles',
-                                help='profiles directory (defaults to %(profiles.d)s)' % {
-                                    "profiles.d": self.profiles_d},
-                                nargs='?', default=self.profiles_d)
-            parser.add_argument('-d', '--drives',
-                                help='drives directory (defaults to %(drives.d)s)' % {"drives.d": self.drives_d},
-                                nargs='?', default=self.drives_d)
-            parser.add_argument('-i', '--info',
-                                help='describes the configuration',
-                                action='store_true')
-
-            args = parser.parse_args()
-
-            if (args.name):
-                leitus = Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles)
-                if (args.info):
-                    sys.stdout.write(leitus.info(args.name))
-                else:
-                    leitus.perform(args.name)
-            else:
-                if (args.info):
-                    sys.stdout.write(
-                        "Leitus %(version)s\n\n  Add the drive name to the command line, and I'll describe its configuration.\n\n  For example 'leitus --info cool'\n\n" % {
-                            "version": __version__})
-                else:
-                    sys.stdout.write(
-                        "Leitus %(version)s\n - Did you want something in particular?\n" % {"version": __version__})
+            args = self.parse_args()
+            execute(args)
             return self.OKAY
 
         except diagnosis.ConfigurationPermissionError as error:
-            return self.noteFailure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommendedFix())
+            return self.note_failure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommended_fix())
 
         except diagnosis.ConfigurationNotFoundError as error:
-            return self.noteFailure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommendedFix())
+            return self.note_failure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommended_fix())
 
         except diagnosis.MissingDiscImageError as error:
-            return self.noteFailure(self.FAILURE_MISSING_DISC_IMAGE, error, error.recommendedFix())
+            return self.note_failure(self.FAILURE_MISSING_DISC_IMAGE, error, error.recommended_fix())
 
         except diagnosis.CouldNotUnlockEncryptedDrive as error:
-            return self.noteFailure(self.FAILURE_CANNOT_UNLOCK_ENCRYPTED_DRIVE, error, error.recommendedFix())
+            return self.note_failure(self.FAILURE_CANNOT_UNLOCK_ENCRYPTED_DRIVE, error, error.recommended_fix())
 
         except diagnosis.UnsupportedRequirementError as error:
-            return self.noteFailure(self.FAILURE_MISSING_REQUIREMENT, error, error.recommendedFix())
+            return self.note_failure(self.FAILURE_MISSING_REQUIREMENT, error, error.recommended_fix())
 
         except diagnosis.InUseError as error:
-            return self.noteFailure(self.FAILURE_MISSING_REQUIREMENT, error, error.recommendedFix())
+            return self.note_failure(self.FAILURE_MISSING_REQUIREMENT, error, error.recommended_fix())
 
         except KeyboardInterrupt:
             sys.stderr.write("\nLeitus cancelled.\n\nSome manual tidy up might be a good idea.\n")
             return self.FAILURE_USER_CANCEL
 
-    def noteFailure(self, exit_code, error, recommendations=None):
+    def parse_args(self):
+        parser = argparse.ArgumentParser(
+            description="Leitus %(version)s does the legwork so users can relax and enjoy cryptographic drives."
+                        % {"version": __version__})
+        parser.add_argument('name', help='the configuration exercised', nargs='?', default=None)
+        parser.add_argument('-c', '--conf',
+                            help='configuration directory (defaults to %(conf.d)s)' % {"conf.d": self.conf_d},
+                            nargs='?', default=self.conf_d)
+        parser.add_argument('-p', '--profiles',
+                            help='profiles directory (defaults to %(profiles.d)s)' % {
+                                "profiles.d": self.profiles_d},
+                            nargs='?', default=self.profiles_d)
+        parser.add_argument('-d', '--drives',
+                            help='drives directory (defaults to %(drives.d)s)' % {"drives.d": self.drives_d},
+                            nargs='?', default=self.drives_d)
+        parser.add_argument('-i', '--info',
+                            help='describes the configuration',
+                            action='store_true')
+        args = parser.parse_args()
+        return args
+
+    @staticmethod
+    def note_failure(exit_code, error, recommendations=None):
         sys.stderr.write("%(message)s\nLeitus failed.\n" % {"message": repr(error)})
         if recommendations:
             sys.stderr.write("\n")
             sys.stderr.write(recommendations)
             sys.stderr.write("\n")
         return exit_code
-
-
-__version__ = '1.0rc2.dev'

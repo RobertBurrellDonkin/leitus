@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2011-2013, 2020
+# Copyright (c) Robert Burrell Donkin 2020
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,32 +15,19 @@
 #    with this program; if not, write to the Free Software Foundation, Inc.,
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-#
-#
-# Leitus is a suite of higher level functions for cryptographic drives.
-# The contents tests the surface module.
-#
-# Robert Burrell Donkin, 2011
-#
+from unittest import mock
 
-import unittest
-
-from leitus import diagnosis
+from leitus import cli
 
 
-class TestFileNotFound(unittest.TestCase):
+@mock.patch('leitus.cli.sys.stdout')
+def test_write_info(mock_stdout):
 
-    def test_below_two(self):
-        for i in range(-100, 1):
-            self.assertFalse(diagnosis.file_not_found(i))
+    cli.write_info()
 
-    def test_two(self):
-        self.assertTrue(diagnosis.file_not_found(2))
-
-    def test_above_two(self):
-        for i in range(3, 100):
-            self.assertFalse(diagnosis.file_not_found(i))
-
-
-if __name__ == '__main__':
-    unittest.main()
+    mock_stdout.write.assert_has_calls([
+            mock.call(
+                "Leitus " + cli.__version__ + "\n\n  "
+                "Add the drive name to the command line, and I'll describe its configuration.\n\n"
+                "  For example 'leitus --info cool'\n\n")
+        ])

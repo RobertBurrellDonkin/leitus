@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2011-2013, 2020
+# Copyright (c) Robert Burrell Donkin 2012-2013, 2020
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,32 +15,26 @@
 #    with this program; if not, write to the Free Software Foundation, Inc.,
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-#
-#
 # Leitus is a suite of higher level functions for cryptographic drives.
-# The contents tests the surface module.
 #
-# Robert Burrell Donkin, 2011
 #
-
-import unittest
-
-from leitus import diagnosis
+#
+from leitus.deep import LuksDevice, LoopDevice
 
 
-class TestFileNotFound(unittest.TestCase):
-
-    def test_below_two(self):
-        for i in range(-100, 1):
-            self.assertFalse(diagnosis.file_not_found(i))
-
-    def test_two(self):
-        self.assertTrue(diagnosis.file_not_found(2))
-
-    def test_above_two(self):
-        for i in range(3, 100):
-            self.assertFalse(diagnosis.file_not_found(i))
+def an_image_drive(uuid, name, target):
+    return ImageDrive(uuid, name, target)
 
 
-if __name__ == '__main__':
-    unittest.main()
+class ImageDrive:
+
+    def __init__(self, source, name, target):
+        self.source = source
+        self.name = name
+        self.target = target
+
+    def perform(self):
+        LuksDevice().on(LoopDevice(self.source).open()).toggle(self.name, self.target)
+
+    def info(self):
+        return "Image Drive\n  source: {0}\n  target: {1}\n\n".format(self.source, self.target)

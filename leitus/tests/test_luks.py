@@ -23,38 +23,14 @@
 # Robert Burrell Donkin, 2011
 #
 
-import unittest
-
-from leitus import deep
+from leitus.luks import LuksDrive
 
 
-class SubprocessLoopDeviceStub():
-    def status(self, file):
-        return self.status_result
+def test_info():
+    uuid = "AAAA-BBBB"
+    name = "some name"
+    target = "some/target"
+    subject = LuksDrive(uuid, name, target)
 
-
-class TestLoopDevice(unittest.TestCase):
-
-    def testDeviceName(self):
-        stub = SubprocessLoopDeviceStub()
-        stub.status_result = "/dev/loop0: [fd05]:49178 (/opt/development/leitus/drives.d/small.img)"
-        file = "something"
-        subject = deep.LoopDevice(file, stub)
-        self.assertEqual('/dev/loop0', subject.device_name())
-
-
-class TestLosetup(unittest.TestCase):
-
-    def testAssociated(self):
-        subject = deep.Losetup()
-        deviceName = "Some device Name"
-        args = subject.list(deviceName).args()
-        self.assertIsNotNone(args)
-        self.assertEqual(3, len(args))
-        self.assertEqual("losetup", args[0])
-        self.assertEqual("-j", args[1])
-        self.assertEqual(deviceName, args[2])
-
-
-if __name__ == '__main__':
-    unittest.main()
+    assert subject.info() == ("\n\nLUKS encrypted drive:\n\n\tuuid:\t\tAAAA-BBBB\n\tmapping:\t" +
+                              "'some name'\n\ttarget:\t\t'some/target'\n\n")
