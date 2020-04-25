@@ -113,4 +113,4 @@ def fileNotFound(error_number):
 #
 logger = logging.getLogger("leitus")
 
-__version__ = '0.6dev'
+__version__ = '1.0rc1.dev'
