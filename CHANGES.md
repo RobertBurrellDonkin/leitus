@@ -1,4 +1,8 @@
-In Flight
+Changes
+=======
+
+Leitus 1.0
+ * Port to Python 3
 
 Leitus 0.6
  * Adopt simpler and more pythonic package name
