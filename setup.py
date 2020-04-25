@@ -30,7 +30,11 @@ setup(name='leitus',
       scripts=['bin/leitus'],
       packages=['leitus'],
       classifiers=[
-          "Programming Language :: Python :: 3.7",
-          "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+          'Programming Language :: Python :: 3.7"'
+          'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+          'Operating System :: POSIX',
+          'Intended Audience :: System Administrators',
+          'Development Status :: 4 - Beta',
+          'Environment :: Console',
       ]
       )
