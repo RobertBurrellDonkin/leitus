@@ -27,80 +27,42 @@ from leitus import layout
 from leitus.config import ConfigConstants
 
 
-def standard():
-    return session_home('neo').with_size(2000).for_user(
-        'rdonkin').merge_profiles(['home', 'gnome', 'maven', 'java6']
-                                  ).build()
+def with_configuration(configuration, directory_layout=None):
+    constants = ConfigConstants()
+    if constants.UUID in configuration:
+        return None #deep.a_luks_drive(constants.uuid_for(configuration),
+                     #            constants.name_for(configuration),
+                      #           constants.target_for(configuration))
 
+    elif constants.SOURCE in configuration:
+        source_disc_image = constants.source_for(configuration)
+        if directory_layout:
+            source_disc_image = directory_layout.drivePath(source_disc_image)
 
-def session_home(name):
-    return Builder().named(name)
-
-
-class Configure:
-    def __init__(self, api=deep.Facade()):
-        self.api = api
-
-    def with_configuration(self, configuration, directory_layout=None):
-        constants = ConfigConstants()
-        if constants.UUID in configuration:
-            return self.api.a_luks_drive(constants.uuid_for(configuration),
-                                         constants.name_for(configuration),
-                                         constants.target_for(configuration))
-        elif constants.SOURCE in configuration:
-            source_disc_image = constants.source_for(configuration)
-            if directory_layout:
-                source_disc_image = directory_layout.drivePath(source_disc_image)
-            return self.api.an_image_drive(source_disc_image,
-                                           constants.name_for(configuration),
-                                           constants.target_for(configuration))
-        else:
-            user = constants.user_for(configuration)
-            return self.api.a_session_home(constants.profiles_for(configuration),
-                                           constants.name_for(configuration), constants.size_for(configuration),
-                                           user, user.home())
-
-
-class Builder:
-
-    def __init__(self):
-        self.configuration = {}
-        self.constants = ConfigConstants()
-
-    def merge_profiles(self, profiles):
-        self.configuration[self.constants.PROFILES] = profiles
-        return self
-
-    def for_user(self, with_name):
-        self.configuration[self.constants.USER] = with_name
-        return self
-
-    def with_size(self, megabytes):
-        self.configuration[self.constants.SIZE] = megabytes
-        return self
-
-    def named(self, name):
-        self.configuration[self.constants.NAME] = name
-        return self
-
-    def build(self):
-        return with_configuration(self.configuration)
+        return None # deep.an_image_drive(source_disc_image,
+              #                     constants.name_for(configuration),
+               #                    constants.target_for(configuration))
+    else:
+        user = constants.user_for(configuration)
+        return None #deep.a_session_home(constants.profiles_for(configuration),
+                     #              constants.name_for(configuration),
+                      #             constants.size_for(configuration),
+                       #            user,
+                        #           user.home())
 
 
 class Leitus:
-    def __init__(self, conf_d, drives_d, profiles_d, api=deep.Facade()):
+    def __init__(self, conf_d, drives_d, profiles_d):
         self.layout = layout.StandardLayout(conf_d, drives_d, profiles_d)
-        self.api = api
 
     def with_configuration(self, name):
-        return Configure(self.api).with_configuration(config.load(name, self.layout.conf()), self.layout)
+        return with_configuration(config.load(name, self.layout.conf()), self.layout)
 
     def perform(self, name):
         try:
             if name:
                 self.with_configuration(name).perform()
-            else:
-                standard().perform()
+
         except deep.DiscImageNotFoundError as error:
             raise diagnosis.MissingDiscImageError(self.layout, error, error.resource)
 

@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2011-2013
+# Copyright (c) Robert Burrell Donkin 2011-2013, 2020
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,14 +30,14 @@ from leitus import diagnosis
 
 class TestFileNotFound(unittest.TestCase):
 
-    def testBelowTwo(self):
+    def test_below_two(self):
         for i in range(-100, 1):
             self.assertFalse(diagnosis.file_not_found(i))
 
-    def testTwo(self):
+    def test_two(self):
         self.assertTrue(diagnosis.file_not_found(2))
 
-    def testAboveTwo(self):
+    def test_above_two(self):
         for i in range(3, 100):
             self.assertFalse(diagnosis.file_not_found(i))
 

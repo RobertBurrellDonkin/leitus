@@ -30,6 +30,18 @@ import subprocess
 from tempfile import NamedTemporaryFile
 
 
+def a_session_home(profiles, name, size_in_megabytes, user, target):
+    return SessionHome(profiles, name, size_in_megabytes, user, target)
+
+
+def an_image_drive(uuid, name, target):
+    return ImageDrive(uuid, name, target)
+
+
+def a_luks_drive(uuid, name, target):
+    return LuksDrive(uuid, name, target)
+
+
 class ResourceError(Exception):
     """
     Raised when a resource causes an operation to failure.
@@ -645,17 +657,6 @@ class SessionHome:
             info += repr(profile)
         info += "\n\n"
         return info
-
-
-class Facade:
-    def a_session_home(self, profiles, name, sizeInMegabytes, user, target):
-        return SessionHome(profiles, name, sizeInMegabytes, user, target)
-
-    def an_image_drive(self, uuid, name, target):
-        return ImageDrive(uuid, name, target)
-
-    def a_luks_drive(self, uuid, name, target):
-        return LuksDrive(uuid, name, target)
 
 
 __version__ = '1.0rc2.dev'
