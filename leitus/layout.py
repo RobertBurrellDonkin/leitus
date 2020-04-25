@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2011-2013
+# Copyright (c) Robert Burrell Donkin 2011-2013, 2020
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -18,12 +18,11 @@
 # Leitus is a suite of higher level functions for cryptographic drives.
 # The layout module abstracts options for laying out resources.
 #
-# Robert Burrell Donkin, 2011
-#
 
 import os.path
 
 from leitus import diagnosis
+
 
 class StandardLayout():
 
@@ -31,33 +30,34 @@ class StandardLayout():
         self.drives_d = drives_d
         self.conf_d = conf_d
         self.profiles_d = profiles_d
-    
+
     def drives(self):
         return FileSystemLayout(self.drives_d)
-    
+
     def conf(self):
         return FileSystemLayout(self.conf_d)
-        
+
     def profiles(self):
         return FileSystemLayout(self.profiles_d)
-        
+
     def drivePath(self, resource):
         if os.path.isabs(resource):
             return resource
         else:
             return self.drives().asPath(resource)
-    
+
+
 class FileSystemLayout():
     READ_ONLY = 'r'
-    
+
     def __init__(self, directory):
         self.directory = directory
-    
+
     def read(self, resource):
         try:
             return open(self.asPath(resource), self.READ_ONLY)
         except IOError as e:
-            errorNumber = e.errno 
+            errorNumber = e.errno
             errorMessage = e.strerror
             if errorNumber == 2:
                 raise diagnosis.ConfigurationNotFoundError(resource, self, errorMessage)
@@ -70,6 +70,7 @@ class FileSystemLayout():
         return os.path.join(self.directory, resource)
 
     def __repr__(self):
-        return "directory %(dir)s" % {"dir":repr(self.directory)}
-    
-__version__='0.6dev'
+        return "directory %(dir)s" % {"dir": repr(self.directory)}
+
+
+__version__ = '0.6dev'

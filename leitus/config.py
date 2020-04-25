@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2011-2013
+# Copyright (c) Robert Burrell Donkin 2011-2013, 2020
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -18,18 +18,18 @@
 # Leitus is a suite of higher level functions for cryptographic drives.
 # The config module contains configuration foo.
 #
-# Robert Burrell Donkin, 2011
 #
 
-import os.path
 import json
 
 from leitus import deep
 from leitus import diagnosis
 
+
 def load(name, layout):
     return JsonLoader(name, layout).load()
-    
+
+
 class ConfigConstants():
     USER = 'user'
     PROFILES = 'profiles'
@@ -38,47 +38,48 @@ class ConfigConstants():
     UUID = 'UUID'
     TARGET = 'target'
     SOURCE = 'source'
-    
+
     def build(self, user, profiles, size, name):
-        return {self.USER:user, self.PROFILES: profiles,
-                    self.SIZE: size, self.NAME:name}
-        
+        return {self.USER: user, self.PROFILES: profiles,
+                self.SIZE: size, self.NAME: name}
+
     def targetFor(self, configuration):
         return configuration[self.TARGET]
-    
+
     def sourceFor(self, configuration):
         return configuration[self.SOURCE]
-    
+
     def uuidFor(self, configuration):
         return configuration[self.UUID]
-        
+
     def userNameFor(self, configuration):
         return configuration[self.USER]
-        
+
     def userFor(self, configuration):
         return deep.User(self.userNameFor(configuration))
-        
+
     def profilesFor(self, configuration):
         return configuration[self.PROFILES]
-        
+
     def nameFor(self, configuration):
         return configuration[self.NAME]
-        
+
     def sizeFor(self, configuration):
         return configuration[self.SIZE]
 
+
 class JsonLoader():
     SUFFIX = ".json"
-    
+
     def __init__(self, name, layout):
         self.resource = name + self.SUFFIX
         self.layout = layout
-        
+
     def load(self):
         try:
             return json.load(self.layout.read(self.resource))
         except IOError as e:
-            errorNumber = e.errno 
+            errorNumber = e.errno
             errorMessage = e.strerror
             if errorNumber == 2:
                 raise diagnosis.ConfigurationNotFoundError(self.resource, self.layout, errorMessage)
@@ -86,6 +87,6 @@ class JsonLoader():
                 raise diagnosis.ConfigurationPermissionError(self.resource, self.layout, errorMessage)
             else:
                 raise
-            
-            
-__version__='0.6dev'
+
+
+__version__ = '0.6dev'

@@ -1,5 +1,5 @@
 #
-# Copyright (c) Robert Burrell Donkin 2011-2013
+# Copyright (c) Robert Burrell Donkin 2011-2013, 2020
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -17,10 +17,9 @@
 #
 # Contains common diagnostics.
 #
-# Robert Burrell Donkin, 2011
-#
 
 import logging
+
 
 class DiagnosticError(Exception):
     def __init__(self, error, fix, message):
@@ -35,9 +34,10 @@ class DiagnosticError(Exception):
 
     def __repr__(self):
         return str(self)
-    
+
     def recommendedFix(self):
         return self.fix
+
 
 class ConfigurationNotFoundError(DiagnosticError):
     def __init__(self, configuration, layout, error):
@@ -46,8 +46,10 @@ class ConfigurationNotFoundError(DiagnosticError):
         DiagnosticError.__init__(self,
                                  error,
                                  "Did you mistype %(name)s?" % {"name": repr(configuration)},
-                                 "Missing configuration: %(configuration)s not found in %(layout)s" % {"configuration": repr(configuration),
-                                                "layout": repr(layout)})
+                                 "Missing configuration: %(configuration)s not found in %(layout)s" % {
+                                     "configuration": repr(configuration),
+                                     "layout": repr(layout)})
+
 
 class ConfigurationPermissionError(DiagnosticError):
     def __init__(self, configuration, layout, error):
@@ -56,10 +58,11 @@ class ConfigurationPermissionError(DiagnosticError):
         DiagnosticError.__init__(self,
                                  error,
                                  "Did you mean to sudo?",
-                                 "Could not read %(configuration)s in %(layout)s" % {"configuration": repr(configuration),
-                                                "layout": repr(layout)})
+                                 "Could not read %(configuration)s in %(layout)s" % {
+                                     "configuration": repr(configuration),
+                                     "layout": repr(layout)})
 
-    
+
 class MissingDiscImageError(DiagnosticError):
     def __init__(self, layout, error, discImageNotFound):
         self.layout = layout
@@ -71,6 +74,7 @@ class MissingDiscImageError(DiagnosticError):
                                  "Disc image '%(discImage)s' not found. Drives in %(drives)s"
                                  % {"discImage": str(discImageNotFound), "drives": repr(layout.drives())})
 
+
 class CouldNotUnlockEncryptedDrive(DiagnosticError):
     def __init__(self, layout, error, driveThatCouldNotBeUnlock):
         self.layout = layout
@@ -81,16 +85,15 @@ class CouldNotUnlockEncryptedDrive(DiagnosticError):
                                  "Did you type the right passphase?",
                                  "\n'%(discImage)s' couldn't be unlocked."
                                  % {"discImage": str(driveThatCouldNotBeUnlock)})
-    
-    
-    
+
+
 class UnsupportedRequirementError(DiagnosticError):
     def __init__(self, error):
         DiagnosticError.__init__(self,
                                  error,
                                  "Looks like your system is missing a vital requirement for Leitus.",
                                  error.explain())
-        
+
 
 class InUseError(DiagnosticError):
     def __init__(self, error):
@@ -103,12 +106,11 @@ class InUseError(DiagnosticError):
 
 def fileNotFound(error_number):
     return (error_number == 2)
-    
-    
+
 
 #
 # Default logger for module
 #
 logger = logging.getLogger("leitus")
 
-__version__='0.6dev'
+__version__ = '0.6dev'
