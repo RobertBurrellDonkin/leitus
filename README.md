@@ -91,8 +91,3 @@ For example
         profiles:       'home','gnome','maven','java6'
 
 
-
-Developers
-==========
-
-* Use nose to run all the tests after making changes: nosetests
