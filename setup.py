@@ -27,7 +27,7 @@ setup(name='leitus',
       author_email='leitus@robertburrelldonkin.name',
       url='https://github.com/RobertBurrellDonkin/leitus',
       license='GNU GPL v2',
-      scripts=['bin/leitus'],
+      scripts=['scripts/leitus'],
       packages=['leitus'],
       classifiers=[
           'Programming Language :: Python :: 3.7"'
