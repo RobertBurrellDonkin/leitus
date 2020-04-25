@@ -32,14 +32,14 @@ class TestFileNotFound(unittest.TestCase):
 
     def testBelowTwo(self):
         for i in range(-100, 1):
-            self.assertFalse(diagnosis.fileNotFound(i))
+            self.assertFalse(diagnosis.file_not_found(i))
 
     def testTwo(self):
-        self.assertTrue(diagnosis.fileNotFound(2))
+        self.assertTrue(diagnosis.file_not_found(2))
 
     def testAboveTwo(self):
         for i in range(3, 100):
-            self.assertFalse(diagnosis.fileNotFound(i))
+            self.assertFalse(diagnosis.file_not_found(i))
 
 
 if __name__ == '__main__':

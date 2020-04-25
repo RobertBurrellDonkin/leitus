@@ -30,7 +30,7 @@ def load(name, layout):
     return JsonLoader(name, layout).load()
 
 
-class ConfigConstants():
+class ConfigConstants:
     USER = 'user'
     PROFILES = 'profiles'
     SIZE = 'sizeInMeg'
@@ -43,32 +43,32 @@ class ConfigConstants():
         return {self.USER: user, self.PROFILES: profiles,
                 self.SIZE: size, self.NAME: name}
 
-    def targetFor(self, configuration):
+    def target_for(self, configuration):
         return configuration[self.TARGET]
 
-    def sourceFor(self, configuration):
+    def source_for(self, configuration):
         return configuration[self.SOURCE]
 
-    def uuidFor(self, configuration):
+    def uuid_for(self, configuration):
         return configuration[self.UUID]
 
-    def userNameFor(self, configuration):
+    def user_name_for(self, configuration):
         return configuration[self.USER]
 
-    def userFor(self, configuration):
-        return deep.User(self.userNameFor(configuration))
+    def user_for(self, configuration):
+        return deep.User(self.user_name_for(configuration))
 
-    def profilesFor(self, configuration):
+    def profiles_for(self, configuration):
         return configuration[self.PROFILES]
 
-    def nameFor(self, configuration):
+    def name_for(self, configuration):
         return configuration[self.NAME]
 
-    def sizeFor(self, configuration):
+    def size_for(self, configuration):
         return configuration[self.SIZE]
 
 
-class JsonLoader():
+class JsonLoader:
     SUFFIX = ".json"
 
     def __init__(self, name, layout):
@@ -79,12 +79,12 @@ class JsonLoader():
         try:
             return json.load(self.layout.read(self.resource))
         except IOError as e:
-            errorNumber = e.errno
-            errorMessage = e.strerror
-            if errorNumber == 2:
-                raise diagnosis.ConfigurationNotFoundError(self.resource, self.layout, errorMessage)
-            elif errorNumber == 13:
-                raise diagnosis.ConfigurationPermissionError(self.resource, self.layout, errorMessage)
+            error_number = e.errno
+            error_message = e.strerror
+            if error_number == 2:
+                raise diagnosis.ConfigurationNotFoundError(self.resource, self.layout, error_message)
+            elif error_number == 13:
+                raise diagnosis.ConfigurationPermissionError(self.resource, self.layout, error_message)
             else:
                 raise
 

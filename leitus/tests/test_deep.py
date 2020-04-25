@@ -40,7 +40,7 @@ class TestLoopDevice(unittest.TestCase):
         stub.status_result = "/dev/loop0: [fd05]:49178 (/opt/development/leitus/drives.d/small.img)"
         file = "something"
         subject = deep.LoopDevice(file, stub)
-        self.assertEqual('/dev/loop0', subject.deviceName())
+        self.assertEqual('/dev/loop0', subject.device_name())
 
 
 class TestLosetup(unittest.TestCase):

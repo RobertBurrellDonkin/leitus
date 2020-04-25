@@ -165,41 +165,46 @@ class SubprocessLoopDevice:
     Low level API for loop devices
     """
 
-    def status(self, file):
+    @staticmethod
+    def status(file):
         """
         Status of every loop device mapped to the given file.
         """
         status = Losetup().list(file).do();
-        if (len(status)):
+        if len(status):
             return str(status)
         return None
 
-    def firstUnusedDevice(self):
+    @staticmethod
+    def first_unused_device():
         """
         The name of the first unused device.
         """
         return subprocess.check_output(["losetup", "-f"]).strip()
 
-    def open(self, file, device):
+    @staticmethod
+    def open(file, device):
         """
         Mounts the given file as a loopback on the first available
         device.
-        
+
         Returns - the device name
         """
         subprocess.check_call(["losetup", device, file])
 
-    def create(self, file, count):
+    @staticmethod
+    def create(file, count):
         """
         Fills with random data
-        
+
         count in megabytes
         """
         subprocess.check_call(
             ['dd', 'if=/dev/urandom', 'of=' + file, 'count={0}'.format(count),
              'conv=fsync', 'iflag=nonblock', 'bs=1M'])
 
-    def close(self, device):
+    @staticmethod
+    def close(device):
         subprocess.check_call(["losetup", "-d", device])
 
 
@@ -219,21 +224,21 @@ class LoopDevice:
         return "Loop device (based on '{0}')".format(self.file)
 
     def open(self):
-        if (not os.path.exists(self.file)):
+        if not os.path.exists(self.file):
             raise DiscImageNotFoundError(self.file)
-        if (self.isInUse()):
+        if self.is_in_use():
             raise AlreadyInUseError(self)
-        self.api.open(self.file, self.firstUnusedDevice())
+        self.api.open(self.file, self.first_unused_device())
         return self
 
-    def isInUse(self):
-        return (os.path.exists(self.file) and not (self.status() == None))
+    def is_in_use(self):
+        return os.path.exists(self.file) and not (self.status() is None)
 
     def status(self):
         return self.api.status(self.file)
 
-    def firstUnusedDevice(self):
-        return self.api.firstUnusedDevice()
+    def first_unused_device(self):
+        return self.api.first_unused_device()
 
     def create(self, size):
         """
@@ -242,36 +247,38 @@ class LoopDevice:
         
         size (in megabytes)
         """
-        if (os.path.exists(self.file)):
+        if os.path.exists(self.file):
             raise AlreadyInUseError(self.file)
         print("Filling " + self.file + " with noise...")
         self.api.create(self.file, size)
         print("Done.")
         return self
 
-    def deviceName(self):
+    def device_name(self):
         status = self.status()
-        if (status == None):
+        if status is None:
             raise NotFoundError(self)
         return status.split(":", 1)[0]
 
     def close(self):
         try:
-            self.api.close(self.deviceName())
+            self.api.close(self.device_name())
         except NotFoundError:
             pass
 
 
 class CryptSetup:
 
-    def map(self, name, device):
+    @staticmethod
+    def map(name, device):
         args = ['cryptsetup',
                 '-d', '/dev/urandom',
                 'create',
                 name, device]
         subprocess.check_call(args)
 
-    def unmap(self, name):
+    @staticmethod
+    def unmap(name):
         args = ['cryptsetup',
                 'remove', name]
         subprocess.check_call(args)
@@ -279,7 +286,8 @@ class CryptSetup:
 
 class CryptDeviceWithRandomKey:
 
-    def on(self, source):
+    @staticmethod
+    def on(source):
         return DeviceMapping(source, CryptSetup())
 
 
@@ -288,7 +296,7 @@ class LowLevelError(Exception):
     Raised when a low level operation fails.
     
     Attributes:
-       msg -- offers an explaination for the failure
+       msg -- offers an explanation for the failure
        api -- names the low level API that failed
     """
 
@@ -296,13 +304,13 @@ class LowLevelError(Exception):
         self.msg = msg
         self.api = api
 
-    def isAlreadyInUse(self):
+    def is_already_in_use(self):
         return False
 
-    def isNotFound(self):
+    def is_not_found(self):
         return False
 
-    def isBadPassphrase(self):
+    def is_bad_passphrase(self):
         return False
 
     def __str__(self):
@@ -330,23 +338,23 @@ class CryptsetupError(LowLevelError):
         self.output = error.output
         LowLevelError.__init__(self, self.cause(), "cryptation")
 
-    def isParameterError(self):
+    def is_parameter_error(self):
         return self.returncode == 1
 
-    def isBadPassphrase(self):
+    def is_bad_passphrase(self):
         return self.returncode == 2
 
-    def isOutOfMemory(self):
+    def is_out_of_memory(self):
         return self.returncode == 3
 
-    def isDeviceError(self):
+    def is_device_error(self):
         return self.returncode == 4
 
-    def isDeviceBusy(self):
+    def is_device_busy(self):
         return self.returncode == 5
 
-    def isAlreadyInUse(self):
-        return self.isDeviceBusy()
+    def is_already_in_use(self):
+        return self.is_device_busy()
 
     def cause(self):
         returncode = self.returncode
@@ -366,7 +374,8 @@ class CryptsetupError(LowLevelError):
 
 class LuksSetup:
 
-    def map(self, name, device):
+    @staticmethod
+    def map(name, device):
         args = ['cryptsetup',
                 'luksOpen',
                 device, name]
@@ -375,12 +384,14 @@ class LuksSetup:
         except subprocess.CalledProcessError as e:
             raise CryptsetupError(e)
 
-    def unmap(self, name):
+    @staticmethod
+    def unmap(name):
         args = ['cryptsetup',
                 'luksClose', name]
         subprocess.check_call(args)
 
-    def isInUse(self, name):
+    @staticmethod
+    def is_in_use(name):
         args = ['cryptsetup',
                 'status', name]
         return (subprocess.call(args) == 0)
@@ -388,7 +399,8 @@ class LuksSetup:
 
 class LuksDevice:
 
-    def on(self, source):
+    @staticmethod
+    def on(source):
         return DeviceMapping(source, LuksSetup())
 
 
@@ -398,7 +410,7 @@ class DiskByUUID:
     def __init__(self, uuid):
         self.uuid = uuid
 
-    def deviceName(self):
+    def device_name(self):
         return self.PATH + self.uuid
 
     def close(self):
@@ -407,40 +419,40 @@ class DiskByUUID:
 
 class DeviceMapping:
     def __init__(self, source, api):
-        self.device = source.deviceName()
+        self.device = source.device_name()
         self.api = api
         self.source = source
 
-    def nameAfterMapping(self, name):
+    def name_after_mapping(self, name):
         return '/dev/mapper/{0}'.format(name)
 
-    def mapTo(self, name):
+    def map_to(self, name):
         try:
             self.api.map(name, self.device)
-            return self.fileSystem(name)
+            return self.file_system(name)
         except LowLevelError as e:
-            if e.isAlreadyInUse():
+            if e.is_already_in_use():
                 raise AlreadyInUseError(self.device)
-            if e.isBadPassphrase():
+            if e.is_bad_passphrase():
                 raise PassphaseError(self.device)
             raise
 
-    def fileSystem(self, name):
-        return FileSystemOnDeviceMapping(self.nameAfterMapping(name))
+    def file_system(self, name):
+        return FileSystemOnDeviceMapping(self.name_after_mapping(name))
 
-    def unmapFrom(self, name, mountPoint=None):
-        self.fileSystem(name).unmountFrom(mountPoint)
+    def unmap_from(self, name, mount_point=None):
+        self.file_system(name).unmount_from(mount_point)
         self.api.unmap(name)
         self.source.close()
 
-    def isInUse(self, name):
-        return self.api.isInUse(name)
+    def is_in_use(self, name):
+        return self.api.is_in_use(name)
 
     def toggle(self, name, target):
-        if self.isInUse(name):
-            self.unmapFrom(name)
+        if self.is_in_use(name):
+            self.unmap_from(name)
         else:
-            self.mapTo(name).mountOn(target)
+            self.map_to(name).mount_on(target)
         return self
 
 
@@ -453,29 +465,29 @@ class Ext3:
 
 
 class SubprocessMount:
-    def mount(self, device, onPath):
-        subprocess.check_call(['mount', device, onPath])
+    def mount(self, device, on_path):
+        subprocess.check_call(['mount', device, on_path])
 
-    def unmount(self, onPath):
-        if (onPath):
-            subprocess.check_call(['umount', onPath])
+    def unmount(self, on_path):
+        if (on_path):
+            subprocess.check_call(['umount', on_path])
 
 
 class FileSystemOnDeviceMapping:
 
-    def __init__(self, onDevice):
-        self.onDevice = onDevice
+    def __init__(self, on_device):
+        self.on_device = on_device
         self.api = SubprocessMount()
 
-    def withFormat(self, api):
-        api.format(self.onDevice)
+    def with_format(self, api):
+        api.format(self.on_device)
         return self
 
-    def mountOn(self, path):
-        self.api.mount(self.onDevice, path)
+    def mount_on(self, path):
+        self.api.mount(self.on_device, path)
         return MountedFileSystem(path)
 
-    def unmountFrom(self, path):
+    def unmount_from(self, path):
         self.api.unmount(path)
 
 
@@ -549,22 +561,22 @@ class Copy:
 
 class MountedFileSystem():
 
-    def __init__(self, mountPoint):
-        self.mountPoint = mountPoint
-        self.profileRoot = "profiles.d"
+    def __init__(self, mount_point):
+        self.mount_point = mount_point
+        self.profile_root = "profiles.d"
 
     def merge(self, profiles):
-        if not (os.path.exists(self.mountPoint)):
+        if not (os.path.exists(self.mount_point)):
             raise NotFoundError(self)
         for profile in profiles:
-            Copy(os.path.join(self.profileRoot, profile)).into(self.mountPoint)
+            Copy(os.path.join(self.profile_root, profile)).into(self.mount_point)
         return self
 
-    def ownBy(self, user):
-        user.own(self.mountPoint)
+    def own_by(self, user):
+        user.own(self.mount_point)
 
     def __repr__(self):
-        return "File system at {0}".format(self.mountPoint)
+        return "File system at {0}".format(self.mount_point)
 
 
 class ImageDrive:
@@ -598,22 +610,22 @@ class LuksDrive:
 
 
 class SessionHome:
-    def __init__(self, profiles, name, sizeInMegabytes, user, target):
+    def __init__(self, profiles, name, size_in_megabytes, user, target):
         self.profiles = profiles
         self.name = name
         self.user = user
-        self.sizeInMegabytes = sizeInMegabytes
+        self.size_in_megabytes = size_in_megabytes
         self.target = target
         self.filename = NamedTemporaryFile(prefix='leitus-drive-' + name + '-', suffix=".img").name
 
     def commission(self):
         CryptDeviceWithRandomKey().on(
-            LoopDevice(self.filename).create(self.sizeInMegabytes).open()).mapTo(
-            self.name).withFormat(Ext3()).mountOn(self.target).merge(self.profiles).ownBy(self.user)
+            LoopDevice(self.filename).create(self.size_in_megabytes).open()).map_to(
+            self.name).with_format(Ext3()).mount_on(self.target).merge(self.profiles).own_by(self.user)
 
     def decommission(self):
         CryptDeviceWithRandomKey().on(
-            LoopDevice(self.filename)).unmapFrom(self.name, self.target)
+            LoopDevice(self.filename)).unmap_from(self.name, self.target)
 
     def perform(self):
         if os.path.exists(self.filename):
@@ -623,11 +635,11 @@ class SessionHome:
 
     def info(self):
         info = "\n\nSession drive:\n\n\tsize:\t\t{0}M\n\tmapping:\t'{1}'\n\ttarget:\t\t'{2}'\n\tuser:\t\t{3}\n\tprofiles:\t".format(
-            self.sizeInMegabytes, self.name, self.target, self.user)
-        isFirstTime = True
+            self.size_in_megabytes, self.name, self.target, self.user)
+        is_first_time = True
         for profile in self.profiles:
-            if isFirstTime:
-                isFirstTime = False
+            if is_first_time:
+                is_first_time = False
             else:
                 info += ','
             info += repr(profile)
@@ -636,13 +648,13 @@ class SessionHome:
 
 
 class Facade:
-    def aSessionHome(self, profiles, name, sizeInMegabytes, user, target):
+    def a_session_home(self, profiles, name, sizeInMegabytes, user, target):
         return SessionHome(profiles, name, sizeInMegabytes, user, target)
 
-    def anImageDrive(self, uuid, name, target):
+    def an_image_drive(self, uuid, name, target):
         return ImageDrive(uuid, name, target)
 
-    def aLuksDrive(self, uuid, name, target):
+    def a_luks_drive(self, uuid, name, target):
         return LuksDrive(uuid, name, target)
 
 

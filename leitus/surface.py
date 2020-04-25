@@ -28,54 +28,54 @@ from leitus.config import ConfigConstants
 
 
 def standard():
-    return session_home('neo').withSize(2000).forUser(
-        'rdonkin').mergeProfiles(['home', 'gnome', 'maven', 'java6']
-                                 ).build()
+    return session_home('neo').with_size(2000).for_user(
+        'rdonkin').merge_profiles(['home', 'gnome', 'maven', 'java6']
+                                  ).build()
 
 
 def session_home(name):
     return Builder().named(name)
 
 
-class Configure():
+class Configure:
     def __init__(self, api=deep.Facade()):
         self.api = api
 
-    def withConfiguration(self, configuration, directoryLayout=None):
+    def with_configuration(self, configuration, directory_layout=None):
         constants = ConfigConstants()
         if constants.UUID in configuration:
-            return self.api.aLuksDrive(constants.uuidFor(configuration),
-                                       constants.nameFor(configuration),
-                                       constants.targetFor(configuration))
+            return self.api.a_luks_drive(constants.uuid_for(configuration),
+                                         constants.name_for(configuration),
+                                         constants.target_for(configuration))
         elif constants.SOURCE in configuration:
-            sourceDiscImage = constants.sourceFor(configuration)
-            if (directoryLayout):
-                sourceDiscImage = directoryLayout.drivePath(sourceDiscImage)
-            return self.api.anImageDrive(sourceDiscImage,
-                                         constants.nameFor(configuration),
-                                         constants.targetFor(configuration))
+            source_disc_image = constants.source_for(configuration)
+            if directory_layout:
+                source_disc_image = directory_layout.drivePath(source_disc_image)
+            return self.api.an_image_drive(source_disc_image,
+                                           constants.name_for(configuration),
+                                           constants.target_for(configuration))
         else:
-            user = constants.userFor(configuration)
-            return self.api.aSessionHome(constants.profilesFor(configuration),
-                                         constants.nameFor(configuration), constants.sizeFor(configuration),
-                                         user, user.home())
+            user = constants.user_for(configuration)
+            return self.api.a_session_home(constants.profiles_for(configuration),
+                                           constants.name_for(configuration), constants.size_for(configuration),
+                                           user, user.home())
 
 
-class Builder():
+class Builder:
 
     def __init__(self):
         self.configuration = {}
         self.constants = ConfigConstants()
 
-    def mergeProfiles(self, profiles):
+    def merge_profiles(self, profiles):
         self.configuration[self.constants.PROFILES] = profiles
         return self
 
-    def forUser(self, withName):
-        self.configuration[self.constants.USER] = withName
+    def for_user(self, with_name):
+        self.configuration[self.constants.USER] = with_name
         return self
 
-    def withSize(self, megabytes):
+    def with_size(self, megabytes):
         self.configuration[self.constants.SIZE] = megabytes
         return self
 
@@ -84,21 +84,21 @@ class Builder():
         return self
 
     def build(self):
-        return withConfiguration(self.configuration)
+        return with_configuration(self.configuration)
 
 
-class Leitus():
+class Leitus:
     def __init__(self, conf_d, drives_d, profiles_d, api=deep.Facade()):
         self.layout = layout.StandardLayout(conf_d, drives_d, profiles_d)
         self.api = api
 
-    def withConfiguration(self, name):
-        return Configure(self.api).withConfiguration(config.load(name, self.layout.conf()), self.layout)
+    def with_configuration(self, name):
+        return Configure(self.api).with_configuration(config.load(name, self.layout.conf()), self.layout)
 
     def perform(self, name):
         try:
             if name:
-                self.withConfiguration(name).perform()
+                self.with_configuration(name).perform()
             else:
                 standard().perform()
         except deep.DiscImageNotFoundError as error:
@@ -115,7 +115,7 @@ class Leitus():
 
     def info(self, name):
         if name:
-            return self.withConfiguration(name).info()
+            return self.with_configuration(name).info()
         else:
             return "Here's the deal: a name for information"
 

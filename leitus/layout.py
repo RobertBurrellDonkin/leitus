@@ -44,7 +44,7 @@ class StandardLayout():
         if os.path.isabs(resource):
             return resource
         else:
-            return self.drives().asPath(resource)
+            return self.drives().as_path(resource)
 
 
 class FileSystemLayout():
@@ -55,18 +55,18 @@ class FileSystemLayout():
 
     def read(self, resource):
         try:
-            return open(self.asPath(resource), self.READ_ONLY)
+            return open(self.as_path(resource), self.READ_ONLY)
         except IOError as e:
-            errorNumber = e.errno
-            errorMessage = e.strerror
-            if errorNumber == 2:
-                raise diagnosis.ConfigurationNotFoundError(resource, self, errorMessage)
-            elif errorNumber == 13:
-                raise diagnosis.ConfigurationPermissionError(resource, self, errorMessage)
+            error_number = e.errno
+            error_message = e.strerror
+            if error_number == 2:
+                raise diagnosis.ConfigurationNotFoundError(resource, self, error_message)
+            elif error_number == 13:
+                raise diagnosis.ConfigurationPermissionError(resource, self, error_message)
             else:
                 raise
 
-    def asPath(self, resource):
+    def as_path(self, resource):
         return os.path.join(self.directory, resource)
 
     def __repr__(self):

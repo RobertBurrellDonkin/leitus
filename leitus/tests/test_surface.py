@@ -37,7 +37,7 @@ class TestLUKSDrive(unittest.TestCase):
         aUUID = "8e1f215f-6c53-4a96-b664-5c1252a06e43"
         aName = "Bingo"
         aTarget = "/some/path"
-        drive = surface.Configure().withConfiguration(
+        drive = surface.Configure().with_configuration(
             {ConfigConstants().UUID: aUUID, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget})
         self.assertEqual(aName, drive.name)
         self.assertEqual(aTarget, drive.target)
@@ -50,7 +50,7 @@ class TestImageDrive(unittest.TestCase):
         aSource = "/something.img"
         aName = "Bongo"
         aTarget = "/a/path"
-        drive = surface.Configure().withConfiguration(
+        drive = surface.Configure().with_configuration(
             {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget})
         self.assertEqual(aName, drive.name)
         self.assertEqual(aTarget, drive.target)
@@ -60,7 +60,7 @@ class TestImageDrive(unittest.TestCase):
         aSource = "something.img"
         aName = "Bongo"
         aTarget = "/a/path"
-        drive = surface.Configure().withConfiguration(
+        drive = surface.Configure().with_configuration(
             {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget})
         self.assertEqual(aName, drive.name)
         self.assertEqual(aTarget, drive.target)
@@ -72,7 +72,7 @@ class TestImageDrive(unittest.TestCase):
         aTarget = "/a/path"
         aDriveDirectory = "drives.d"
 
-        drive = surface.Configure().withConfiguration(
+        drive = surface.Configure().with_configuration(
             {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget},
             layout.StandardLayout("conf.d", aDriveDirectory, "profiles.d"))
         self.assertEqual(aName, drive.name)
@@ -88,7 +88,7 @@ class TestBuildSessionHome(unittest.TestCase):
         self.checkUserNamed('one')
 
     def checkUserNamed(self, name):
-        self.assertEqual(name, surface.Builder().forUser(name).configuration[surface.ConfigConstants().USER])
+        self.assertEqual(name, surface.Builder().for_user(name).configuration[surface.ConfigConstants().USER])
 
     def testMergeProfiles(self):
         self.checkMergeProfiles(['alpha', 'beta', 'gamma'])
@@ -98,7 +98,7 @@ class TestBuildSessionHome(unittest.TestCase):
 
     def checkMergeProfiles(self, profiles):
         self.assertEqual(profiles,
-                          surface.Builder().mergeProfiles(profiles).configuration[surface.ConfigConstants().PROFILES])
+                         surface.Builder().merge_profiles(profiles).configuration[surface.ConfigConstants().PROFILES])
 
     def testWithSize(self):
         self.checkWithSize(12)
@@ -106,7 +106,7 @@ class TestBuildSessionHome(unittest.TestCase):
         self.checkWithSize(46)
 
     def checkWithSize(self, size):
-        self.assertEqual(size, surface.Builder().withSize(size).configuration[surface.ConfigConstants().SIZE])
+        self.assertEqual(size, surface.Builder().with_size(size).configuration[surface.ConfigConstants().SIZE])
 
     def testNamed(self):
         self.checkNamed('roger')
@@ -122,7 +122,7 @@ class TestBuildSessionHome(unittest.TestCase):
         self.assertEqual(user, withConfiguration(ConfigConstants().build(user, profiles, size, name)).user.name)
         self.assertEqual(profiles, withConfiguration(ConfigConstants().build(user, profiles, size, name)).profiles)
         self.assertEqual(size,
-                          withConfiguration(ConfigConstants().build(user, profiles, size, name)).user.sizeInMegabytes)
+                         withConfiguration(ConfigConstants().build(user, profiles, size, name)).user.size_in_megabytes)
 
 
 if __name__ == '__main__':

@@ -96,28 +96,29 @@ class CommandLineInterface():
             return self.OKAY
 
         except diagnosis.ConfigurationPermissionError as error:
-            return self.noteFailure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommendedFix())
+            return self.note_failure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommended_fix())
 
         except diagnosis.ConfigurationNotFoundError as error:
-            return self.noteFailure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommendedFix())
+            return self.note_failure(self.FAILURE_MISSING_CONFIGURATION, error, error.recommended_fix())
 
         except diagnosis.MissingDiscImageError as error:
-            return self.noteFailure(self.FAILURE_MISSING_DISC_IMAGE, error, error.recommendedFix())
+            return self.note_failure(self.FAILURE_MISSING_DISC_IMAGE, error, error.recommended_fix())
 
         except diagnosis.CouldNotUnlockEncryptedDrive as error:
-            return self.noteFailure(self.FAILURE_CANNOT_UNLOCK_ENCRYPTED_DRIVE, error, error.recommendedFix())
+            return self.note_failure(self.FAILURE_CANNOT_UNLOCK_ENCRYPTED_DRIVE, error, error.recommended_fix())
 
         except diagnosis.UnsupportedRequirementError as error:
-            return self.noteFailure(self.FAILURE_MISSING_REQUIREMENT, error, error.recommendedFix())
+            return self.note_failure(self.FAILURE_MISSING_REQUIREMENT, error, error.recommended_fix())
 
         except diagnosis.InUseError as error:
-            return self.noteFailure(self.FAILURE_MISSING_REQUIREMENT, error, error.recommendedFix())
+            return self.note_failure(self.FAILURE_MISSING_REQUIREMENT, error, error.recommended_fix())
 
         except KeyboardInterrupt:
             sys.stderr.write("\nLeitus cancelled.\n\nSome manual tidy up might be a good idea.\n")
             return self.FAILURE_USER_CANCEL
 
-    def noteFailure(self, exit_code, error, recommendations=None):
+    @staticmethod
+    def note_failure(exit_code, error, recommendations=None):
         sys.stderr.write("%(message)s\nLeitus failed.\n" % {"message": repr(error)})
         if recommendations:
             sys.stderr.write("\n")
