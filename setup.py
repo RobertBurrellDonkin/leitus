@@ -17,12 +17,14 @@
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 #
-from distutils.core import setup
+from setuptools import setup
+
+from leitus import cli
 
 setup(name='leitus',
       description='Leitus is a suite of higher level functions for cryptographic drives.',
       long_description='A suite of higher level tasks for cryptographic drive management',
-      version='1.0rc2.dev',
+      version=cli.__version__,
       author='Robert Burrell Donkin',
       author_email='leitus@robertburrelldonkin.name',
       url='https://github.com/RobertBurrellDonkin/leitus',
