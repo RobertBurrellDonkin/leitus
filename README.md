@@ -5,7 +5,7 @@ Leitus
 
 Whom...?
 --------
-I like to think that [Leitus](https://en.wikipedia.org/wiki/Leitus) the [Boeotian](https://en.wikipedia.org/wiki/Boeotia) is the sort of Homerian hero likely to played by [Claude Rains](https://en.wikipedia.org/wiki/Claude_Rains). An Argonaut, an also-ran suitor for Helen, turned up for the Trojan War and made it all the way home again without every really doing anything that really hit the headlines. 
+I like to think that [Leitus](https://en.wikipedia.org/wiki/Leitus) the [Boeotian](https://en.wikipedia.org/wiki/Boeotia) is the sort of Homerian hero likely to played by [Claude Rains](https://en.wikipedia.org/wiki/Claude_Rains). An Argonaut, an also-ran suitor for Helen, a turner upper for the Trojan War who made it all the way home again without even doing any defining deed. Immortalized forever in story and song, a name that lives on for having been there.
 
 A Message In A Bottle
 ---------------------
