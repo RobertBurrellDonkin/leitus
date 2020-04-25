@@ -92,7 +92,7 @@ class Leitus():
         self.api = api
 
     def withConfiguration(self, name):
-        return Configure(api).withConfiguration(config.load(name, self.layout.conf()), self.layout);
+        return Configure(self.api).withConfiguration(config.load(name, self.layout.conf()), self.layout)
 
     def perform(self, name):
         try:
