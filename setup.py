@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) Robert Burrell Donkin 2011
+# Copyright (c) Robert Burrell Donkin 2011, 2020
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,9 +16,6 @@
 #    with this program; if not, write to the Free Software Foundation, Inc.,
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-# Leitus is a suite of higher level functions for cryptographic drives.
-#
-# Robert Burrell Donkin, 2011
 #
 from distutils.core import setup
 
@@ -32,4 +29,8 @@ setup(name='leitus',
       license='GNU GPL v2',
       scripts=['bin/leitus'],
       packages=['leitus'],
+      classifiers=[
+          "Programming Language :: Python :: 3.7",
+          "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+      ]
       )
