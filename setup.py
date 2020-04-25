@@ -17,9 +17,25 @@
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 #
+import sys
+
 from setuptools import setup
+from setuptools.command.test import test as TestCommand
 
 from leitus import cli
+
+
+class PyTest(TestCommand):
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        import pytest
+        errcode = pytest.main(self.test_args)
+        sys.exit(errcode)
+
 
 setup(name='leitus',
       description='Leitus is a suite of higher level functions for cryptographic drives.',
@@ -29,8 +45,10 @@ setup(name='leitus',
       author_email='leitus@robertburrelldonkin.name',
       url='https://github.com/RobertBurrellDonkin/leitus',
       license='GNU GPL v2',
+      cmdclass={'test': PyTest},
       scripts=['scripts/leitus'],
       packages=['leitus'],
+      python_requires='>=3',
       classifiers=[
           'Programming Language :: Python :: 3.7"'
           'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
