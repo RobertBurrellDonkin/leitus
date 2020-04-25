@@ -48,6 +48,7 @@ setup(name='leitus',
       cmdclass={'test': PyTest},
       scripts=['scripts/leitus'],
       packages=['leitus'],
+      python_requires='>=3',
       classifiers=[
           'Programming Language :: Python :: 3.7"'
           'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
