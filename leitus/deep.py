@@ -28,6 +28,8 @@ import shutil
 import stat
 import subprocess
 
+CRYPTSETUP = 'cryptsetup'
+
 
 class ResourceError(Exception):
     """
@@ -375,7 +377,22 @@ class LuksSetup:
 
     @staticmethod
     def map(name, device):
-        args = ['cryptsetup',
+        LuksSetup.luksOpen(device, name)
+        LuksSetup.check_filesystem(name)
+
+    @staticmethod
+    def check_filesystem(name):
+        args = ['fsck',
+                '-MCr',
+                DeviceMapping.name_after_mapping(name)]
+        # try:
+        subprocess.check_call(args)
+        # except subprocess.CalledProcessError as e:
+        #   raise CryptsetupError(e)
+
+    @staticmethod
+    def luksOpen(device, name):
+        args = [CRYPTSETUP,
                 'luksOpen',
                 device, name]
         try:
@@ -422,7 +439,8 @@ class DeviceMapping:
         self.api = api
         self.source = source
 
-    def name_after_mapping(self, name):
+    @staticmethod
+    def name_after_mapping(name):
         return '/dev/mapper/{0}'.format(name)
 
     def map_to(self, name):
