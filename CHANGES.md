@@ -1,6 +1,9 @@
 Changes
 =======
 
+Letius 1.1
+ * https://github.com/RobertBurrellDonkin/leitus/issues/13 Check drive before mounting Issue 
+
 Leitus 1.0
  * Port to Python 3
 
