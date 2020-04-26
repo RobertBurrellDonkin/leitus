@@ -410,9 +410,10 @@ class LuksSetup:
 
     @staticmethod
     def is_in_use(name):
-        args = ['cryptsetup',
-                'status', name]
-        return (subprocess.call(args) == 0)
+        args = [CRYPTSETUP,
+                'status',
+                name]
+        return subprocess.call(args) == 0
 
 
 class LuksDevice:

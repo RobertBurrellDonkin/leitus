@@ -52,3 +52,16 @@ def test_unmap_calls(mock_subprocess):
              "A-NAME"]
         )
     ])
+
+
+@mock.patch('leitus.deep.subprocess')
+def test_is_in_use_calls(mock_subprocess):
+    deep.LuksSetup.is_in_use(name)
+
+    mock_subprocess.call.assert_has_calls([
+        mock.call(
+            ['cryptsetup',
+             'status',
+             "A-NAME"]
+        )
+    ])
