@@ -394,7 +394,8 @@ class LuksSetup:
     def luksOpen(device, name):
         args = [CRYPTSETUP,
                 'luksOpen',
-                device, name]
+                device,
+                name]
         try:
             subprocess.check_call(args)
         except subprocess.CalledProcessError as e:
@@ -402,8 +403,9 @@ class LuksSetup:
 
     @staticmethod
     def unmap(name):
-        args = ['cryptsetup',
-                'luksClose', name]
+        args = [CRYPTSETUP,
+                'luksClose',
+                name]
         subprocess.check_call(args)
 
     @staticmethod

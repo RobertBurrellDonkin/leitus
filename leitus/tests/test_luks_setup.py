@@ -24,7 +24,7 @@ device = "/some/device"
 
 
 @mock.patch('leitus.deep.subprocess')
-def test_calls_cryptsetup(mock_subprocess):
+def test_map_calls(mock_subprocess):
     deep.LuksSetup.map(name, device)
 
     mock_subprocess.check_call.assert_has_calls([
@@ -38,5 +38,17 @@ def test_calls_cryptsetup(mock_subprocess):
             ['fsck',
              '-MCr',
              "/dev/mapper/A-NAME"]
+        )
+    ])
+
+@mock.patch('leitus.deep.subprocess')
+def test_unmap_calls(mock_subprocess):
+    deep.LuksSetup.unmap(name)
+
+    mock_subprocess.check_call.assert_has_calls([
+        mock.call(
+            ['cryptsetup',
+             'luksClose',
+             "A-NAME"]
         )
     ])
