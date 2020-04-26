@@ -385,10 +385,7 @@ class LuksSetup:
         args = ['fsck',
                 '-MCr',
                 DeviceMapping.name_after_mapping(name)]
-        # try:
         subprocess.check_call(args)
-        # except subprocess.CalledProcessError as e:
-        #   raise CryptsetupError(e)
 
     @staticmethod
     def luksOpen(device, name):

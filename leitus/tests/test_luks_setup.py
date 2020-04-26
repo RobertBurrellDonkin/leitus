@@ -41,6 +41,7 @@ def test_map_calls(mock_subprocess):
         )
     ])
 
+
 @mock.patch('leitus.deep.subprocess')
 def test_unmap_calls(mock_subprocess):
     deep.LuksSetup.unmap(name)
