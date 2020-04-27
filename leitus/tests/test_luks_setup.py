@@ -17,18 +17,18 @@
 #
 from unittest import mock
 
-from leitus import deep
+from leitus import crypt
 
 name = "A-NAME"
 device = "/some/device"
 
 
 @mock.patch('leitus.filesystem.subprocess')
-@mock.patch('leitus.deep.subprocess')
-def test_map_calls(mock_deep_subprocess, mock_filesystem_subprocess):
-    deep.LuksSetup.map(name, device)
+@mock.patch('leitus.crypt.subprocess')
+def test_map_calls(mock_crypt_subprocess, mock_filesystem_subprocess):
+    crypt.LuksSetup.map(name, device)
 
-    mock_deep_subprocess.check_call.assert_has_calls([
+    mock_crypt_subprocess.check_call.assert_has_calls([
         mock.call(
             ['cryptsetup',
              'luksOpen',
@@ -47,9 +47,9 @@ def test_map_calls(mock_deep_subprocess, mock_filesystem_subprocess):
     ])
 
 
-@mock.patch('leitus.deep.subprocess')
+@mock.patch('leitus.crypt.subprocess')
 def test_unmap_calls(mock_subprocess):
-    deep.LuksSetup.unmap(name)
+    crypt.LuksSetup.unmap(name)
 
     mock_subprocess.check_call.assert_has_calls([
         mock.call(
@@ -60,9 +60,9 @@ def test_unmap_calls(mock_subprocess):
     ])
 
 
-@mock.patch('leitus.deep.subprocess')
+@mock.patch('leitus.crypt.subprocess')
 def test_is_in_use_calls(mock_subprocess):
-    deep.LuksSetup.is_in_use(name)
+    crypt.LuksSetup.is_in_use(name)
 
     mock_subprocess.call.assert_has_calls([
         mock.call(

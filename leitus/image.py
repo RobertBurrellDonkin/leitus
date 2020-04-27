@@ -19,7 +19,7 @@
 #
 #
 #
-from leitus.deep import LuksDevice
+from leitus.crypt import LuksDevice
 
 from leitus.loop import LoopDevice
 

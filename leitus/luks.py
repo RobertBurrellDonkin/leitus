@@ -20,7 +20,7 @@
 #
 #
 
-from leitus.deep import LuksDevice
+from leitus.crypt import LuksDevice
 from leitus.device import DiskByUUID
 
 INFO = """
