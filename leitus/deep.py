@@ -473,6 +473,11 @@ class DeviceMapping:
         return self
 
 
+class FileSystemHeaders:
+    def __init__(self, raw):
+        self.raw = raw
+
+
 class ExtFileSystem:
 
     @staticmethod
@@ -487,14 +492,15 @@ class ExtFileSystem:
             device])
 
     @staticmethod
-    def header(device):
-        subprocess.check_output(
-            [
-                "dumpe2fs",
-                "-h",
-                device
-            ]
-        )
+    def headers(device):
+        return FileSystemHeaders(
+            subprocess.check_output(
+                [
+                    "dumpe2fs",
+                    "-h",
+                    device
+                ]
+            ))
 
 
 class SubprocessMount:

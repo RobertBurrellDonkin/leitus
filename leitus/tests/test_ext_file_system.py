@@ -22,7 +22,7 @@ from unittest import mock
 from leitus import deep
 
 SAMPLE_DEVICE = "/dev/mapper/music"
-SAMPLE_COMMAND = ["dumpe2fs","-h","/dev/mapper/music"]
+SAMPLE_COMMAND = ["dumpe2fs", "-h", "/dev/mapper/music"]
 
 SAMPLE_OUTPUT = """
 dumpe2fs 1.45.5 (07-Jan-2020)
@@ -79,9 +79,16 @@ Journal start:            0
 
 @mock.patch('leitus.deep.subprocess')
 def test_headers_call(mock_subprocess):
-    deep.ExtFileSystem.header(SAMPLE_DEVICE)
+    deep.ExtFileSystem.headers(SAMPLE_DEVICE)
 
     mock_subprocess.check_output.assert_has_calls([
         mock.call(SAMPLE_COMMAND
-        )
+                  )
     ])
+
+
+@mock.patch('leitus.deep.subprocess')
+def test_headers_output(mock_subprocess):
+    mock_subprocess.check_output.return_value = SAMPLE_OUTPUT
+
+    assert deep.ExtFileSystem.headers(SAMPLE_DEVICE).raw == SAMPLE_OUTPUT
