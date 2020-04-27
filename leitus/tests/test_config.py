@@ -35,10 +35,10 @@ class TestJsonLoader(unittest.TestCase):
 
     def testWhenConfigurationFileIsMissingThatConfigurationNotFoundErrorIsRaised(self):
         dir = "test"
-        someMissingFile = "some-missing-file"
-        self.assertFalse(os.path.exists(os.path.join("test", someMissingFile)),
-                         "Please remove " + someMissingFile + " in " + dir + " before running test")
-        subject = config.JsonLoader(someMissingFile, layout.FileSystemLayout(dir))
+        some_missing_file = "some-missing-file"
+        self.assertFalse(os.path.exists(os.path.join("test", some_missing_file)),
+                         "Please remove " + some_missing_file + " in " + dir + " before running test")
+        subject = config.JsonLoader(some_missing_file, layout.FileSystemLayout(dir))
         try:
             subject.load()
         except diagnosis.ConfigurationNotFoundError:

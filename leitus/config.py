@@ -39,8 +39,8 @@ class ConfigConstants:
     TARGET = 'target'
     SOURCE = 'source'
 
-    def build(self, user, profiles, size, name):
-        return {self.USER: user, self.PROFILES: profiles,
+    def build(self, user_name, profiles, size, name):
+        return {self.USER: user_name, self.PROFILES: profiles,
                 self.SIZE: size, self.NAME: name}
 
     def target_for(self, configuration):
