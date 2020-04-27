@@ -54,8 +54,6 @@ Maximum mount count:  {}
 
 class FileSystemHeaders:
     def __init__(self, raw):
-
-
         self.raw = raw
         self.check_interval = None
         self.last_check = None

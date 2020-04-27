@@ -55,10 +55,10 @@ class CryptDeviceWithRandomKey:
 
 class LuksSetup:
 
-    def __init__(self, tune=True, interval=30, mounts=30):
+    def __init__(self, tune=True, interval=30, max_mounts=30):
         self.tune = tune
         self.interval = interval
-        self.mounts = mounts
+        self.max_mounts = max_mounts
 
     def map(self, name, device):
         LuksSetup.luks_open(device, name)
@@ -69,6 +69,10 @@ class LuksSetup:
         if self.tune:
             headers = filesystem.headers(name)
             print(headers)
+            if not headers.is_check_interval_set:
+                filesystem.ExtFileSystem.tune_interval(name, self.interval)
+            if not headers.is_max_count_set:
+                filesystem.ExtFileSystem.tune_count(name, self.max_mounts)
 
     @staticmethod
     def check_filesystem(name):

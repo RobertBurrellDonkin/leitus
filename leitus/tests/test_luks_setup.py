@@ -46,6 +46,11 @@ def test_map_calls(mock_crypt_subprocess, mock_filesystem_subprocess):
         mock.call(["dumpe2fs", "-h", "/dev/mapper/A-NAME"], universal_newlines=True)
     ])
 
+    mock_filesystem_subprocess.check_call.assert_has_calls([
+        mock.call(["tune2fs", "-i 30", "/dev/mapper/A-NAME"]),
+        mock.call(["tune2fs", "-c 30", "/dev/mapper/A-NAME"])
+    ])
+
 
 @mock.patch('leitus.filesystem.subprocess')
 @mock.patch('leitus.crypt.subprocess')
@@ -67,6 +72,7 @@ def test_map_calls_no_tune(mock_crypt_subprocess, mock_filesystem_subprocess):
     ])
 
     mock_filesystem_subprocess.check_output.assert_has_calls([])
+    mock_filesystem_subprocess.check_call.assert_has_calls([])
 
 
 @mock.patch('leitus.crypt.subprocess')
