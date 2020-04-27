@@ -102,3 +102,23 @@ class ExtFileSystem:
                 ],
                 universal_newlines=True
             ))
+
+    @staticmethod
+    def tune_interval(name, interval):
+        subprocess.check_call(
+            [
+                "tune2fs",
+                "-i {}".format(interval),
+                DeviceMapping.name_after_mapping(name)
+            ]
+        )
+
+    @staticmethod
+    def tune_count(name, count):
+        subprocess.check_call(
+            [
+                "tune2fs",
+                "-c {}".format(count),
+                DeviceMapping.name_after_mapping(name)
+            ]
+        )

@@ -78,6 +78,33 @@ Journal start:            0
 
 
 @mock.patch('leitus.filesystem.subprocess')
+def test_tune_interval_call(mock_subprocess):
+    filesystem.ExtFileSystem.tune_interval(SAMPLE_NAME, interval=33)
+
+    mock_subprocess.check_call.assert_has_calls([
+        mock.call(
+            [
+                "tune2fs",
+                "-i 33",
+                "/dev/mapper/music"]
+        )
+    ])
+
+@mock.patch('leitus.filesystem.subprocess')
+def test_tune_count_call(mock_subprocess):
+    filesystem.ExtFileSystem.tune_count(SAMPLE_NAME, count=77)
+
+    mock_subprocess.check_call.assert_has_calls([
+        mock.call(
+            [
+                "tune2fs",
+                "-c 77",
+                "/dev/mapper/music"]
+        )
+    ])
+
+
+@mock.patch('leitus.filesystem.subprocess')
 def test_headers_call(mock_subprocess):
     filesystem.ExtFileSystem.headers(SAMPLE_NAME)
 
