@@ -25,7 +25,7 @@
 
 import unittest
 
-from leitus import deep
+from leitus import loop
 
 
 class SubprocessLoopDeviceStub():
@@ -39,14 +39,14 @@ class TestLoopDevice(unittest.TestCase):
         stub = SubprocessLoopDeviceStub()
         stub.status_result = "/dev/loop0: [fd05]:49178 (/opt/development/leitus/drives.d/small.img)"
         file = "something"
-        subject = deep.LoopDevice(file, stub)
+        subject = loop.LoopDevice(file, stub)
         self.assertEqual('/dev/loop0', subject.device_name())
 
 
 class TestLosetup(unittest.TestCase):
 
     def testAssociated(self):
-        subject = deep.Losetup()
+        subject = loop.Losetup()
         deviceName = "Some device Name"
         args = subject.list(deviceName).args()
         self.assertIsNotNone(args)

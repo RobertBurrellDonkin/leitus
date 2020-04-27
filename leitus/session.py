@@ -24,7 +24,8 @@ import os
 import os.path
 from tempfile import NamedTemporaryFile
 
-from leitus.deep import CryptDeviceWithRandomKey, LoopDevice, ExtFileSystem
+from leitus.deep import CryptDeviceWithRandomKey, ExtFileSystem
+from leitus.loop import LoopDevice
 
 
 def a_session_home(profiles, name, size_in_megabytes, user, target):

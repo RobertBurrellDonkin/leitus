@@ -22,12 +22,11 @@ from leitus import cli
 
 @mock.patch('leitus.cli.sys.stdout')
 def test_write_info(mock_stdout):
-
     cli.write_info()
 
     mock_stdout.write.assert_has_calls([
-            mock.call(
-                "Leitus " + cli.__version__ + "\n\n  "
-                "Add the drive name to the command line, and I'll describe its configuration.\n\n"
-                "  For example 'leitus --info cool'\n\n")
-        ])
+        mock.call(
+            "Leitus " + cli.__version__ + "\n\n  "
+                                          "Add the drive name to the command line, and I'll describe its configuration.\n\n"
+                                          "  For example 'leitus --info cool'\n\n")
+    ])

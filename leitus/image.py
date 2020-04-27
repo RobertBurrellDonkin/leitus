@@ -19,7 +19,9 @@
 #
 #
 #
-from leitus.deep import LuksDevice, LoopDevice
+from leitus.deep import LuksDevice
+
+from leitus.loop import LoopDevice
 
 
 def an_image_drive(uuid, name, target):

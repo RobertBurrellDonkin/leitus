@@ -28,7 +28,6 @@ from leitus.surface import Leitus
 
 __version__ = '1.2.dev1'
 
-
 #
 #
 # Scripting foo
