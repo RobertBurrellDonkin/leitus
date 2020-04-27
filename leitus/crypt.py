@@ -58,7 +58,8 @@ class LuksSetup:
     @staticmethod
     def map(name, device):
         LuksSetup.luks_open(device, name)
-        filesystem.headers(name)
+        headers = filesystem.headers(name)
+        print (headers)
         LuksSetup.check_filesystem(name)
 
     @staticmethod

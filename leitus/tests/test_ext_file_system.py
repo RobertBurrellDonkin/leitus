@@ -107,3 +107,12 @@ def test_mount_count():
 
 def test_max_mount_count():
     assert filesystem.FileSystemHeaders(SAMPLE_OUTPUT).max_mount_count == "-1"
+
+
+def test_headers_str():
+    assert str(filesystem.FileSystemHeaders(SAMPLE_OUTPUT)) == """
+Last check:           Fri Apr 10 12:00:58 2015
+Check interval:       0 (<none>)
+Mount count:          2049
+Maximum mount count:  -1
+"""

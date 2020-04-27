@@ -44,6 +44,14 @@ class Line:
             self.value = None
 
 
+HEADER_STRING = """
+Last check:           {}
+Check interval:       {}
+Mount count:          {}
+Maximum mount count:  {}
+"""
+
+
 class FileSystemHeaders:
     def __init__(self, raw):
         self.raw = raw
@@ -60,7 +68,7 @@ class FileSystemHeaders:
                 self.max_mount_count = header.value
 
     def __str__(self):
-        return self.raw
+        return HEADER_STRING.format(self.last_check, self.check_interval, self.mount_count, self.max_mount_count)
 
 
 class ExtFileSystem:
