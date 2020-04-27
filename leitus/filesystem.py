@@ -56,6 +56,9 @@ class FileSystemHeaders:
     def __init__(self, raw):
         self.raw = raw
         self.check_interval = None
+        self.last_check = None
+        self.mount_count = None
+        self.max_mount_count = None
         for line in raw.splitlines(False):
             header = Line(line)
             if header.is_check_interval:
@@ -68,7 +71,11 @@ class FileSystemHeaders:
                 self.max_mount_count = header.value
 
     def __str__(self):
-        return HEADER_STRING.format(self.last_check, self.check_interval, self.mount_count, self.max_mount_count)
+        return HEADER_STRING.format(
+            self.last_check or '',
+            self.check_interval or '',
+            self.mount_count or '',
+            self.max_mount_count or '')
 
 
 class ExtFileSystem:

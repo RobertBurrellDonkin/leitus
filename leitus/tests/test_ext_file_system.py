@@ -109,10 +109,35 @@ def test_max_mount_count():
     assert filesystem.FileSystemHeaders(SAMPLE_OUTPUT).max_mount_count == "-1"
 
 
+def test_missing_last_check():
+    assert filesystem.FileSystemHeaders("").last_check is None
+
+
+def test_missing_check_interval():
+    assert filesystem.FileSystemHeaders("").check_interval is None
+
+
+def test_missing_mount_count():
+    assert filesystem.FileSystemHeaders("").mount_count is None
+
+
+def test_missing_max_mount_count():
+    assert filesystem.FileSystemHeaders("").max_mount_count is None
+
+
 def test_headers_str():
     assert str(filesystem.FileSystemHeaders(SAMPLE_OUTPUT)) == """
 Last check:           Fri Apr 10 12:00:58 2015
 Check interval:       0 (<none>)
 Mount count:          2049
 Maximum mount count:  -1
+"""
+
+
+def test_missing_headers_str():
+    assert str(filesystem.FileSystemHeaders("")) == """
+Last check:           
+Check interval:       
+Mount count:          
+Maximum mount count:  
 """
