@@ -43,7 +43,7 @@ def test_map_calls(mock_crypt_subprocess, mock_filesystem_subprocess):
     ])
 
     mock_filesystem_subprocess.check_output.assert_has_calls([
-        mock.call(["dumpe2fs", "-h", "/dev/mapper/A-NAME"])
+        mock.call(["dumpe2fs", "-h", "/dev/mapper/A-NAME"], universal_newlines=True)
     ])
 
 

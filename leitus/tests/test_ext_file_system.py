@@ -82,7 +82,7 @@ def test_headers_call(mock_subprocess):
     filesystem.ExtFileSystem.headers(SAMPLE_NAME)
 
     mock_subprocess.check_output.assert_has_calls([
-        mock.call(SAMPLE_COMMAND)
+        mock.call(SAMPLE_COMMAND, universal_newlines=True)
     ])
 
 

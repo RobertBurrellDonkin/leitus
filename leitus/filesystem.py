@@ -99,5 +99,6 @@ class ExtFileSystem:
                     "dumpe2fs",
                     "-h",
                     DeviceMapping.name_after_mapping(name)
-                ]
+                ],
+                universal_newlines=True
             ))
