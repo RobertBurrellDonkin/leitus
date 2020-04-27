@@ -26,7 +26,7 @@ device = "/some/device"
 @mock.patch('leitus.filesystem.subprocess')
 @mock.patch('leitus.crypt.subprocess')
 def test_map_calls(mock_crypt_subprocess, mock_filesystem_subprocess):
-    crypt.LuksSetup.map(name, device)
+    crypt.LuksSetup().map(name, device)
 
     mock_crypt_subprocess.check_call.assert_has_calls([
         mock.call(
@@ -45,6 +45,28 @@ def test_map_calls(mock_crypt_subprocess, mock_filesystem_subprocess):
     mock_filesystem_subprocess.check_output.assert_has_calls([
         mock.call(["dumpe2fs", "-h", "/dev/mapper/A-NAME"], universal_newlines=True)
     ])
+
+
+@mock.patch('leitus.filesystem.subprocess')
+@mock.patch('leitus.crypt.subprocess')
+def test_map_calls_no_tune(mock_crypt_subprocess, mock_filesystem_subprocess):
+    crypt.LuksSetup(tune=False).map(name, device)
+
+    mock_crypt_subprocess.check_call.assert_has_calls([
+        mock.call(
+            ['cryptsetup',
+             'luksOpen',
+             "/some/device",
+             "A-NAME"]
+        ),
+        mock.call(
+            ['fsck',
+             '-MCr',
+             "/dev/mapper/A-NAME"]
+        )
+    ])
+
+    mock_filesystem_subprocess.check_output.assert_has_calls([])
 
 
 @mock.patch('leitus.crypt.subprocess')

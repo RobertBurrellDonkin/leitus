@@ -22,9 +22,9 @@
 
 import subprocess
 
+from leitus import filesystem
 from leitus.device import DeviceMapping
 from leitus.errors import CryptsetupError
-from leitus import filesystem
 
 CRYPTSETUP = 'cryptsetup'
 
@@ -55,16 +55,20 @@ class CryptDeviceWithRandomKey:
 
 class LuksSetup:
 
-    @staticmethod
-    def map(name, device):
+    def __init__(self, tune=True, interval=30, mounts=30):
+        self.tune = tune
+        self.interval = interval
+        self.mounts = mounts
+
+    def map(self, name, device):
         LuksSetup.luks_open(device, name)
-        LuksSetup.check_tuning(name)
+        self.check_tuning(name)
         LuksSetup.check_filesystem(name)
 
-    @staticmethod
-    def check_tuning(name):
-        headers = filesystem.headers(name)
-        print(headers)
+    def check_tuning(self, name):
+        if self.tune:
+            headers = filesystem.headers(name)
+            print(headers)
 
     @staticmethod
     def check_filesystem(name):
