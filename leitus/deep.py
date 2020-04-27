@@ -473,7 +473,7 @@ class DeviceMapping:
         return self
 
 
-class Ext3:
+class ExtFileSystem:
 
     @staticmethod
     def format(device):
@@ -485,6 +485,16 @@ class Ext3:
             '-O',
             'dir_index,filetype',
             device])
+
+    @staticmethod
+    def header(device):
+        subprocess.check_output(
+            [
+                "dumpe2fs",
+                "-h",
+                device
+            ]
+        )
 
 
 class SubprocessMount:
