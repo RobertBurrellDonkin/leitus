@@ -31,10 +31,13 @@ def headers(name):
 
 class Line:
     def __init__(self, line):
+
         parts = line.split(':', 1)
         self.name = parts[0]
         self.is_check_interval = self.name == "Check interval"
         self.is_last_check = self.name == "Last checked"
+        self.is_mount_count = self.name == "Mount count"
+        self.is_max_mount_count = self.name == "Maximum mount count"
         if len(parts) > 1:
             self.value = parts[1].strip()
         else:
@@ -51,6 +54,10 @@ class FileSystemHeaders:
                 self.check_interval = header.value
             elif header.is_last_check:
                 self.last_check = header.value
+            elif header.is_mount_count:
+                self.mount_count = header.value
+            elif header.is_max_mount_count:
+                self.max_mount_count = header.value
 
     def __str__(self):
         return self.raw

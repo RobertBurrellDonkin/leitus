@@ -99,3 +99,11 @@ def test_last_check():
 
 def test_check_interval():
     assert filesystem.FileSystemHeaders(SAMPLE_OUTPUT).check_interval == "0 (<none>)"
+
+
+def test_mount_count():
+    assert filesystem.FileSystemHeaders(SAMPLE_OUTPUT).mount_count == "2049"
+
+
+def test_max_mount_count():
+    assert filesystem.FileSystemHeaders(SAMPLE_OUTPUT).max_mount_count == "-1"
