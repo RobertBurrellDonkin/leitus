@@ -91,3 +91,7 @@ def test_headers_output(mock_subprocess):
     mock_subprocess.check_output.return_value = SAMPLE_OUTPUT
 
     assert filesystem.ExtFileSystem.headers(SAMPLE_NAME).raw == SAMPLE_OUTPUT
+
+def test_last_check():
+    assert filesystem.FileSystemHeaders(SAMPLE_OUTPUT).check_interval == "0 (<none>)"
+

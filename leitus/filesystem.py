@@ -32,6 +32,11 @@ def headers(name):
 class FileSystemHeaders:
     def __init__(self, raw):
         self.raw = raw
+        self.check_interval = None
+        for line in raw.splitlines(False):
+            parts = line.split(':')
+            if parts[0] == "Check interval":
+                self.check_interval = parts[1].strip()
 
     def __str__(self):
         return self.raw
