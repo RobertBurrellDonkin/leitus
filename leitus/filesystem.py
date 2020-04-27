@@ -29,14 +29,28 @@ def headers(name):
     return ExtFileSystem.headers(name)
 
 
+class Line:
+    def __init__(self, line):
+        parts = line.split(':', 1)
+        self.name = parts[0]
+        self.is_check_interval = self.name == "Check interval"
+        self.is_last_check = self.name == "Last checked"
+        if len(parts) > 1:
+            self.value = parts[1].strip()
+        else:
+            self.value = None
+
+
 class FileSystemHeaders:
     def __init__(self, raw):
         self.raw = raw
         self.check_interval = None
         for line in raw.splitlines(False):
-            parts = line.split(':')
-            if parts[0] == "Check interval":
-                self.check_interval = parts[1].strip()
+            header = Line(line)
+            if header.is_check_interval:
+                self.check_interval = header.value
+            elif header.is_last_check:
+                self.last_check = header.value
 
     def __str__(self):
         return self.raw

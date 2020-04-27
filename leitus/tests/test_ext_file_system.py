@@ -92,6 +92,10 @@ def test_headers_output(mock_subprocess):
 
     assert filesystem.ExtFileSystem.headers(SAMPLE_NAME).raw == SAMPLE_OUTPUT
 
-def test_last_check():
-    assert filesystem.FileSystemHeaders(SAMPLE_OUTPUT).check_interval == "0 (<none>)"
 
+def test_last_check():
+    assert filesystem.FileSystemHeaders(SAMPLE_OUTPUT).last_check == "Fri Apr 10 12:00:58 2015"
+
+
+def test_check_interval():
+    assert filesystem.FileSystemHeaders(SAMPLE_OUTPUT).check_interval == "0 (<none>)"
