@@ -377,7 +377,8 @@ class LuksSetup:
 
     @staticmethod
     def map(name, device):
-        LuksSetup.luksOpen(device, name)
+        LuksSetup.luks_open(device, name)
+        ExtFileSystem.headers(name)
         LuksSetup.check_filesystem(name)
 
     @staticmethod
@@ -388,7 +389,7 @@ class LuksSetup:
         subprocess.check_call(args)
 
     @staticmethod
-    def luksOpen(device, name):
+    def luks_open(device, name):
         args = [CRYPTSETUP,
                 'luksOpen',
                 device,
@@ -477,6 +478,9 @@ class FileSystemHeaders:
     def __init__(self, raw):
         self.raw = raw
 
+    def __str__(self):
+        return self.raw
+
 
 class ExtFileSystem:
 
@@ -492,13 +496,13 @@ class ExtFileSystem:
             device])
 
     @staticmethod
-    def headers(device):
+    def headers(name):
         return FileSystemHeaders(
             subprocess.check_output(
                 [
                     "dumpe2fs",
                     "-h",
-                    device
+                    DeviceMapping.name_after_mapping(name)
                 ]
             ))
 

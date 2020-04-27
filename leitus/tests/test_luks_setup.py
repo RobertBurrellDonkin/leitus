@@ -41,6 +41,10 @@ def test_map_calls(mock_subprocess):
         )
     ])
 
+    mock_subprocess.check_output.assert_has_calls([
+        mock.call(["dumpe2fs", "-h", "/dev/mapper/A-NAME"])
+    ])
+
 
 @mock.patch('leitus.deep.subprocess')
 def test_unmap_calls(mock_subprocess):
