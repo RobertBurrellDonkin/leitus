@@ -76,6 +76,58 @@ Journal sequence:         0x0000cc56
 Journal start:            0
 """
 
+TUNED_OUTPUT = """
+Last mounted on:          /home/rob/Videos
+Filesystem UUID:          2e067b03-693b-49a5-ab61-d9e87e9dddb5
+Filesystem magic number:  0xEF53
+Filesystem revision #:    1 (dynamic)
+Filesystem features:      has_journal ext_attr resize_inode dir_index filetype needs_recovery extent 64bit flex_bg sparse_super large_file huge_file dir_nlink extra_isize
+Filesystem flags:         signed_directory_hash 
+Default mount options:    user_xattr acl
+Filesystem state:         clean
+Errors behavior:          Continue
+Filesystem OS type:       Linux
+Inode count:              3815552
+Block count:              976753873
+Reserved block count:     48837693
+Free blocks:              163837403
+Free inodes:              3810953
+First block:              0
+Block size:               4096
+Fragment size:            4096
+Group descriptor size:    64
+Reserved GDT blocks:      1024
+Blocks per group:         32768
+Fragments per group:      32768
+Inodes per group:         128
+Inode blocks per group:   8
+Flex block group size:    16
+Filesystem created:       Fri Oct  6 20:00:01 2017
+Last mount time:          Mon Apr 27 18:51:05 2020
+Last write time:          Mon Apr 27 18:51:05 2020
+Mount count:              4
+Maximum mount count:      30
+Last checked:             Sun Apr 26 09:45:01 2020
+Check interval:           2592000 (1 month)
+Next check after:         Tue May 26 09:45:01 2020
+Lifetime writes:          3178 GB
+Reserved blocks uid:      0 (user root)
+Reserved blocks gid:      0 (group root)
+First inode:              11
+Inode size:               256
+Required extra isize:     32
+Desired extra isize:      32
+Journal inode:            8
+Default directory hash:   half_md4
+Directory Hash Seed:      f6295615-c371-4ad5-991a-f3e2fc8c2256
+Journal backup:           inode blocks
+Journal features:         journal_incompat_revoke journal_64bit
+Journal size:             128M
+Journal length:           32768
+Journal sequence:         0x00011839
+Journal start:            0
+"""
+
 
 @mock.patch('leitus.filesystem.subprocess')
 def test_tune_interval_call(mock_subprocess):
@@ -89,6 +141,7 @@ def test_tune_interval_call(mock_subprocess):
                 "/dev/mapper/music"]
         )
     ])
+
 
 @mock.patch('leitus.filesystem.subprocess')
 def test_tune_count_call(mock_subprocess):
@@ -118,6 +171,22 @@ def test_headers_output(mock_subprocess):
     mock_subprocess.check_output.return_value = SAMPLE_OUTPUT
 
     assert filesystem.ExtFileSystem.headers(SAMPLE_NAME).raw == SAMPLE_OUTPUT
+
+
+def test_is_check_interval_set_when_unset():
+    assert filesystem.FileSystemHeaders(SAMPLE_OUTPUT).is_check_interval_set == False
+
+
+def test_is_max_count_set_when_unset():
+    assert filesystem.FileSystemHeaders(SAMPLE_OUTPUT).is_max_count_set == False
+
+
+def test_is_check_interval_set_when_set():
+    assert filesystem.FileSystemHeaders(TUNED_OUTPUT).is_check_interval_set == True
+
+
+def test_is_max_count_set_when_set():
+    assert filesystem.FileSystemHeaders(TUNED_OUTPUT).is_max_count_set == True
 
 
 def test_last_check():

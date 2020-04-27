@@ -54,6 +54,8 @@ Maximum mount count:  {}
 
 class FileSystemHeaders:
     def __init__(self, raw):
+
+
         self.raw = raw
         self.check_interval = None
         self.last_check = None
@@ -69,6 +71,8 @@ class FileSystemHeaders:
                 self.mount_count = header.value
             elif header.is_max_mount_count:
                 self.max_mount_count = header.value
+        self.is_check_interval_set = self.check_interval and not self.check_interval.startswith('0')
+        self.is_max_count_set = self.max_mount_count and not self.max_mount_count == '-1'
 
     def __str__(self):
         return HEADER_STRING.format(
