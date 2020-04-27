@@ -217,48 +217,6 @@ class FileSystemOnDeviceMapping:
     def unmount_from(self, path):
         self.api.unmount(path)
 
-
-class User:
-    NAME_FIELD = 0
-    PASSWD_FIELD = 1
-    UID_FIELD = 2
-    GID_FIELD = 3
-    COMMENT_FIELD = 4
-    HOME_DIRECTORY_FIELD = 5
-    SHELL_FIELD = 6
-
-    def __init__(self, name):
-        self.name = name
-
-    def uid(self):
-        return self.info()[self.UID_FIELD]
-
-    def gid(self):
-        return self.info()[self.GID_FIELD]
-
-    def home(self):
-        return self.info()[self.HOME_DIRECTORY_FIELD]
-
-    def info(self):
-        return pwd.getpwnam(self.name)
-
-    def own(self, target):
-        """
-        Establishes this user as owner of target.
-        Applied recursively when target is a directory.
-        """
-        uid = self.uid()
-        gid = self.gid()
-        os.chown(target, uid, gid)
-        for root, dirs, files in os.walk(target):
-            for file in files:
-                os.chown(os.path.join(root, file), uid, gid)
-        os.chmod(target, stat.S_IRWXU)
-
-    def __repr__(self):
-        return "User named '{0}'".format(self.name)
-
-
 class Copy:
     """
     Copy operations.

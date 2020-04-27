@@ -22,7 +22,7 @@
 
 import json
 
-from leitus import deep
+from leitus import user
 from leitus import diagnosis
 
 
@@ -56,7 +56,7 @@ class ConfigConstants:
         return configuration[self.USER]
 
     def user_for(self, configuration):
-        return deep.User(self.user_name_for(configuration))
+        return user.User(self.user_name_for(configuration))
 
     def profiles_for(self, configuration):
         return configuration[self.PROFILES]
