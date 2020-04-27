@@ -475,10 +475,16 @@ class DeviceMapping:
 
 class Ext3:
 
-    def format(self, device):
-        subprocess.check_call(['mke2fs', '-j', '-m', '1', '-O',
-                               'dir_index,filetype',
-                               device])
+    @staticmethod
+    def format(device):
+        subprocess.check_call([
+            'mke2fs',
+            '-j',
+            '-m',
+            '1',
+            '-O',
+            'dir_index,filetype',
+            device])
 
 
 class SubprocessMount:
