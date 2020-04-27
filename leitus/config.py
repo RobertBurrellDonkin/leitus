@@ -22,8 +22,8 @@
 
 import json
 
-from leitus import user
 from leitus import diagnosis
+from leitus import user
 
 
 def load(name, layout):
