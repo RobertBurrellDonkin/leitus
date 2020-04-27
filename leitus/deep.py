@@ -24,6 +24,7 @@ import subprocess
 
 from leitus.device import DeviceMapping
 from leitus.errors import CryptsetupError
+from leitus import filesystem
 
 CRYPTSETUP = 'cryptsetup'
 
@@ -57,7 +58,7 @@ class LuksSetup:
     @staticmethod
     def map(name, device):
         LuksSetup.luks_open(device, name)
-        ExtFileSystem.headers(name)
+        filesystem.headers(name)
         LuksSetup.check_filesystem(name)
 
     @staticmethod
@@ -98,36 +99,3 @@ class LuksDevice:
     @staticmethod
     def on(source):
         return DeviceMapping(source, LuksSetup())
-
-
-class FileSystemHeaders:
-    def __init__(self, raw):
-        self.raw = raw
-
-    def __str__(self):
-        return self.raw
-
-
-class ExtFileSystem:
-
-    @staticmethod
-    def format(device):
-        subprocess.check_call([
-            'mke2fs',
-            '-j',
-            '-m',
-            '1',
-            '-O',
-            'dir_index,filetype',
-            device])
-
-    @staticmethod
-    def headers(name):
-        return FileSystemHeaders(
-            subprocess.check_output(
-                [
-                    "dumpe2fs",
-                    "-h",
-                    DeviceMapping.name_after_mapping(name)
-                ]
-            ))

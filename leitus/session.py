@@ -24,7 +24,8 @@ import os
 import os.path
 from tempfile import NamedTemporaryFile
 
-from leitus.deep import CryptDeviceWithRandomKey, ExtFileSystem
+from leitus.deep import CryptDeviceWithRandomKey
+from leitus.filesystem import ExtFileSystem
 from leitus.loop import LoopDevice
 
 
