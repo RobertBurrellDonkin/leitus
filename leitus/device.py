@@ -80,7 +80,7 @@ class DeviceMapping:
         return self
 
 
-class SubprocessMount:
+class MountPoint:
     @staticmethod
     def mount(device, on_path):
         subprocess.check_call(['mount', device, on_path])
@@ -95,7 +95,7 @@ class FileSystemOnDeviceMapping:
 
     def __init__(self, on_device):
         self.on_device = on_device
-        self.api = SubprocessMount()
+        self.api = MountPoint()
 
     def with_format(self, api):
         api.format(self.on_device)
@@ -171,7 +171,7 @@ class FileSystemOnDeviceMapping:
 
     def __init__(self, on_device):
         self.on_device = on_device
-        self.api = SubprocessMount()
+        self.api = MountPoint()
 
     def with_format(self, api):
         api.format(self.on_device)
