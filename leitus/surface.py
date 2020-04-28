@@ -20,10 +20,11 @@
 # The surface module contains a high level API.
 #
 
-from leitus import config, luks, image, session, deep
+from leitus import config, luks, image, session
 from leitus import diagnosis
 from leitus import layout
 from leitus.config import ConfigConstants
+from leitus.errors import DiscImageNotFoundError, PassphaseError, UnsupportedError, AlreadyInUseError
 
 
 def with_configuration(configuration, directory_layout=None):
@@ -36,7 +37,7 @@ def with_configuration(configuration, directory_layout=None):
     elif constants.SOURCE in configuration:
         source_disc_image = constants.source_for(configuration)
         if directory_layout:
-            source_disc_image = directory_layout.drivePath(source_disc_image)
+            source_disc_image = directory_layout.drive_path(source_disc_image)
 
         return image.an_image_drive(source_disc_image,
                                     constants.name_for(configuration),
@@ -63,16 +64,16 @@ class Leitus:
             if name:
                 self.with_configuration(name).perform()
 
-        except deep.DiscImageNotFoundError as error:
+        except DiscImageNotFoundError as error:
             raise diagnosis.MissingDiscImageError(self.layout, error, error.resource)
 
-        except deep.PassphaseError as error:
+        except PassphaseError as error:
             raise diagnosis.CouldNotUnlockEncryptedDrive(self.layout, error, error.resource)
 
-        except deep.UnsupportedError as error:
+        except UnsupportedError as error:
             raise diagnosis.UnsupportedRequirementError(error)
 
-        except deep.AlreadyInUseError as error:
+        except AlreadyInUseError as error:
             raise diagnosis.InUseError(error)
 
     def info(self, name):

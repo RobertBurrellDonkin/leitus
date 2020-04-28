@@ -22,8 +22,8 @@
 
 import json
 
-from leitus import deep
 from leitus import diagnosis
+from leitus import user
 
 
 def load(name, layout):
@@ -39,8 +39,8 @@ class ConfigConstants:
     TARGET = 'target'
     SOURCE = 'source'
 
-    def build(self, user, profiles, size, name):
-        return {self.USER: user, self.PROFILES: profiles,
+    def build(self, user_name, profiles, size, name):
+        return {self.USER: user_name, self.PROFILES: profiles,
                 self.SIZE: size, self.NAME: name}
 
     def target_for(self, configuration):
@@ -56,7 +56,7 @@ class ConfigConstants:
         return configuration[self.USER]
 
     def user_for(self, configuration):
-        return deep.User(self.user_name_for(configuration))
+        return user.User(self.user_name_for(configuration))
 
     def profiles_for(self, configuration):
         return configuration[self.PROFILES]

@@ -40,14 +40,14 @@ class StandardLayout():
     def profiles(self):
         return FileSystemLayout(self.profiles_d)
 
-    def drivePath(self, resource):
+    def drive_path(self, resource):
         if os.path.isabs(resource):
             return resource
         else:
             return self.drives().as_path(resource)
 
 
-class FileSystemLayout():
+class FileSystemLayout:
     READ_ONLY = 'r'
 
     def __init__(self, directory):

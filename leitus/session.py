@@ -24,7 +24,9 @@ import os
 import os.path
 from tempfile import NamedTemporaryFile
 
-from leitus.deep import CryptDeviceWithRandomKey, LoopDevice, Ext3
+from leitus.crypt import CryptDeviceWithRandomKey
+from leitus.filesystem import ExtFileSystem
+from leitus.loop import LoopDevice
 
 
 def a_session_home(profiles, name, size_in_megabytes, user, target):
@@ -54,7 +56,7 @@ class SessionHome:
     def commission(self):
         CryptDeviceWithRandomKey().on(
             LoopDevice(self.filename).create(self.size_in_megabytes).open()).map_to(
-            self.name).with_format(Ext3()).mount_on(self.target).merge(self.profiles).own_by(self.user)
+            self.name).with_format(ExtFileSystem()).mount_on(self.target).merge(self.profiles).own_by(self.user)
 
     def decommission(self):
         CryptDeviceWithRandomKey().on(

@@ -30,37 +30,37 @@ from leitus import surface
 from leitus.config import ConfigConstants
 
 
-def test_whenAbsoluteSourceIsNotModified():
-    aSource = "/something.img"
-    aName = "Bongo"
-    aTarget = "/a/path"
+def test_when_absolute_source_is_not_modified():
+    a_source = "/something.img"
+    a_name = "Bongo"
+    a_target = "/a/path"
     drive = surface.with_configuration(
-        {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget})
-    assert aName == drive.name
-    assert aTarget == drive.target
-    assert aSource == drive.source
+        {ConfigConstants().SOURCE: a_source, ConfigConstants().NAME: a_name, ConfigConstants().TARGET: a_target})
+    assert a_name == drive.name
+    assert a_target == drive.target
+    assert a_source == drive.source
 
 
-def test_whenRelativeIsNotModifiedWithoutLayout():
-    aSource = "something.img"
-    aName = "Bongo"
-    aTarget = "/a/path"
+def test_when_relative_is_not_modified_without_layout():
+    a_source = "something.img"
+    a_name = "Bongo"
+    a_target = "/a/path"
     drive = surface.with_configuration(
-        {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget})
-    assert aName == drive.name
-    assert aTarget == drive.target
-    assert aSource == drive.source
+        {ConfigConstants().SOURCE: a_source, ConfigConstants().NAME: a_name, ConfigConstants().TARGET: a_target})
+    assert a_name == drive.name
+    assert a_target == drive.target
+    assert a_source == drive.source
 
 
-def test_whenRelativeIsJoinedToDrivesWhenLayoutSet():
-    aSource = "something.img"
-    aName = "Bongo"
-    aTarget = "/a/path"
-    aDriveDirectory = "drives.d"
+def test_when_relative_is_joined_to_drives_when_layout_set():
+    a_source = "something.img"
+    a_name = "Bongo"
+    a_target = "/a/path"
+    a_drive_directory = "drives.d"
 
     drive = surface.with_configuration(
-        {ConfigConstants().SOURCE: aSource, ConfigConstants().NAME: aName, ConfigConstants().TARGET: aTarget},
-        layout.StandardLayout("conf.d", aDriveDirectory, "profiles.d"))
-    assert aName == drive.name
-    assert aTarget == drive.target
-    assert os.path.join(aDriveDirectory, aSource) == drive.source
+        {ConfigConstants().SOURCE: a_source, ConfigConstants().NAME: a_name, ConfigConstants().TARGET: a_target},
+        layout.StandardLayout("conf.d", a_drive_directory, "profiles.d"))
+    assert a_name == drive.name
+    assert a_target == drive.target
+    assert os.path.join(a_drive_directory, a_source) == drive.source
