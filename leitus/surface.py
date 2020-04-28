@@ -81,3 +81,6 @@ class Leitus:
             return self.with_configuration(name).info()
         else:
             return "Here's the deal: a name for information"
+
+    def list(self):
+        pass
