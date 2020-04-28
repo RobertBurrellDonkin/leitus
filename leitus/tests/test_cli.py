@@ -30,3 +30,25 @@ def test_write_info(mock_stdout):
                                           "Add the drive name to the command line, and I'll describe its configuration.\n\n"
                                           "  For example 'leitus --info cool'\n\n")
     ])
+
+
+@mock.patch('leitus.cli.sys')
+@mock.patch('leitus.cli.Leitus.list')
+def test_list_drives(mock_leitus, mock_sys):
+    target = mock.Mock()
+    target.list.return_value = True
+
+    mock_leitus.return_value=["alpha", "beta"]
+
+    cli.execute(target)
+
+    mock_leitus.assert_called()
+
+    mock_sys.stdout.write.assert_has_calls(
+        [
+            mock.call('Active drives:\n'),
+            mock.call('  alpha\n'),
+            mock.call('  beta\n'),
+            mock.call('\n')
+        ]
+    )

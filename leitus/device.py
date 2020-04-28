@@ -50,6 +50,10 @@ class DeviceMapping:
     def name_after_mapping(name):
         return '/dev/mapper/{0}'.format(name)
 
+    @staticmethod
+    def name_from_mapping(mapping):
+        return mapping.split(maxsplit=1)[0].split('-')[1]
+
     def map_to(self, name):
         try:
             self.api.map(name, self.device)
@@ -80,7 +84,7 @@ class DeviceMapping:
         return self
 
 
-class SubprocessMount:
+class MountPoint:
     @staticmethod
     def mount(device, on_path):
         subprocess.check_call(['mount', device, on_path])
@@ -90,12 +94,18 @@ class SubprocessMount:
         if on_path:
             subprocess.check_call(['umount', on_path])
 
+    @staticmethod
+    def list():
+        return [DeviceMapping.name_from_mapping(line)
+                for line in subprocess.check_output('df', universal_newlines=True).splitlines()
+                if line.startswith("/dev/mapper/leitus")]
+
 
 class FileSystemOnDeviceMapping:
 
     def __init__(self, on_device):
         self.on_device = on_device
-        self.api = SubprocessMount()
+        self.api = MountPoint()
 
     def with_format(self, api):
         api.format(self.on_device)
@@ -156,22 +166,11 @@ class MountedFileSystem():
         return "File system at {0}".format(self.mount_point)
 
 
-class SubprocessMount:
-    @staticmethod
-    def mount(device, on_path):
-        subprocess.check_call(['mount', device, on_path])
-
-    @staticmethod
-    def unmount(on_path):
-        if (on_path):
-            subprocess.check_call(['umount', on_path])
-
-
 class FileSystemOnDeviceMapping:
 
     def __init__(self, on_device):
         self.on_device = on_device
-        self.api = SubprocessMount()
+        self.api = MountPoint()
 
     def with_format(self, api):
         api.format(self.on_device)

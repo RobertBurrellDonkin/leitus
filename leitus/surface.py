@@ -23,6 +23,7 @@
 from leitus import config, luks, image, session
 from leitus import diagnosis
 from leitus import layout
+from leitus import device
 from leitus.config import ConfigConstants
 from leitus.errors import DiscImageNotFoundError, PassphaseError, UnsupportedError, AlreadyInUseError
 
@@ -81,3 +82,6 @@ class Leitus:
             return self.with_configuration(name).info()
         else:
             return "Here's the deal: a name for information"
+
+    def list(self):
+        return device.MountPoint.list()

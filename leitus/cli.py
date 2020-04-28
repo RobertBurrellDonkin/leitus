@@ -26,7 +26,7 @@ import sys
 from leitus import diagnosis
 from leitus.surface import Leitus
 
-__version__ = '1.3.dev1'
+__version__ = '1.3.dev3'
 
 #
 #
@@ -48,17 +48,27 @@ def leitus(conf_data, var_data):
 
 
 def execute(args):
-    if args.name:
-        app = Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles)
-        if args.info:
-            sys.stdout.write(app.info(args.name))
-        else:
-            app.perform(args.name)
+    if args.list:
+        sys.stdout.write("Active drives:\n")
+        for drive in app_from(args).list():
+            sys.stdout.write("  {}\n".format(drive))
+        sys.stdout.write("\n")
     else:
-        if args.info:
-            write_info()
+        if args.name:
+            app = app_from(args)
+            if args.info:
+                sys.stdout.write(app.info(args.name))
+            else:
+                app.perform(args.name)
         else:
-            write_version()
+            if args.info:
+                write_info()
+            else:
+                write_version()
+
+
+def app_from(args):
+    return Leitus(conf_d=args.conf, drives_d=args.drives, profiles_d=args.profiles)
 
 
 def write_version():
@@ -134,6 +144,9 @@ class CommandLineInterface:
                             nargs='?', default=self.drives_d)
         parser.add_argument('-i', '--info',
                             help='describes the configuration',
+                            action='store_true')
+        parser.add_argument('-l', '--list',
+                            help='lists all active drives',
                             action='store_true')
         args = parser.parse_args()
         return args
