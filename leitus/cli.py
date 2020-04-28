@@ -26,7 +26,7 @@ import sys
 from leitus import diagnosis
 from leitus.surface import Leitus
 
-__version__ = '1.3.dev2'
+__version__ = '1.3.dev3'
 
 #
 #
@@ -51,7 +51,7 @@ def execute(args):
     if args.list:
         sys.stdout.write("Active drives:\n")
         for drive in app_from(args).list():
-            sys.stdout.write("\t{}\n".format(drive))
+            sys.stdout.write("  {}\n".format(drive))
         sys.stdout.write("\n")
     else:
         if args.name:
