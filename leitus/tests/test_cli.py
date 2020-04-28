@@ -46,9 +46,9 @@ def test_list_drives(mock_leitus, mock_sys):
 
     mock_sys.stdout.write.assert_has_calls(
         [
-            mock.call('Active drives:'),
-            mock.call('\talpha'),
-            mock.call('\tbeta'),
-            mock.call('')
+            mock.call('Active drives:\n'),
+            mock.call('\talpha\n'),
+            mock.call('\tbeta\n'),
+            mock.call('\n')
         ]
     )
