@@ -32,11 +32,23 @@ def test_write_info(mock_stdout):
     ])
 
 
+@mock.patch('leitus.cli.sys')
 @mock.patch('leitus.cli.Leitus.list')
-def test_list_drives(mock_leitus):
+def test_list_drives(mock_leitus, mock_sys):
     target = mock.Mock()
     target.list.return_value = True
+
+    mock_leitus.return_value=["alpha", "beta"]
 
     cli.execute(target)
 
     mock_leitus.assert_called()
+
+    mock_sys.stdout.write.assert_has_calls(
+        [
+            mock.call('Active drives:'),
+            mock.call('\talpha'),
+            mock.call('\tbeta'),
+            mock.call('')
+        ]
+    )

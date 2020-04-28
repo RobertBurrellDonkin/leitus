@@ -49,7 +49,10 @@ def leitus(conf_data, var_data):
 
 def execute(args):
     if args.list:
-        app_from(args).list()
+        sys.stdout.write("Active drives:")
+        for drive in app_from(args).list():
+            sys.stdout.write("\t{}".format(drive))
+        sys.stdout.write("")
     else:
         if args.name:
             app = app_from(args)
