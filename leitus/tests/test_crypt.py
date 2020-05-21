@@ -16,12 +16,6 @@
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 #
-#
-# Leitus is a suite of higher level functions for cryptographic drives.
-# The contents tests the surface module.
-#
-# Robert Burrell Donkin, 2011
-#
 from unittest import mock
 
 from leitus.crypt import CryptSetup

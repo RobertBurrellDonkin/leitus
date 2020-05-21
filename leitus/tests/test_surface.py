@@ -25,3 +25,21 @@ def test_list(mock_device):
     mock_device.MountPoint.list.return_value = ["alice", "betty", "clem"]
 
     assert surface.Leitus(None, None, None).list() == ["alice", "betty", "clem"]
+
+
+@mock.patch('leitus.surface.device.MountPoint')
+@mock.patch('leitus.surface.crypt')
+def test_close_all(mock_crypt, mock_mount_point):
+    mock_mount_point.list.return_value = ["alice", "betty", "clem"]
+
+    surface.Leitus(None, None, None).close_all()
+
+    mock_mount_point.unmount_all.assert_has_calls([
+        mock.call()
+    ])
+
+    mock_crypt.CryptSetup.close.assert_has_calls([
+        mock.call('leitus-alice'),
+        mock.call('leitus-betty'),
+        mock.call('leitus-clem')
+    ])

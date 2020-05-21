@@ -113,7 +113,7 @@ class MountPoint:
             if line.startswith(mapping)]
 
     @staticmethod
-    def umount_all():
+    def unmount_all():
         for path in MountPoint.all_active():
             MountPoint.unmount(path)
 
