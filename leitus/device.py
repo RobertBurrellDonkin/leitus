@@ -95,10 +95,14 @@ class MountPoint:
             subprocess.check_call(['umount', on_path])
 
     @staticmethod
+    def is_leitus_mount(line):
+        return line.startswith("/dev/mapper/leitus")
+
+    @staticmethod
     def list():
         return [DeviceMapping.name_from_mapping(line)
                 for line in subprocess.check_output('df', universal_newlines=True).splitlines()
-                if line.startswith("/dev/mapper/leitus")]
+                if MountPoint.is_leitus_mount(line)]
 
     @staticmethod
     def active(name):
@@ -107,6 +111,17 @@ class MountPoint:
             line.split()[5]
             for line in subprocess.check_output('df', universal_newlines=True).splitlines()
             if line.startswith(mapping)]
+
+    @staticmethod
+    def umount_all():
+        for path in MountPoint.all_active():
+            MountPoint.unmount(path)
+
+    @staticmethod
+    def all_active():
+        return [line.split()[5]
+                for line in subprocess.check_output('df', universal_newlines=True).splitlines()
+                if MountPoint.is_leitus_mount(line)]
 
 
 class FileSystemOnDeviceMapping:
