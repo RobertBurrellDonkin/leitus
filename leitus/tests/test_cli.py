@@ -57,3 +57,4 @@ def test_list_drives(mock_leitus, mock_sys):
 #  * accept --close-all
 #  * reject other arguments
 #  * add help
+#  * Automatically prefix name with "leitus" unless already present

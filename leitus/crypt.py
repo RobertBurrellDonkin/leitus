@@ -45,6 +45,12 @@ class CryptSetup:
                 'remove', name]
         subprocess.check_call(args)
 
+    @staticmethod
+    def close(name):
+        args = ['cryptsetup',
+                'close', name]
+        subprocess.check_call(args)
+
 
 class CryptDeviceWithRandomKey:
 
