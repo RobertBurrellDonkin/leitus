@@ -48,23 +48,26 @@ def leitus(conf_data, var_data):
 
 
 def execute(args):
-    if args.list:
-        sys.stdout.write("Active drives:\n")
-        for drive in app_from(args).list():
-            sys.stdout.write("  {}\n".format(drive))
-        sys.stdout.write("\n")
+    if args.close_all:
+        app_from(args).close_all()
     else:
-        if args.name:
-            app = app_from(args)
-            if args.info:
-                sys.stdout.write(app.info(args.name))
-            else:
-                app.perform(args.name)
+        if args.list:
+            sys.stdout.write("Active drives:\n")
+            for drive in app_from(args).list():
+                sys.stdout.write("  {}\n".format(drive))
+            sys.stdout.write("\n")
         else:
-            if args.info:
-                write_info()
+            if args.name:
+                app = app_from(args)
+                if args.info:
+                    sys.stdout.write(app.info(args.name))
+                else:
+                    app.perform(args.name)
             else:
-                write_version()
+                if args.info:
+                    write_info()
+                else:
+                    write_version()
 
 
 def app_from(args):
@@ -147,6 +150,9 @@ class CommandLineInterface:
                             action='store_true')
         parser.add_argument('-l', '--list',
                             help='lists all active drives',
+                            action='store_true')
+        parser.add_argument('-C', '--close-all',
+                            help='closes all active drives',
                             action='store_true')
         args = parser.parse_args()
         return args

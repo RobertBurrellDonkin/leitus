@@ -53,8 +53,16 @@ def test_list_drives(mock_leitus, mock_sys):
         ]
     )
 
+@mock.patch('leitus.cli.Leitus.close_all')
+def test_close_all(mock_leitus):
+    target = mock.Mock()
+    target.close_all.return_value = True
+
+    cli.execute(target)
+
+    mock_leitus.assert_called()
+
+
+
 # TODO:
-#  * accept --close-all
-#  * reject other arguments
-#  * add help
 #  * Automatically prefix name with "leitus" unless already present
