@@ -100,6 +100,14 @@ class MountPoint:
                 for line in subprocess.check_output('df', universal_newlines=True).splitlines()
                 if line.startswith("/dev/mapper/leitus")]
 
+    @staticmethod
+    def active(name):
+        mapping = "/dev/mapper/leitus-{0}".format(name)
+        return [
+            line.split()[5]
+            for line in subprocess.check_output('df', universal_newlines=True).splitlines()
+            if line.startswith(mapping)]
+
 
 class FileSystemOnDeviceMapping:
 

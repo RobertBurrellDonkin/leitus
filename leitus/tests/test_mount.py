@@ -49,3 +49,17 @@ def test_list_df(mock_subprocess):
     mock_subprocess.check_output.return_value = SAMPLE_OUTPUT
 
     assert device.MountPoint.list() == ['vanilla', 'pike']
+
+
+@mock.patch('leitus.device.subprocess')
+def test_active_mount(mock_subprocess):
+    mock_subprocess.check_output.return_value = SAMPLE_OUTPUT
+
+    assert device.MountPoint.active("vanilla") == ['/home/adam']
+
+
+@mock.patch('leitus.device.subprocess')
+def test_inactive_mount(mock_subprocess):
+    mock_subprocess.check_output.return_value = SAMPLE_OUTPUT
+
+    assert device.MountPoint.active("bogus") == []

@@ -52,3 +52,8 @@ def test_list_drives(mock_leitus, mock_sys):
             mock.call('\n')
         ]
     )
+
+# TODO:
+#  * accept --close-all
+#  * reject other arguments
+#  * add help

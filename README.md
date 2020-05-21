@@ -101,4 +101,3 @@ For example
         user:           User named 'rdonkin'
         profiles:       'home','gnome','maven','java6'
 
-
