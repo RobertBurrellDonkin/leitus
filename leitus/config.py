@@ -62,7 +62,10 @@ class ConfigConstants:
         return configuration[self.PROFILES]
 
     def name_for(self, configuration):
-        return configuration[self.NAME]
+        name = configuration[self.NAME]
+        if name and not name.startswith("leitus-"):
+            name = "leitus-{0}".format(name)
+        return name
 
     def size_for(self, configuration):
         return configuration[self.SIZE]

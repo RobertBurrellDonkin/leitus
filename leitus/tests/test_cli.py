@@ -63,6 +63,3 @@ def test_close_all(mock_leitus):
     cli.execute(target)
 
     mock_leitus.assert_called()
-
-# TODO:
-#  * Automatically prefix name with "leitus" unless already present

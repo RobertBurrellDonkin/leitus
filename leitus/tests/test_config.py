@@ -22,6 +22,7 @@ import os.path
 from leitus import config
 from leitus import diagnosis
 from leitus import layout
+from leitus.config import ConfigConstants
 
 
 def test_when_configuration_file_is_missing_that_configuration_not_found_error_is_raised():
@@ -34,3 +35,11 @@ def test_when_configuration_file_is_missing_that_configuration_not_found_error_i
         subject.load()
     except diagnosis.ConfigurationNotFoundError:
         pass
+
+
+def test_add_missing_prefix_to_name():
+    assert ConfigConstants().name_for({'name': 'alpha'}) == 'leitus-alpha'
+
+
+def test_when_name_starts_with_prefix():
+    assert ConfigConstants().name_for({'name': 'leitus-alpha'}) == 'leitus-alpha'
