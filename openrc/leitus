@@ -29,11 +29,15 @@ depend() {
 }
 
 start() {
+ ebegin "Leitus is so busy doing nothings"
  return 0
 }
 
 stop() {
-  return 0
+  ebegin "Asking Leitus to tidy up"
+  einfo $(${command} --close-all)
+  eend $? "Leitus isn't around :/"
+  return $?
 }
 
 status() {
