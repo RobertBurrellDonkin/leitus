@@ -26,7 +26,7 @@ import sys
 from leitus import diagnosis
 from leitus.surface import Leitus
 
-__version__ = '2.0.rc1'
+__version__ = '2.0.rc2'
 
 #
 #
@@ -42,7 +42,7 @@ INFO = """Leitus %(version)s
 
 
 def leitus(conf_data, var_data):
-    CommandLineInterface(os.path.join(conf_data, 'leitus'),
+    CommandLineInterface(conf_data,
                          os.path.join(var_data, 'drives.d'),
                          os.path.join(var_data, 'profiles.d')).leitus()
 
