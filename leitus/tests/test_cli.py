@@ -35,10 +35,11 @@ def test_write_info(mock_stdout):
 @mock.patch('leitus.cli.sys')
 @mock.patch('leitus.cli.Leitus.list')
 def test_list_drives(mock_leitus, mock_sys):
-    target = mock.Mock()
-    target.list.return_value = True
+    target = mock.MagicMock()
+    target.close_all = False
+    target.list = True
 
-    mock_leitus.return_value=["alpha", "beta"]
+    mock_leitus.return_value = ["alpha", "beta"]
 
     cli.execute(target)
 
@@ -53,16 +54,15 @@ def test_list_drives(mock_leitus, mock_sys):
         ]
     )
 
+
 @mock.patch('leitus.cli.Leitus.close_all')
 def test_close_all(mock_leitus):
-    target = mock.Mock()
-    target.close_all.return_value = True
+    target = mock.MagicMock()
+    target.close_all = True
 
     cli.execute(target)
 
     mock_leitus.assert_called()
-
-
 
 # TODO:
 #  * Automatically prefix name with "leitus" unless already present
