@@ -92,7 +92,7 @@ class MountPoint:
     @staticmethod
     def unmount(on_path):
         if on_path:
-            subprocess.check_call(['umount', on_path])
+            subprocess.check_call(['umount', '--lazy', on_path])
 
     @staticmethod
     def is_leitus_mount(line):

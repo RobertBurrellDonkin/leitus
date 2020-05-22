@@ -82,11 +82,13 @@ def test_umount_all(mock_subprocess):
         mock.call(
             [
                 "umount",
+                "--lazy",
                 '/home/adam']
         ),
         mock.call(
             [
                 "umount",
+                "--lazy",
                 '/home/sandy']
         )
     ])
