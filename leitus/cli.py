@@ -26,7 +26,7 @@ import sys
 from leitus import diagnosis
 from leitus.surface import Leitus
 
-__version__ = '2.0.rc5'
+__version__ = '2.0'
 
 #
 #
