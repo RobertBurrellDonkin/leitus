@@ -24,8 +24,10 @@ name="Leitus Drive Wrangler"
 
 description="Leitus wrangles secure drives"
 
+# Gentoo
 depend() {
   need lvm
+  before dmcrypt
 }
 
 start() {
