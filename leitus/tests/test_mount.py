@@ -49,3 +49,46 @@ def test_list_df(mock_subprocess):
     mock_subprocess.check_output.return_value = SAMPLE_OUTPUT
 
     assert device.MountPoint.list() == ['vanilla', 'pike']
+
+
+@mock.patch('leitus.device.subprocess')
+def test_active_mount(mock_subprocess):
+    mock_subprocess.check_output.return_value = SAMPLE_OUTPUT
+
+    assert device.MountPoint.active("vanilla") == ['/home/adam']
+
+
+@mock.patch('leitus.device.subprocess')
+def test_inactive_mount(mock_subprocess):
+    mock_subprocess.check_output.return_value = SAMPLE_OUTPUT
+
+    assert device.MountPoint.active("bogus") == []
+
+
+@mock.patch('leitus.device.subprocess')
+def test_all_active(mock_subprocess):
+    mock_subprocess.check_output.return_value = SAMPLE_OUTPUT
+
+    assert device.MountPoint.all_active() == ['/home/adam', '/home/sandy']
+
+
+@mock.patch('leitus.device.subprocess')
+def test_umount_all(mock_subprocess):
+    mock_subprocess.check_output.return_value = SAMPLE_OUTPUT
+
+    device.MountPoint.unmount_all()
+
+    mock_subprocess.check_call.assert_has_calls([
+        mock.call(
+            [
+                "umount",
+                "--lazy",
+                '/home/adam']
+        ),
+        mock.call(
+            [
+                "umount",
+                "--lazy",
+                '/home/sandy']
+        )
+    ])

@@ -16,34 +16,30 @@
 #    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 #
-#
-# Leitus is a suite of higher level functions for cryptographic drives.
-# The contents tests the surface module.
-#
-# Robert Burrell Donkin, 2011
-#
 
 import os.path
-import unittest
 
 from leitus import config
 from leitus import diagnosis
 from leitus import layout
+from leitus.config import ConfigConstants
 
 
-class TestJsonLoader(unittest.TestCase):
-
-    def testWhenConfigurationFileIsMissingThatConfigurationNotFoundErrorIsRaised(self):
-        dir = "test"
-        some_missing_file = "some-missing-file"
-        self.assertFalse(os.path.exists(os.path.join("test", some_missing_file)),
-                         "Please remove " + some_missing_file + " in " + dir + " before running test")
-        subject = config.JsonLoader(some_missing_file, layout.FileSystemLayout(dir))
-        try:
-            subject.load()
-        except diagnosis.ConfigurationNotFoundError:
-            pass
+def test_when_configuration_file_is_missing_that_configuration_not_found_error_is_raised():
+    dir = "test"
+    some_missing_file = "some-missing-file"
+    path_exists = os.path.exists(os.path.join("test", some_missing_file))
+    assert path_exists != "Please remove " + some_missing_file + " in " + dir + ' before running test'
+    subject = config.JsonLoader(some_missing_file, layout.FileSystemLayout(dir))
+    try:
+        subject.load()
+    except diagnosis.ConfigurationNotFoundError:
+        pass
 
 
-if __name__ == '__main__':
-    unittest.main()
+def test_add_missing_prefix_to_name():
+    assert ConfigConstants().name_for({'name': 'alpha'}) == 'leitus-alpha'
+
+
+def test_when_name_starts_with_prefix():
+    assert ConfigConstants().name_for({'name': 'leitus-alpha'}) == 'leitus-alpha'

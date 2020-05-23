@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/sbin/openrc-run
 #
 # Copyright (c) Robert Burrell Donkin 2011, 2020
 #
@@ -18,17 +18,32 @@
 #
 #
 
-import sys
+command=/usr/bin/leitus
 
-try:
-    from leitus import cli
+name="Leitus Drive Wrangler"
 
-    # Defaults
-    CONF_DATA = '/etc/leitus.d'
-    VAR_DATA = '/var/lib/leitus'
+description="Leitus wrangles secure drives"
 
-    # Run
-    sys.exit(cli.leitus(CONF_DATA, VAR_DATA))
+# Gentoo
+depend() {
+  need lvm
+  before dmcrypt
+}
 
-except KeyboardInterrupt:
-    sys.stderr.write("\nLeitus cancelled.\n")
+start() {
+ ebegin "Leitus is so busy doing nothings"
+ return 0
+}
+
+stop() {
+  ebegin "Asking Leitus to tidy up"
+  einfo $(${command} --close-all)
+  eend $? "Leitus isn't around :/"
+  return $?
+}
+
+status() {
+  ebegin "Asking Leitus"
+  einfo $(${command} --list)
+  eend $? "Leitus isn't around :/"
+}

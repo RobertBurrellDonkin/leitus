@@ -1,6 +1,9 @@
 Changes
 =======
 
+Leitus 2.0
+ * Change default configuration director to `/etc/leitus.d`
+ 
 Letius 1.1
  * https://github.com/RobertBurrellDonkin/leitus/issues/13 Check drive before mounting Issue 
 

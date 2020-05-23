@@ -21,9 +21,9 @@
 #
 
 from leitus import config, luks, image, session
+from leitus import device, crypt
 from leitus import diagnosis
 from leitus import layout
-from leitus import device
 from leitus.config import ConfigConstants
 from leitus.errors import DiscImageNotFoundError, PassphaseError, UnsupportedError, AlreadyInUseError
 
@@ -85,3 +85,11 @@ class Leitus:
 
     def list(self):
         return device.MountPoint.list()
+
+    def close_all(self):
+        active_devices = device.MountPoint.list()
+
+        device.MountPoint.unmount_all()
+
+        for active_device in active_devices:
+            crypt.CryptSetup.close("leitus-{0}".format(active_device))

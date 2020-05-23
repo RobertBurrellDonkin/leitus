@@ -32,7 +32,7 @@ from leitus.config import ConfigConstants
 
 def test_when_absolute_source_is_not_modified():
     a_source = "/something.img"
-    a_name = "Bongo"
+    a_name = "leitus-Bongo"
     a_target = "/a/path"
     drive = surface.with_configuration(
         {ConfigConstants().SOURCE: a_source, ConfigConstants().NAME: a_name, ConfigConstants().TARGET: a_target})
@@ -43,7 +43,7 @@ def test_when_absolute_source_is_not_modified():
 
 def test_when_relative_is_not_modified_without_layout():
     a_source = "something.img"
-    a_name = "Bongo"
+    a_name = "leitus-Bongo"
     a_target = "/a/path"
     drive = surface.with_configuration(
         {ConfigConstants().SOURCE: a_source, ConfigConstants().NAME: a_name, ConfigConstants().TARGET: a_target})
@@ -54,7 +54,7 @@ def test_when_relative_is_not_modified_without_layout():
 
 def test_when_relative_is_joined_to_drives_when_layout_set():
     a_source = "something.img"
-    a_name = "Bongo"
+    a_name = "leitus-Bongo"
     a_target = "/a/path"
     a_drive_directory = "drives.d"
 
