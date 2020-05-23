@@ -21,9 +21,9 @@
 #
 
 from leitus import config, luks, image, session
+from leitus import device, crypt
 from leitus import diagnosis
 from leitus import layout
-from leitus import device, crypt
 from leitus.config import ConfigConstants
 from leitus.errors import DiscImageNotFoundError, PassphaseError, UnsupportedError, AlreadyInUseError
 

@@ -23,7 +23,6 @@ from leitus.crypt import CryptSetup
 
 @mock.patch('leitus.crypt.subprocess')
 def test_close(mock_subprocess):
-
     CryptSetup.close("A-NAME")
 
     mock_subprocess.check_call.assert_has_calls([
